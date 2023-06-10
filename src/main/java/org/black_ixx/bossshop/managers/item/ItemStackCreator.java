@@ -100,12 +100,11 @@ public class ItemStackCreator {
 
     /**
      * Gives the selected item to the player.
-     *
+     * If clone_item = false the item is modified (placeholders adapted to player and amount changed).
      * @param p          Player to give the item to.
      * @param buy        Shopitem linked to the item.
      * @param i          Item to add to the player.
      * @param clone_item Whether the item selected can be modified or if a clone of the selected item should be used instead, keeping the original item unchanged.
-     * @post If clone_item = false the item is modified (placeholders adapted to player and amount changed).
      */
     public void giveItem(Player p, BSBuy buy, ItemStack i, boolean clone_item) {
         giveItem(p, buy, i, i.getAmount(), clone_item);
@@ -114,13 +113,12 @@ public class ItemStackCreator {
 
     /**
      * Gives the selected item to the player.
-     *
+     * If clone_item = false the item is modified (placeholders adapted to player and amount changed).
      * @param p          Player to give the item to.
      * @param buy        Shopitem linked to the item.
      * @param i          Item to add to the player.
      * @param amount     Amount of the item to add to the player.
      * @param clone_item Whether the item selected can be modified or if a clone of the selected item should be used instead, keeping the original item unchanged.
-     * @post If clone_item = false the item is modified (placeholders adapted to player and amount changed).
      */
     public void giveItem(Player p, BSBuy buy, ItemStack i, int amount, boolean clone_item) {
         if (clone_item) {

@@ -31,68 +31,20 @@ public class PointsManager {
         }
 
         switch (p) {
-            case COMMANDPOINTS:
-                this.pa = new BSPointsPluginCommandPoints();
-                break;
-
-            case ENJIN_MINECRAFT_PLUGIN:
-                this.pa = new BSPointsPluginEnjin();
-                break;
-
-            case PLAYERPOINTS:
-                this.pa = new BSPointsPluginPlayerPoints();
-                break;
-
-            case POINTSAPI:
-                this.pa = new BSPointsPluginPointsAPI();
-                break;
-
-            case TOKENENCHANT:
-                this.pa = new BSPointsPluginTokenEnchant();
-                break;
-
-            case TOKENMANAGER:
-                this.pa = new BSPointsPluginTokenManager();
-                break;
-
-            case Jobs:
-                this.pa = new BSPointsPluginJobs();
-                break;
-
-            case MYSQL_TOKENS:
-                this.pa = new BSPointsPluginMySQL_Tokens();
-                break;
-
-            case MYSQLTOKENS:
-                this.pa = new BSPointsPluginMySQLTokens();
-                break;
-
-            case VOTINGPLUGIN:
-                this.pa = new BSPointsPluginVotingPlugin();
-                break;
-
-            case KINGDOMS:
-                this.pa = new BSPointsPluginKingdoms();
-                break;
-
-            case GadetsMenu:
-                this.pa = new BSPointsPluginGadgetsMenu();
-                break;
-
-            case NONE:
-                this.pa = new BSPointsPluginNone();
-                break;
-
-			/*case COINS:
-			this.pa = new BSPointsPluginCoins();
-			break;*/
-
-            case CUSTOM:
+            case PLAYERPOINTS -> this.pa = new BSPointsPluginPlayerPoints();
+            case TOKENENCHANT -> this.pa = new BSPointsPluginTokenEnchant();
+            case TOKENMANAGER -> this.pa = new BSPointsPluginTokenManager();
+            case JOBS -> this.pa = new BSPointsPluginJobs();
+            case VOTINGPLUGIN -> this.pa = new BSPointsPluginVotingPlugin();
+            case GADGETS_MENU -> this.pa = new BSPointsPluginGadgetsMenu();
+            case COINS -> new BSPointsPluginCoins();
+            case NONE -> this.pa = new BSPointsPluginNone();
+            case CUSTOM -> {
                 BSPointsPlugin customPoints = BSPointsAPI.get(p.getCustom());
                 if (customPoints != null) {
                     this.pa = customPoints;
                 }
-                break;
+            }
         }
 
         if (this.pa == null) {
@@ -126,24 +78,18 @@ public class PointsManager {
     public enum PointsPlugin {
         NONE(new String[]{"none", "nothing"}),
         PLAYERPOINTS(new String[]{"PlayerPoints", "PlayerPoint", "PP"}),
-        COMMANDPOINTS(new String[]{"CommandPoints", "CommandPoint", "CP"}),
-        ENJIN_MINECRAFT_PLUGIN(new String[]{"EnjinMinecraftPlugin", "Enjin", "EMP"}),
-        POINTSAPI(new String[]{"PointsAPI", "PAPI"}),
         TOKENENCHANT(new String[]{"TokenEnchant", "TE", "TokenEnchants"}),
         TOKENMANAGER(new String[]{"TokenManager", "TM"}),
-        Jobs(new String[]{"Jobs", "JobsReborn"}),
-        MYSQL_TOKENS(new String[]{"MySQL-Tokens", "MySQL-Token"}),
-        MYSQLTOKENS(new String[]{"MySQLTokens", "MySQLToken"}),
+        JOBS(new String[]{"Jobs", "JobsReborn"}),
         VOTINGPLUGIN(new String[]{"VotingPlugin", "VP"}),
-        KINGDOMS(new String[]{"Kingdoms", "Kingdom"}),
-        GadetsMenu(new String[]{"GadgetsMenu"}),
-        //COINS(new String[] { "Coins"}),
+        GADGETS_MENU(new String[]{"GadgetsMenu"}),
+        COINS(new String[] { "Coins"}),
         CUSTOM(new String[0]);
 
         private String[] nicknames;
         private String custom_name;
 
-        private PointsPlugin(String[] nicknames) {
+        PointsPlugin(String[] nicknames) {
             this.nicknames = nicknames;
         }
 

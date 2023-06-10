@@ -6,6 +6,7 @@ plugins {
     id("java-library")
     id("xyz.jpenilla.run-paper") version "2.1.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.papermc.paperweight.userdev") version "1.5.5"
 }
 
 repositories {
@@ -22,12 +23,13 @@ repositories {
 }
 
 dependencies {
+    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
     compileOnly("lilypad.client.connect:api:0.0.1-SNAPSHOT") //LilyPad
     compileOnly("com.bencodez:votingplugin:6.13") //VotingPlugin
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1") //Vault
     compileOnly("me.clip:placeholderapi:2.11.3") //PlaceholderAPI
     compileOnly("net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT") //Bungeecord
-    compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT") //Paper
+    //compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT") //Paper
     compileOnly("org.black_ixx:playerpoints:3.2.5") //PlayerPoints
     compileOnly("com.vk2gpz.tokenenchant:TokenEnchantAPI:18.37.1") //TokenEnchant
     compileOnly("com.github.JustEli:Coins:1.10.3") //TODO: new version

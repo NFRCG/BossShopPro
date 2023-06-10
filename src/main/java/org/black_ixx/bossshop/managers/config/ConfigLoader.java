@@ -1,6 +1,6 @@
 package org.black_ixx.bossshop.managers.config;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 public class ConfigLoader {
+
+    private ConfigLoader() {}
 
     public static YamlConfiguration loadConfiguration(File file, boolean debug) throws InvalidConfigurationException {
         Validate.notNull(file, "File cannot be null");

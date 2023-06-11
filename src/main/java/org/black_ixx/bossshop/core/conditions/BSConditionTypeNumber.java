@@ -7,13 +7,12 @@ import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 
 public abstract class BSConditionTypeNumber extends BSConditionType {
-
     @Override
     public boolean meetsCondition(BSShopHolder holder, BSBuy shopitem, Player p, String conditiontype, String condition) {
         double n = getNumber(shopitem, holder, p);
 
         if (condition.contains("#") && condition.contains("%")) {
-            String parts[] = condition.split("#", 2);
+            String[] parts = condition.split("#", 2);
             condition = parts[0];
             int divisor = InputReader.getInt(parts[1].replace("%", ""), 1);
             n %= divisor;
@@ -48,8 +47,6 @@ public abstract class BSConditionTypeNumber extends BSConditionType {
                 return false;
             }
         }
-
-
         return false;
     }
 
@@ -63,12 +60,10 @@ public abstract class BSConditionTypeNumber extends BSConditionType {
         return false;
     }
 
-
     @Override
     public String[] showStructure() {
         return new String[]{"over:[double]", "under:[double]", "equals:[double]", "between:[double]:[double]"};
     }
 
     public abstract double getNumber(BSBuy shopitem, BSShopHolder holder, Player p);
-
 }

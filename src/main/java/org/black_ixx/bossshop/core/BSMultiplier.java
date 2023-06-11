@@ -6,9 +6,9 @@ import org.bukkit.entity.Player;
 
 public class BSMultiplier {
 
-    public final static int RANGE_ALL = 0;
-    public final static int RANGE_PRICE_ONLY = 1;
-    public final static int RANGE_REWARD_ONLY = 2;
+    public static final int RANGE_ALL = 0;
+    public static final int RANGE_PRICE_ONLY = 1;
+    public static final int RANGE_REWARD_ONLY = 2;
 
     private String permission = "Permission.Node";
     private BSPriceType type = BSPriceType.Nothing;
@@ -16,11 +16,11 @@ public class BSMultiplier {
     private int range = RANGE_ALL;
 
 
-    public BSMultiplier(String config_line) {
-        String[] parts = config_line.split(":", 4);
+    public BSMultiplier(String line) {
+        String[] parts = line.split(":", 4);
 
         if (parts.length != 3 && parts.length != 4) {
-            ClassManager.manager.getBugFinder().warn("Invalid Multiplier Group Line... \"" + config_line + "\"! It should look like this: \"Permission.Node:<type>:<multiplier>:<price/reward/both>\"");
+            ClassManager.manager.getBugFinder().warn("Invalid Multiplier Group Line... \"" + line + "\"! It should look like this: \"Permission.Node:<type>:<multiplier>:<price/reward/both>\"");
             return;
         }
 
@@ -36,13 +36,13 @@ public class BSMultiplier {
         int range = RANGE_ALL;
 
         if (type == null || !type.supportsMultipliers()) {
-            ClassManager.manager.getBugFinder().warn("Invalid Multiplier Group Line... \"" + config_line + "\"! It should look like this: \"Permission.Node:<type>:<multiplier>:<price/reward/both>\". '" + parts[1].trim() + "' does not support multipliers!");
+            ClassManager.manager.getBugFinder().warn("Invalid Multiplier Group Line... \"" + line + "\"! It should look like this: \"Permission.Node:<type>:<multiplier>:<price/reward/both>\". '" + parts[1].trim() + "' does not support multipliers!");
             return;
         }
         try {
             multiplier = Double.parseDouble(parts[2].trim());
         } catch (Exception e) {
-            ClassManager.manager.getBugFinder().warn("Invalid Multiplier Group Line... \"" + config_line + "\"! It should look like this: \"Permission.Node:<type>:<multiplier>:<price/reward/both>\". '" + parts[2].trim() + "' is no valid multiplier... What you can use instead (examples): 0.25, 0.3, 0.75, 1.0, 1.5, 2.0 etc.!");
+            ClassManager.manager.getBugFinder().warn("Invalid Multiplier Group Line... \"" + line + "\"! It should look like this: \"Permission.Node:<type>:<multiplier>:<price/reward/both>\". '" + parts[2].trim() + "' is no valid multiplier... What you can use instead (examples): 0.25, 0.3, 0.75, 1.0, 1.5, 2.0 etc.!");
             return;
         }
 
@@ -92,6 +92,7 @@ public class BSMultiplier {
     }
 
     public double calculateValue(Player p, BSPriceType type, double d, int range) {
+        //TODO: fix
         if (isMultiplierActive(p, type, range)) {
             switch (this.range) {
                 case RANGE_ALL: //Multiplier supports both types -> buy price is multiplied and sell reward is divided

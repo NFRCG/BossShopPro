@@ -14,30 +14,29 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class MathTools {
-
-    public final static String BEGIN = "{";
-    public final static String END = "}";
+    public static final String BEGIN = "{";
+    public static final String END = "}";
     private static DecimalFormat df;
 
-    public static void init(String loc, int grouping_size) {
+    public static void init(String loc, int groupingSize) {
         try {
             String[] parts = loc.split("_");
-            Locale l = Locale.forLanguageTag(loc);
+            Locale l;
             if (parts.length >= 2) {
                 l = new Locale(parts[0].trim(), parts[1].trim());
             } else {
                 l = new Locale(parts[0].trim());
             }
-            if (l != null && l.getCountry() != null) {
+            if (l.getCountry() != null) {
                 df = (DecimalFormat) NumberFormat.getInstance(l);
             }
         } catch (NullPointerException e) {
             df = (DecimalFormat) NumberFormat.getInstance();
         }
 
-        if (grouping_size > 0) {
+        if (groupingSize > 0) {
             df.setGroupingUsed(true);
-            df.setGroupingSize(grouping_size);
+            df.setGroupingSize(groupingSize);
         } else {
             df.setGroupingUsed(false);
         }
@@ -69,57 +68,57 @@ public class MathTools {
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
-        BigDecimal bd = new BigDecimal(value);
+        BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
-    public static double cutNumber(double d, int to_cut, int decimal_place) {
-        if (to_cut == 0) {
-            return round(d, decimal_place);
+    public static double cutNumber(double d, int toCut, int decimalPlace) {
+        if (toCut == 0) {
+            return round(d, decimalPlace);
         } else {
-            long a = (long) Math.pow(10, to_cut);
+            long a = (long) Math.pow(10, toCut);
             d = d / a;
-            return round(d, decimal_place);
+            return round(d, decimalPlace);
         }
     }
 
 
-    public static String displayNumber(double d, BSPriceType pricetype) {
+    public static String displayNumber(double d, BSPriceType priceType) {
         List<String> formatting = null;
-        boolean integer_value = isIntegerValue(pricetype);
+        boolean integerValue = isIntegerValue(priceType);
 
-        if (pricetype == BSPriceType.Money) {
+        if (priceType == BSPriceType.Money) {
             formatting = ClassManager.manager.getSettings().getMoneyFormatting();
-        } else if (pricetype == BSPriceType.Points) {
+        } else if (priceType == BSPriceType.Points) {
             formatting = ClassManager.manager.getSettings().getPointsFormatting();
         }
 
-        return displayNumber(d, formatting, integer_value);
+        return displayNumber(d, formatting, integerValue);
     }
 
-    public static List<String> getFormatting(BSPriceType pricetype) {
-        if (pricetype == BSPriceType.Money) {
+    public static List<String> getFormatting(BSPriceType priceType) {
+        if (priceType == BSPriceType.Money) {
             return ClassManager.manager.getSettings().getMoneyFormatting();
-        } else if (pricetype == BSPriceType.Points) {
+        } else if (priceType == BSPriceType.Points) {
             return ClassManager.manager.getSettings().getPointsFormatting();
         }
         return null;
     }
 
-    public static boolean isIntegerValue(BSPriceType pricetype) {
-        if (pricetype == BSPriceType.Points) {
+    public static boolean isIntegerValue(BSPriceType priceType) {
+        if (priceType == BSPriceType.Points) {
             if (!ClassManager.manager.getPointsManager().usesDoubleValues()) {
                 return true;
             }
         }
-        if (pricetype == BSPriceType.Exp) {
+        if (priceType == BSPriceType.Exp) {
             return true;
         }
         return false;
     }
 
-    public static String displayNumber(double d, List<String> formatting, boolean integer_value) {
+    public static String displayNumber(double d, List<String> formatting, boolean integerValue) {
         if (d == 0) {
             return "0";
         }
@@ -132,18 +131,18 @@ public class MathTools {
                     double positive = Math.abs(d);
 
                     if (positive >= number_needed) {
-                        int to_cut = InputReader.getInt(parts[1].trim(), -1);
-                        int decimal_place = InputReader.getInt(parts[2].trim(), -1);
-                        double number = cutNumber(d, to_cut, decimal_place);
+                        int toCut = InputReader.getInt(parts[1].trim(), -1);
+                        int decimalPlace = InputReader.getInt(parts[2].trim(), -1);
+                        double number = cutNumber(d, toCut, decimalPlace);
 
-                        String output = parts[3].trim().replace("%number%", MathTools.displayNumber(number, decimal_place));
+                        String output = parts[3].trim().replace("%number%", MathTools.displayNumber(number, decimalPlace));
                         return output;
                     }
                 }
             }
         }
 
-        if (integer_value) {
+        if (integerValue) {
             return displayNumber(d, 0);
         }
 
@@ -151,10 +150,10 @@ public class MathTools {
     }
 
 
-    public static String displayNumber(double d, int decimal_place) {
+    public static String displayNumber(double d, int decimalPlace) {
         synchronized (df) {
-            df.setMaximumFractionDigits(decimal_place);
-            df.setMinimumFractionDigits(decimal_place);
+            df.setMaximumFractionDigits(decimalPlace);
+            df.setMinimumFractionDigits(decimalPlace);
             return df.format(d);
         }
     }
@@ -180,8 +179,9 @@ public class MathTools {
     }
 
     private static String calculate(String copy, char type) {
+        //TODO: ???
         String[] vals = copy.split("\\" + type);
-        double outcome = 0.0;
+        double outcome;
         for (int i = 0; i < vals.length - 1; i++) {
             String val1 = vals[i];
             String val2 = vals[i + 1];
@@ -199,26 +199,15 @@ public class MathTools {
             double secondVal = Double.parseDouble(second[0]);
             outcome = firstVal - secondVal;
 
-            switch (type) {
-                case '^':
-                    outcome = Math.pow(firstVal, secondVal);
-                    break;
-                case '*':
-                    outcome = firstVal * secondVal;
-                    break;
-                case '/':
-                    outcome = firstVal / secondVal;
-                    break;
-                case '+':
-                    outcome = firstVal + secondVal;
-                    break;
-                case '-':
-                    outcome = firstVal - secondVal;
-                    break;
-                case '%':
-                    outcome = firstVal % secondVal;
-                    break;
-            }
+            outcome = switch (type) {
+                case '^' -> Math.pow(firstVal, secondVal);
+                case '*' -> firstVal * secondVal;
+                case '/' -> firstVal / secondVal;
+                case '+' -> firstVal + secondVal;
+                case '-' -> firstVal - secondVal;
+                case '%' -> firstVal % secondVal;
+                default -> outcome;
+            };
 
             copy = copy.replaceFirst(Pattern.quote(first[first.length - 1] + type + second[0]),
                     String.valueOf(outcome));

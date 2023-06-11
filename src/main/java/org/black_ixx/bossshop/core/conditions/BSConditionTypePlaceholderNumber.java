@@ -7,8 +7,6 @@ import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 
 public class BSConditionTypePlaceholderNumber extends BSConditionType {
-
-
     @Override
     public boolean meetsCondition(BSShopHolder holder, BSBuy shopitem, Player p, String conditiontype, String condition) {
         String realparts[] = condition.split(":", 2);
@@ -53,11 +51,8 @@ public class BSConditionTypePlaceholderNumber extends BSConditionType {
                 return false;
             }
         }
-
-
         return false;
     }
-
 
     private boolean equals(double n, String[] options) {
         for (String option : options) {
@@ -68,7 +63,6 @@ public class BSConditionTypePlaceholderNumber extends BSConditionType {
         }
         return false;
     }
-
 
     public double getNumber(BSBuy shopitem, Player p, String placeholder) {
         String transformedPlaceholder = ClassManager.manager.getStringManager().transform(placeholder, shopitem, shopitem.getShop(), null, p);
@@ -85,15 +79,12 @@ public class BSConditionTypePlaceholderNumber extends BSConditionType {
         return new String[]{"placeholdernumber"};
     }
 
-
     @Override
     public void enableType() {
     }
-
 
     @Override
     public String[] showStructure() {
         return new String[]{"[string]:over:[double]", "[string]:under:[double]", "[string]:equals:[double]", "[string]:between:[double]-[double]"};
     }
-
 }

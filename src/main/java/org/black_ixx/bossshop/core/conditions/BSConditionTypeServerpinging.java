@@ -9,8 +9,6 @@ import org.black_ixx.bossshop.managers.serverpinging.ServerPingingManager;
 import org.bukkit.entity.Player;
 
 public class BSConditionTypeServerpinging extends BSConditionTypeNumber {
-
-
     @Override
     public boolean meetsCondition(BSShopHolder holder, BSBuy shopitem, Player p, String conditiontype, String condition) {
         if (conditiontype.equalsIgnoreCase("online")) {
@@ -27,7 +25,6 @@ public class BSConditionTypeServerpinging extends BSConditionTypeNumber {
 
         return super.meetsCondition(holder, shopitem, p, conditiontype, condition);
     }
-
 
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
@@ -59,10 +56,7 @@ public class BSConditionTypeServerpinging extends BSConditionTypeNumber {
         return new String[]{"online", "over:[double]", "under:[double]", "equals:[double]", "between:[double]-[double]"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

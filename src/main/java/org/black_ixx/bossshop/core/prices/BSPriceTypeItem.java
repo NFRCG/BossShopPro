@@ -13,8 +13,8 @@ import java.util.List;
 public class BSPriceTypeItem extends BSPriceType {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
-        if (force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
+        if (forceState) {
             return InputReader.readItemList(o, false);
         } else {
             return InputReader.readStringListList(o);

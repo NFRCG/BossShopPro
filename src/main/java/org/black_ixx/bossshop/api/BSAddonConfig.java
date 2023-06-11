@@ -19,9 +19,9 @@ public class BSAddonConfig implements BSAddonStorage {
     private File file;
     private YamlConfiguration config;
 
-    public BSAddonConfig(Plugin plugin, String file_name) {
+    public BSAddonConfig(Plugin plugin, String fileName) {
         this.plugin = plugin;
-        this.file = new File(ClassManager.manager.getPlugin().getDataFolder().getAbsolutePath() + "/addons/" + plugin.getName() + "/" + file_name + ".yml");
+        this.file = new File(ClassManager.manager.getPlugin().getDataFolder().getAbsolutePath() + "/addons/" + plugin.getName() + "/" + fileName + ".yml");
         this.config = YamlConfiguration.loadConfiguration(file);
     }
 

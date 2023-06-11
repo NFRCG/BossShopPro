@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class BSConditionTypeRealMillisecond extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         return Calendar.getInstance().get(Calendar.MILLISECOND);
@@ -23,10 +22,7 @@ public class BSConditionTypeRealMillisecond extends BSConditionTypeNumber {
         return new String[]{"realmillisecond", "millisecond"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

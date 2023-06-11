@@ -6,7 +6,6 @@ import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 
 public class BSConditionTypeMoney extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         if (ClassManager.manager.getVaultHandler() == null) {
@@ -31,12 +30,9 @@ public class BSConditionTypeMoney extends BSConditionTypeNumber {
         return new String[]{"money"};
     }
 
-
     @Override
     public void enableType() {
         ClassManager.manager.getSettings().setVaultEnabled(true);
         ClassManager.manager.getSettings().setMoneyEnabled(true);
     }
-
-
 }

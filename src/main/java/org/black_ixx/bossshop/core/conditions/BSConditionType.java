@@ -7,44 +7,38 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public abstract class BSConditionType {
-
-
-    public static BSConditionType
-            SERVERPINGING,
-            MONEY,
-            POINTS,
-            GROUP,
-            HEALTH,
-            HUNGER,
-            PERMISSION,
-            TIME,
-            ITEM,
-            HANDITEM,
-            EXP,
-            SHOPPAGE,
-            REALYEAR,
-            REALMONTH,
-            REALWEEK,
-            REALMONTHDAY,
-            REALWEEKDAY,
-            REALHOUR,
-            REALMINUTE,
-            REALSECOND,
-            REALMILLISECOND,
-            LIGHTLEVEL,
-            LOCATIONX,
-            LOCATIONY,
-            LOCATIONZ,
-            WORLD,
-            WEATHER,
-            PLACEHOLDERNUMBER,
-            PLACEHOLDERMATCH;
-
-
+    public static BSConditionType SERVERPINGING;
+    public static BSConditionType MONEY;
+    public static BSConditionType POINTS;
+    public static BSConditionType GROUP;
+    public static BSConditionType HEALTH;
+    public static BSConditionType HUNGER;
+    public static BSConditionType PERMISSION;
+    public static BSConditionType TIME;
+    public static BSConditionType ITEM;
+    public static BSConditionType HANDITEM;
+    public static BSConditionType EXP;
+    public static BSConditionType SHOPPAGE;
+    public static BSConditionType REALYEAR;
+    public static BSConditionType REALMONTH;
+    public static BSConditionType REALWEEK;
+    public static BSConditionType REALMONTHDAY;
+    public static BSConditionType REALWEEKDAY;
+    public static BSConditionType REALHOUR;
+    public static BSConditionType REALMINUTE;
+    public static BSConditionType REALSECOND;
+    public static BSConditionType REALMILLISECOND;
+    public static BSConditionType LIGHTLEVEL;
+    public static BSConditionType LOCATIONX;
+    public static BSConditionType LOCATIONY;
+    public static BSConditionType LOCATIONZ;
+    public static BSConditionType WORLD;
+    public static BSConditionType WEATHER;
+    public static BSConditionType PLACEHOLDERNUMBER;
+    public static BSConditionType PLACEHOLDERMATCH;
     private static List<BSConditionType> types;
-    private String[] names = createNames();
+    private final String[] names = createNames();
 
     public static void loadTypes() {
         types = new ArrayList<>();
@@ -123,7 +117,6 @@ public abstract class BSConditionType {
     public abstract void enableType(); //Here you can register classes that the type depends on
 
     public abstract boolean meetsCondition(BSShopHolder holder, BSBuy shopitem, Player p, String conditiontype, String condition);
-
 
     @Deprecated
     public abstract String[] createNames();

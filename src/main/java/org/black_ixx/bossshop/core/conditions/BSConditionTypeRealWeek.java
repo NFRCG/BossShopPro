@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class BSConditionTypeRealWeek extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         return Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
@@ -23,10 +22,7 @@ public class BSConditionTypeRealWeek extends BSConditionTypeNumber {
         return new String[]{"realweek", "week"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

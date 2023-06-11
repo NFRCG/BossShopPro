@@ -8,12 +8,10 @@ import org.bukkit.entity.Player;
 
 
 public class BSConditionTypePlaceholderMatch extends BSConditionType {
-
-
-    public boolean matches(Player p, String single_condition, String placeholder) {
+    public boolean matches(Player p, String singleCondition, String placeholder) {
         placeholder = ClassManager.manager.getStringManager().transform(placeholder, p);
-        single_condition = ClassManager.manager.getStringManager().transform(single_condition, p);
-        return ChatColor.stripColor(placeholder).trim().equalsIgnoreCase(ChatColor.stripColor(single_condition.trim()));
+        singleCondition = ClassManager.manager.getStringManager().transform(singleCondition, p);
+        return ChatColor.stripColor(placeholder).trim().equalsIgnoreCase(ChatColor.stripColor(singleCondition.trim()));
     }
 
     @Override
@@ -30,7 +28,6 @@ public class BSConditionTypePlaceholderMatch extends BSConditionType {
     @Override
     public void enableType() {
     }
-
 
     @Override
     public boolean meetsCondition(BSShopHolder holder, BSBuy shopitem, Player p, String conditiontype, String condition) {
@@ -50,19 +47,16 @@ public class BSConditionTypePlaceholderMatch extends BSConditionType {
 
 
     private boolean isCorrect(Player p, boolean has_to_match, String condition, String placeholder) {
-        for (String single_condition : condition.split(",")) {
-            if (matches(p, single_condition, placeholder) == has_to_match) {
+        for (String singleCondition : condition.split(",")) {
+            if (matches(p, singleCondition, placeholder) == has_to_match) {
                 return true;
             }
         }
         return false;
     }
 
-
     @Override
     public String[] showStructure() {
         return new String[]{"[string]:match:[string]", "[string]:dontmatch:[string]"};
     }
-
-
 }

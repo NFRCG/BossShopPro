@@ -132,14 +132,14 @@ public class BSBuyAdvanced extends BSBuy {
                 String tr = "%reward_" + s + "%";
 
                 if (msg.contains(tp) || msg.contains(tr)) {
-                    String rewardMessage = action.getRewardType().isPlayerDependend(this, clicktype) ? null : action.getRewardType().getDisplayReward(p, this, action.getReward(), clicktype);
-                    String priceMessage = action.getPriceType().isPlayerDependend(this, clicktype) ? null : action.getPriceType().getDisplayPrice(p, this, action.getPrice(), clicktype);
+                    String rewardMessage = action.getRewardType().isPlayerDependent(this, clicktype) ? null : action.getRewardType().getDisplayReward(p, this, action.getReward(), clicktype);
+                    String priceMessage = action.getPriceType().isPlayerDependent(this, clicktype) ? null : action.getPriceType().getDisplayPrice(p, this, action.getPrice(), clicktype);
 
 
                     if (shop != null) { //Does shop need to be customizable and is not already?
                         if (!shop.isCustomizable()) {
-                            boolean has_pricevariable = (msg.contains(tp) && (action.getPriceType().isPlayerDependend(this, clicktype)));
-                            boolean has_rewardvariable = (msg.contains(tr) && (action.getRewardType().isPlayerDependend(this, clicktype)));
+                            boolean has_pricevariable = (msg.contains(tp) && (action.getPriceType().isPlayerDependent(this, clicktype)));
+                            boolean has_rewardvariable = (msg.contains(tr) && (action.getRewardType().isPlayerDependent(this, clicktype)));
                             if (has_pricevariable || has_rewardvariable) {
                                 shop.setCustomizable(true);
                                 shop.setDisplaying(true);

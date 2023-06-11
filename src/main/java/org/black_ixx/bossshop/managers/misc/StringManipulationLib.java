@@ -8,22 +8,22 @@ public class StringManipulationLib {
     /**
      * Replace placeholders in a string
      * @param s input string
-     * @param placeholder_name name of placeholder
+     * @param name name of placeholder
      * @param replacement  replacement string
      * @param fromIndex index
      * @return replaced string
      */
-    public static String replacePlaceholder(String s, String placeholder_name, String replacement, int fromIndex) {
-        String complete = getCompleteVariable(s, placeholder_name, fromIndex);
+    public static String replacePlaceholder(String s, String name, String replacement, int fromIndex) {
+        String complete = getCompleteVariable(s, name, fromIndex);
         if (complete != null) {
             return s.replace(complete, replacement);
         }
         return s;
     }
 
-    public static String figureOutVariable(String s, int fromIndex, String... placeholders_names) {
-        for (String placeholder_name : placeholders_names) {
-            String variable = figureOutVariable(s, placeholder_name, fromIndex);
+    public static String figureOutVariable(String s, int fromIndex, String... names) {
+        for (String name : names) {
+            String variable = figureOutVariable(s, name, fromIndex);
             if (variable != null) {
                 return variable;
             }
@@ -31,10 +31,10 @@ public class StringManipulationLib {
         return null;
     }
 
-    public static String figureOutVariable(String s, String placeholder_name, int fromIndex) {
+    public static String figureOutVariable(String s, String name, int fromIndex) {
         String symbol = "%";
-        String start = symbol + placeholder_name + "_";
-        String complete = getCompleteVariable(s, placeholder_name, fromIndex);
+        String start = symbol + name + "_";
+        String complete = getCompleteVariable(s, name, fromIndex);
         if (complete != null) {
             String variable = complete.substring(start.length(), complete.length() - symbol.length());
             return variable;
@@ -42,15 +42,15 @@ public class StringManipulationLib {
         return null;
     }
 
-    public static String getCompleteVariable(String s, String placeholder_name, int fromIndex) {
+    public static String getCompleteVariable(String s, String name, int fromIndex) {
         String symbol = "%";
-        String start = symbol + placeholder_name + "_";
+        String start = symbol + name + "_";
         if (s.contains(start)) {
-            int first_occurence_start = s.indexOf(start, fromIndex);
-            if (first_occurence_start != -1) {
-                int first_occurence_end = s.indexOf(symbol, first_occurence_start + 1);
-                if (first_occurence_end != -1) {
-                    String complete = s.substring(first_occurence_start, first_occurence_end + 1);
+            int firstStart = s.indexOf(start, fromIndex);
+            if (firstStart != -1) {
+                int firstEnd = s.indexOf(symbol, firstStart + 1);
+                if (firstEnd != -1) {
+                    String complete = s.substring(firstStart, firstEnd + 1);
                     return complete;
                 }
             }
@@ -58,13 +58,13 @@ public class StringManipulationLib {
         return null;
     }
 
-    public static int getIndexOfVariableEnd(String s, String placeholder_name, int fromIndex) {
+    public static int getIndexOfVariableEnd(String s, String name, int fromIndex) {
         String symbol = "%";
-        String start = symbol + placeholder_name + "_";
+        String start = symbol + name + "_";
         if (s.contains(start)) {
-            int first_occurence_start = s.indexOf(start, fromIndex);
-            int first_occurence_end = s.indexOf(symbol, first_occurence_start + 1);
-            return first_occurence_end;
+            int firstStart = s.indexOf(start, fromIndex);
+            int firstEnd = s.indexOf(symbol, firstStart + 1);
+            return firstEnd;
         }
         return -1;
     }
@@ -87,11 +87,11 @@ public class StringManipulationLib {
 
     public static String getBlock(String s, String beginning, String end, int fromIndex) {
         if (s.contains(beginning) && s.contains(end)) {
-            int first_occurence_start = s.indexOf(beginning, fromIndex);
-            if (first_occurence_start != -1) {
-                int first_occurence_end = s.indexOf(end, first_occurence_start + 1);
-                if (first_occurence_end != -1) {
-                    String complete = s.substring(first_occurence_start, first_occurence_end + 1);
+            int firstStart = s.indexOf(beginning, fromIndex);
+            if (firstStart != -1) {
+                int firstEnd = s.indexOf(end, firstStart + 1);
+                if (firstEnd != -1) {
+                    String complete = s.substring(firstStart, firstEnd + 1);
                     return complete;
                 }
             }
@@ -101,10 +101,10 @@ public class StringManipulationLib {
 
     public static int getIndexOfBlockEnd(String s, String beginning, String end, int fromIndex) {
         if (s.contains(beginning) && s.contains(end)) {
-            int first_occurence_start = s.indexOf(beginning, fromIndex);
-            if (first_occurence_start != -1) {
-                int first_occurence_end = s.indexOf(end, first_occurence_start + 1);
-                return first_occurence_end;
+            int firstStart = s.indexOf(beginning, fromIndex);
+            if (firstStart != -1) {
+                int firstEnd = s.indexOf(end, firstStart + 1);
+                return firstEnd;
             }
         }
         return -1;

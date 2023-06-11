@@ -79,15 +79,15 @@ public class InputReader {
     /**
      * Get list of itemstacks from object
      * @param o object to check
-     * @param final_version final version or not
+     * @param finalVersion final version or not
      * @return list of itemstacks
      */
-    public static List<ItemStack> readItemList(Object o, boolean final_version) {
+    public static List<ItemStack> readItemList(Object o, boolean finalVersion) {
         List<List<String>> list = readStringListList(o);
         if (list != null) {
             List<ItemStack> items = new ArrayList<ItemStack>();
             for (List<String> s : list) {
-                items.add(ClassManager.manager.getItemStackCreator().createItemStack(s, final_version));
+                items.add(ClassManager.manager.getItemStackCreator().createItemStack(s, finalVersion));
             }
             return items;
         }
@@ -97,11 +97,11 @@ public class InputReader {
     /**
      * Get itemstack from object
      * @param o object to check
-     * @param final_version final version or not
+     * @param finalVersion final version or not
      * @return itemstack
      */
-    public static ItemStack readItem(Object o, boolean final_version) {
-        List<ItemStack> list = readItemList(o, final_version);
+    public static ItemStack readItem(Object o, boolean finalVersion) {
+        List<ItemStack> list = readItemList(o, finalVersion);
         if (list != null & !list.isEmpty()) {
             return list.get(0);
         }
@@ -118,18 +118,18 @@ public class InputReader {
         if (s != null) {
             String parts[] = s.split("#", 2);
             if (parts.length == 2) {
-                String p_name = parts[0].trim();
-                String p_level = parts[1].trim();
+                String name = parts[0].trim();
+                String level = parts[1].trim();
                 int lvl;
                 Enchantment e;
 
                 try {
-                    lvl = Integer.parseInt(p_level);
+                    lvl = Integer.parseInt(level);
                 } catch (NumberFormatException ex) {
-                    ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + p_level + "' is not a valid enchantment level.");
+                    ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + level + "' is not a valid enchantment level.");
                     return null;
                 }
-                e = readEnchantment(p_name);
+                e = readEnchantment(name);
 
 				/* Enchantment seems to somehow not be detected.
 				if(e == null && Bukkit.getPluginManager().isPluginEnabled("TokenEnchant")){
@@ -141,7 +141,7 @@ public class InputReader {
 				}*/
 
                 if (e == null) {
-                    ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + p_name + "' is not a valid enchantment name/id.");
+                    ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + name + "' is not a valid enchantment name/id.");
                     return null;
                 }
 

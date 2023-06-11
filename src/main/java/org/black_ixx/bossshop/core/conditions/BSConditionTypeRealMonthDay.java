@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class BSConditionTypeRealMonthDay extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -23,10 +22,7 @@ public class BSConditionTypeRealMonthDay extends BSConditionTypeNumber {
         return new String[]{"realmonthday", "realday", "monthday", "day"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

@@ -7,13 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
 public abstract class BSRewardTypeNumber extends BSRewardType {
-
-
-    public abstract boolean isIntegerValue();
-
     @Override
-    public boolean isPlayerDependend(BSBuy buy, ClickType clicktype) {
-        return super.isPlayerDependend(buy, clicktype) || (buy.getPriceType(clicktype) == BSPriceType.ItemAll && ClassManager.manager.getSettings().getItemAllShowFinalReward());
+    public boolean isPlayerDependent(BSBuy buy, ClickType clicktype) {
+        return super.isPlayerDependent(buy, clicktype) || (buy.getPriceType(clicktype) == BSPriceType.ItemAll && ClassManager.manager.getSettings().getItemAllShowFinalReward());
     }
 
     @Override
@@ -26,6 +22,7 @@ public abstract class BSRewardTypeNumber extends BSRewardType {
         giveReward(p, buy, reward, clickType, 1);
     }
 
-    public abstract void giveReward(Player p, BSBuy buy, Object reward, ClickType clickType, int multiplier);
+    public abstract boolean isIntegerValue();
 
+    public abstract void giveReward(Player p, BSBuy buy, Object reward, ClickType clickType, int multiplier);
 }

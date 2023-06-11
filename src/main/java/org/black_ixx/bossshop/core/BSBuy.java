@@ -27,9 +27,9 @@ public class BSBuy {
 
 
     private BSShop shop;
-    private HashMap<Plugin, Object> special_information;
+    private HashMap<Plugin, Object> specialInformation;
 
-    private boolean fix_item; // In order for an item to not be fix it must contain a player-dependent placeholder (detected by StringManager.checkStringForFeatures)
+    private boolean fixItem; // In order for an item to not be fix it must contain a player-dependent placeholder (detected by StringManager.checkStringForFeatures)
     private ItemStack item;
     private String name;
     private BSInputType inputtype; // null by default. A value if players need to enter input before they can purchase the item.
@@ -40,7 +40,7 @@ public class BSBuy {
     private Object price;
     private BSCondition condition;
     private String permission;
-    private boolean perm_is_group = false;
+    private boolean isGroup = false;
     private String msg;
     private int location;
 
@@ -62,7 +62,7 @@ public class BSBuy {
                     if (group != null) {
                         ClassManager.manager.getSettings().setVaultEnabled(true);
                         this.permission = group;
-                        perm_is_group = true;
+                        this.isGroup = true;
                     }
                 }
             }
@@ -134,7 +134,7 @@ public class BSBuy {
     }
 
     public boolean isItemFix() {
-        return fix_item;
+        return fixItem;
     }
 
     public BSCondition getCondition() {
@@ -163,14 +163,14 @@ public class BSBuy {
         String permission = getExtraPermission(clicktype);
 
         if (isExtraPermissionGroup(clicktype)) {
-            boolean no_group = true;
+            boolean noGroup = true;
             for (String group : ClassManager.manager.getVaultHandler().getPermission().getPlayerGroups(p)) {
-                no_group = false;
+                noGroup = false;
                 if (group.equalsIgnoreCase(permission)) {
                     return true;
                 }
             }
-            if (no_group && permission.equalsIgnoreCase("default")) {
+            if (noGroup && permission.equalsIgnoreCase("default")) {
                 return true;
             }
             if (msg) {
@@ -200,7 +200,7 @@ public class BSBuy {
     }
 
     public boolean isExtraPermissionGroup(ClickType clicktype) {
-        return perm_is_group;
+        return this.isGroup;
     }
 
 
@@ -210,8 +210,8 @@ public class BSBuy {
     }
 
     public Object readSpecialInformation(Plugin plugin) {
-        if (special_information != null) {
-            return special_information.get(plugin);
+        if (specialInformation != null) {
+            return specialInformation.get(plugin);
         }
         return null;
     }
@@ -259,23 +259,23 @@ public class BSBuy {
 
         //Handle reward and price variables
         if (msg.contains("%price%") || msg.contains("%reward%")) {
-            String rewardMessage = rewardT.isPlayerDependend(this, null) ? null : rewardT.getDisplayReward(p, this, reward, null);
-            String priceMessage = priceT.isPlayerDependend(this, null) ? null : priceT.getDisplayPrice(p, this, price, null);
+            String rewardMessage = rewardT.isPlayerDependent(this, null) ? null : rewardT.getDisplayReward(p, this, reward, null);
+            String priceMessage = priceT.isPlayerDependent(this, null) ? null : priceT.getDisplayPrice(p, this, price, null);
 
 
             if (shop != null) { //Does shop need to be customizable and is not already?
                 if (!shop.isCustomizable()) {
-                    boolean has_pricevariable = (msg.contains("%price%") && (priceT.isPlayerDependend(this, null)));
-                    boolean has_rewardvariable = (msg.contains("%reward%") && (rewardT.isPlayerDependend(this, null)));
-                    if (has_pricevariable || has_rewardvariable) {
+                    boolean hasPrice = (msg.contains("%price%") && (priceT.isPlayerDependent(this, null)));
+                    boolean hasReward = (msg.contains("%reward%") && (rewardT.isPlayerDependent(this, null)));
+                    if (hasPrice || hasReward) {
                         shop.setCustomizable(true);
                         shop.setDisplaying(true);
                     }
                 }
             }
 
-            boolean possibly_customizable = shop == null ? true : shop.isCustomizable();
-            if (possibly_customizable) {
+            boolean possiblyCustomizable = shop == null ? true : shop.isCustomizable();
+            if (possiblyCustomizable) {
                 if (p != null) { //When shop is customizable, the variables needs to be adapted to the player
                     rewardMessage = rewardT.getDisplayReward(p, this, reward, null);
                     priceMessage = priceT.getDisplayPrice(p, this, price, null);
@@ -303,11 +303,11 @@ public class BSBuy {
         //Handle rest
         msg = msg.replace("%shopitemname%", this.name);
 
-        String name = this.name;
+        String name;
         if (shop != null && item != null) {
-            String item_title = ClassManager.manager.getItemStackTranslator().readItemName(item);
-            if (item_title != null) {
-                name = item_title;
+            String title = ClassManager.manager.getItemStackTranslator().readItemName(item);
+            if (title != null) {
+                name = title;
                 msg = msg.replace("%itemname%", name);
             }
 
@@ -327,7 +327,7 @@ public class BSBuy {
         return msg;
     }
 
-    public void updateShop(BSShop shop, ItemStack menuitem, ClassManager manager, boolean add_item) {
+    public void updateShop(BSShop shop, ItemStack menuitem, ClassManager manager, boolean addItem) {
         if (manager.getSettings().getPropertyBoolean(Settings.HIDE_ITEMS_PLAYERS_DONT_HAVE_PERMISSIONS_FOR, this)) {
             if (!shop.isCustomizable()) {
                 if (isExtraPermissionExisting(null)) {
@@ -361,23 +361,23 @@ public class BSBuy {
         if (isItemFix()) { //When all placeholders are replaced the plugin can finally cut the lore and do final stuff
             ClassManager.manager.getItemStackTranslator().translateItemStack(null, null, null, getItem(), null, true);
         }
-        if (add_item) {
+        if (addItem) {
             shop.getItems().add(this);
         }
     }
 
     public void putSpecialInformation(Plugin plugin, Object information) {
         if (plugin != null && information != null) {
-            if (special_information == null) {
-                special_information = new HashMap<>();
+            if (specialInformation == null) {
+                specialInformation = new HashMap<>();
             }
-            special_information.put(plugin, information);
+            specialInformation.put(plugin, information);
         }
     }
 
-    public void setItem(ItemStack item, boolean fix_item) {
+    public void setItem(ItemStack item, boolean fixItem) {
         this.item = item;
-        this.fix_item = fix_item;
+        this.fixItem = fixItem;
     }
 
     public void click(Player p, BSShop shop, BSShopHolder holder, ClickType clicktype, InventoryClickEvent event, BossShop plugin) {

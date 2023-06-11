@@ -16,8 +16,8 @@ import org.bukkit.inventory.ItemStack;
 public class BSRewardTypeEnchantment extends BSRewardType {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
-        if (force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
+        if (forceState) {
             return InputReader.readEnchant(o);
         } else {
             return InputReader.readString(o, false);

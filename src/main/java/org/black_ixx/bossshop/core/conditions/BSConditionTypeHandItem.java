@@ -5,13 +5,10 @@ import org.black_ixx.bossshop.misc.Misc;
 import org.bukkit.entity.Player;
 
 public class BSConditionTypeHandItem extends BSConditionTypeMatch {
-
-
     @Override
-    public boolean matches(Player p, String single_condition) {
-        return Misc.getItemInMainHand(p).getType().equals(InputReader.readMaterial(single_condition));
+    public boolean matches(Player p, String singleCondition) {
+        return Misc.getItemInMainHand(p).getType().equals(InputReader.readMaterial(singleCondition));
     }
-
 
     @Override
     public boolean dependsOnPlayer() {
@@ -23,10 +20,7 @@ public class BSConditionTypeHandItem extends BSConditionTypeMatch {
         return new String[]{"handitem", "itemhand", "mainitem", "iteminhand"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

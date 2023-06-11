@@ -23,9 +23,10 @@ public class BuyItemHandler {
 
     /**
      * Load an item from a config into a shop
+     *
      * @param items_section the config section for the item
-     * @param shop the shop to load it into
-     * @param name the name of the config
+     * @param shop          the shop to load it into
+     * @param name          the name of the config
      * @return shop item
      */
     public BSBuy loadItem(ConfigurationSection items_section, BSShop shop, String name) {
@@ -62,9 +63,10 @@ public class BuyItemHandler {
 
     /**
      * Create item to buy
+     *
      * @param shop name of shop to load from
      * @param name name of item
-     * @param c part of config to get from
+     * @param c    part of config to get from
      * @return shop item
      */
     public BSBuy createBuyItem(BSShop shop, String name, ConfigurationSection c) {
@@ -169,11 +171,11 @@ public class BuyItemHandler {
 
                     a = ClassManager.manager.getStringManager().transform(a, null, shop, null, null);
                     b = ClassManager.manager.getStringManager().transform(b, null, shop, null, null);
-
+                    //TODO: based on where this is called, it is not ideal. type enable should happen before this point.
                     type.enableType();
                     set.addCondition(new BSSingleCondition(type, a, b));
                 }
-                if (!set.isEmpty()) {
+                if (!set.getConditions().isEmpty()) {
                     conditionsset = set;
                 }
             }

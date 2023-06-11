@@ -32,7 +32,6 @@ import org.bukkit.plugin.Plugin;
 public class ClassManager {
 
     public static ClassManager manager;
-    String USER = "%%__USER__%%";
     private ItemStackChecker itemstackChecker;
     private StringManager stringmanager;
 

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class BSConditionTypeRealSecond extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         return Calendar.getInstance().get(Calendar.SECOND);
@@ -23,10 +22,7 @@ public class BSConditionTypeRealSecond extends BSConditionTypeNumber {
         return new String[]{"realsecond", "second"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

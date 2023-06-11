@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.ClickType;
 public class BSRewardTypeShop extends BSRewardType {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
         return InputReader.readString(o, true);
     }
 

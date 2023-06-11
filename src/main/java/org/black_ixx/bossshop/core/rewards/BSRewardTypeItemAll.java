@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 public class BSRewardTypeItemAll extends BSRewardType {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
-        if (force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
+        if (forceState) {
             ItemStack i = InputReader.readItem(o, false);
             i.setAmount(1);
             return i;

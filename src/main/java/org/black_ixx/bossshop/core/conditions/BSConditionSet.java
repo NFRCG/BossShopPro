@@ -7,19 +7,13 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO: maybe rename to List? Set implies unique conditions in the collection.
 public class BSConditionSet implements BSCondition {
-
-    private List<BSCondition> conditions;
-
+    private final List<BSCondition> conditions;
 
     public BSConditionSet() {
         this.conditions = new ArrayList<>();
     }
-
-    public BSConditionSet(List<BSCondition> conditions) {
-        this.conditions = conditions;
-    }
-
 
     public void addCondition(BSCondition c) {
         this.conditions.add(c);
@@ -27,14 +21,8 @@ public class BSConditionSet implements BSCondition {
 
     @Override
     public boolean meetsCondition(BSShopHolder holder, BSBuy buy, Player p) {
-        for (BSCondition c : this.conditions) {
-            if (!c.meetsCondition(holder, buy, p)) {
-                return false;
-            }
-        }
-        return true;
+        return this.conditions.stream().allMatch(c -> c.meetsCondition(holder, buy, p));
     }
-
 
     public boolean isEmpty() {
         return this.conditions.isEmpty();
@@ -43,6 +31,4 @@ public class BSConditionSet implements BSCondition {
     public List<BSCondition> getConditions() {
         return this.conditions;
     }
-
-
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class BSRewardTypePlayerCommandOp extends BSRewardType {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
         return InputReader.readStringList(o);
     }
 

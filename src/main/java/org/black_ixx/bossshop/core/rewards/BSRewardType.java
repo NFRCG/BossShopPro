@@ -9,27 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BSRewardType {
-
-
-    public static BSRewardType
-            BungeeCordCommand,
-            BungeeCordServer,
-            Close,
-            Command,
-            Custom,
-            Enchantment,
-            Exp,
-            Item,
-            ItemAll,
-            Money,
-            Nothing,
-            Permission,
-            PlayerCommand,
-            PlayerCommandOp,
-            Points,
-            Shop,
-            ShopBack,
-            ShopPage;
+    public static BSRewardType BungeeCordCommand;
+    public static BSRewardType BungeeCordServer;
+    public static BSRewardType Close;
+    public static BSRewardType Command;
+    public static BSRewardType Custom;
+    public static BSRewardType Enchantment;
+    public static BSRewardType Exp;
+    public static BSRewardType Item;
+    public static BSRewardType ItemAll;
+    public static BSRewardType Money;
+    public static BSRewardType Nothing;
+    public static BSRewardType Permission;
+    public static BSRewardType PlayerCommand;
+    public static BSRewardType PlayerCommandOp;
+    public static BSRewardType Points;
+    public static BSRewardType Shop;
+    public static BSRewardType ShopPage;
 
     private static List<BSRewardType> types;
     private String[] names = createNames();
@@ -99,8 +95,7 @@ public abstract class BSRewardType {
         names = createNames();
     }
 
-
-    public abstract Object createObject(Object o, boolean force_final_state); //Used to transform the config input into a functional object
+    public abstract Object createObject(Object o, boolean forceState); //Used to transform the config input into a functional object
 
     public abstract boolean validityCheck(String item_name, Object o); //Used to check if the object is valid
 
@@ -119,7 +114,7 @@ public abstract class BSRewardType {
         return true; //Can be overwritten
     }
 
-    public boolean isPlayerDependend(BSBuy buy, ClickType clicktype) {
+    public boolean isPlayerDependent(BSBuy buy, ClickType clicktype) {
         return supportsMultipliers() && ClassManager.manager.getMultiplierHandler().hasMultipliers() || (buy.getRewardType(clicktype) == BSRewardType.ItemAll && ClassManager.manager.getSettings().getItemAllShowFinalReward());
     }
 
@@ -146,8 +141,5 @@ public abstract class BSRewardType {
         return null; //Can be overwritten in case of overriding the price
     }
 
-
     public abstract boolean mightNeedShopUpdate();
-
-
 }

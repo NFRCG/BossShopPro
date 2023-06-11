@@ -6,7 +6,6 @@ import org.black_ixx.bossshop.core.BSShopHolder;
 import org.bukkit.entity.Player;
 
 public class BSConditionTypeLocationY extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         return p.getLocation().getY();
@@ -22,10 +21,7 @@ public class BSConditionTypeLocationY extends BSConditionTypeNumber {
         return new String[]{"locationy", "y"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

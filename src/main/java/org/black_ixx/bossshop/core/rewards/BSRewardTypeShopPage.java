@@ -15,7 +15,7 @@ import org.bukkit.inventory.InventoryView;
 public class BSRewardTypeShopPage extends BSRewardType {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
         return InputReader.readString(o, true);
     }
 
@@ -99,7 +99,7 @@ public class BSRewardTypeShopPage extends BSRewardType {
     }
 
     @Override
-    public boolean isPlayerDependend(BSBuy buy, ClickType clicktype) {
+    public boolean isPlayerDependent(BSBuy buy, ClickType clicktype) {
         return true;
     }
 

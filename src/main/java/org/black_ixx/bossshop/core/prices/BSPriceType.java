@@ -9,22 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BSPriceType {
-
-
-    public static BSPriceType
-            Item,
-            ItemAll,
-            Money,
-            Nothing,
-            Points,
-            Exp;
+    public static BSPriceType Item;
+    public static BSPriceType ItemAll;
+    public static BSPriceType Money;
+    public static BSPriceType Nothing;
+    public static BSPriceType Points;
+    public static BSPriceType Exp;
 
     private static List<BSPriceType> types;
     private String[] names = createNames();
 
     public static void loadTypes() {
         types = new ArrayList<>();
-
         Item = registerType(new BSPriceTypeItem());
         ItemAll = registerType(new BSPriceTypeItemAll());
         Money = registerType(new BSPriceTypeMoney());
@@ -75,9 +71,9 @@ public abstract class BSPriceType {
     }
 
 
-    public abstract Object createObject(Object o, boolean force_final_state); //Used to transform the config input into a functional object
+    public abstract Object createObject(Object o, boolean forceState); //Used to transform the config input into a functional object
 
-    public abstract boolean validityCheck(String item_name, Object o); //Used to check if the object is valid
+    public abstract boolean validityCheck(String itemName, Object o); //Used to check if the object is valid
 
     public abstract void enableType(); //Here you can register classes that the type depends on
 
@@ -92,7 +88,7 @@ public abstract class BSPriceType {
     public abstract boolean mightNeedShopUpdate();
 
 
-    public boolean isPlayerDependend(BSBuy buy, ClickType clicktype) {
+    public boolean isPlayerDependent(BSBuy buy, ClickType clicktype) {
         return supportsMultipliers() && ClassManager.manager.getMultiplierHandler().hasMultipliers();
     }
 

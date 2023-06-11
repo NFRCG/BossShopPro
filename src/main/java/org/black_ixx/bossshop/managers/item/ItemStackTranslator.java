@@ -24,7 +24,7 @@ import java.util.List;
 public class ItemStackTranslator {
 
 
-    public ItemStack translateItemStack(BSBuy buy, BSShop shop, BSShopHolder holder, ItemStack item, Player target, boolean final_version) {
+    public ItemStack translateItemStack(BSBuy buy, BSShop shop, BSShopHolder holder, ItemStack item, Player target, boolean finalVersion) {
         if (item != null) {
             if (item.hasItemMeta()) {
                 ItemMeta meta = item.getItemMeta();
@@ -39,7 +39,7 @@ public class ItemStackTranslator {
                     for (int i = 0; i < lore.size(); i++) {
                         lore.set(i, ClassManager.manager.getStringManager().transform(lore.get(i), buy, shop, holder, target));
                     }
-                    meta.setLore(splitLore(lore, ClassManager.manager.getSettings().getMaxLineLength(), final_version));
+                    meta.setLore(splitLore(lore, ClassManager.manager.getSettings().getMaxLineLength(), finalVersion));
                 }
 
 
@@ -85,8 +85,8 @@ public class ItemStackTranslator {
         }
     }
 
-    private List<String> splitLore(List<String> lore, int max_line_length, boolean final_version) {
-        if (max_line_length > 0 && final_version) {
+    private List<String> splitLore(List<String> lore, int maxLength, boolean finalVersion) {
+        if (maxLength > 0 && finalVersion) {
             List<String> goal = new ArrayList<>();
             for (String line : lore) {
 
@@ -99,10 +99,10 @@ public class ItemStackTranslator {
                         continue;
                     }
                     String next = current + " " + word;
-                    if (ChatColor.stripColor(next).length() > max_line_length) {
+                    if (ChatColor.stripColor(next).length() > maxLength) {
                         goal.add(current);
-                        String last_colors = current == null ? "" : ChatColor.getLastColors(current);
-                        current = last_colors + word;
+                        String colors = current == null ? "" : ChatColor.getLastColors(current);
+                        current = colors + word;
                     } else {
                         current = next;
                     }
@@ -209,26 +209,26 @@ public class ItemStackTranslator {
 
     public void copyTexts(ItemStack receiver, ItemStack source) {
         if (source.hasItemMeta()) {
-            ItemMeta meta_source = source.getItemMeta();
-            ItemMeta meta_receiver = receiver.getItemMeta();
+            ItemMeta metaSource = source.getItemMeta();
+            ItemMeta metaReceiver = receiver.getItemMeta();
 
-            if (meta_source.hasDisplayName()) {
-                meta_receiver.setDisplayName(meta_source.getDisplayName());
+            if (metaSource.hasDisplayName()) {
+                metaReceiver.setDisplayName(metaSource.getDisplayName());
             }
-            if (meta_source.hasLore()) {
-                meta_receiver.setLore(meta_source.getLore());
+            if (metaSource.hasLore()) {
+                metaReceiver.setLore(metaSource.getLore());
             }
 
-            if (meta_source instanceof SkullMeta && meta_receiver instanceof SkullMeta) {
-                SkullMeta sm_source = (SkullMeta) meta_source;
-                SkullMeta sm_receiver = (SkullMeta) meta_receiver;
+            if (metaSource instanceof SkullMeta && metaReceiver instanceof SkullMeta) {
+                SkullMeta skullSource = (SkullMeta) metaSource;
+                SkullMeta skullReceiver = (SkullMeta) metaReceiver;
 
-                if (sm_source.hasOwner()) {
-                    sm_receiver.setOwner(sm_source.getOwner());
+                if (skullSource.hasOwner()) {
+                    skullReceiver.setOwner(skullSource.getOwner());
                 }
             }
 
-            receiver.setItemMeta(meta_receiver);
+            receiver.setItemMeta(metaReceiver);
         }
     }
 

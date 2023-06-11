@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class BSConditionTypeRealHour extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -23,10 +22,7 @@ public class BSConditionTypeRealHour extends BSConditionTypeNumber {
         return new String[]{"realhour", "hour"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

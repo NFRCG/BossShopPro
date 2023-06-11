@@ -7,13 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
 public abstract class BSPriceTypeNumber extends BSPriceType {
-
-
-    public abstract boolean isIntegerValue();
-
     @Override
-    public boolean isPlayerDependend(BSBuy buy, ClickType clicktype) {
-        return super.isPlayerDependend(buy, clicktype) || (buy.getRewardType(clicktype) == BSRewardType.ItemAll && ClassManager.manager.getSettings().getItemAllShowFinalReward());
+    public boolean isPlayerDependent(BSBuy buy, ClickType clicktype) {
+        return super.isPlayerDependent(buy, clicktype) || (buy.getRewardType(clicktype) == BSRewardType.ItemAll && ClassManager.manager.getSettings().getItemAllShowFinalReward());
     }
 
     @Override
@@ -31,12 +27,11 @@ public abstract class BSPriceTypeNumber extends BSPriceType {
         return hasPrice(p, buy, price, clickType, 1, messageOnFailure);
     }
 
-
     public abstract String takePrice(Player p, BSBuy buy, Object price, ClickType clickType, int multiplier);
 
     public abstract boolean hasPrice(Player p, BSBuy buy, Object price, ClickType clickType, int multiplier, boolean messageOnFailure);
 
     public abstract String getDisplayBalance(Player p, BSBuy buy, Object price, ClickType clickType);
 
-
+    public abstract boolean isIntegerValue();
 }

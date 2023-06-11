@@ -22,8 +22,10 @@ public class BSCreateShopItemEvent extends BSEvent {
     private final ConfigurationSection section;
     private final BSRewardType rewardT;
     private final BSPriceType priceT;
-    private final Object reward, price;
-    private final String msg, permission;
+    private final Object reward;
+    private final Object price;
+    private final String msg;
+    private final String permission;
     private final int inventorylocation;
     private final BSCondition condition;
     private final BSInputType inputtype;

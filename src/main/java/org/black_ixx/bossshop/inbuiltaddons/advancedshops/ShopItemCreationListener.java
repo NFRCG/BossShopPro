@@ -113,13 +113,13 @@ public class ShopItemCreationListener implements Listener {
             for (ClickType clicktype : ClickType.values()) {
                 String s = clicktype.name().toLowerCase();
                 if (event.getText().contains("%price_" + s + "%")) {
-                    if (event.getShopItem().getPriceType(clicktype).isPlayerDependend(event.getShopItem(), clicktype)) {
+                    if (event.getShopItem().getPriceType(clicktype).isPlayerDependent(event.getShopItem(), clicktype)) {
                         event.approveFeature();
                         return;
                     }
                 }
                 if (event.getText().contains("%reward_" + s + "%")) {
-                    if (event.getShopItem().getRewardType(clicktype).isPlayerDependend(event.getShopItem(), clicktype)) {
+                    if (event.getShopItem().getRewardType(clicktype).isPlayerDependent(event.getShopItem(), clicktype)) {
                         event.approveFeature();
                         return;
                     }

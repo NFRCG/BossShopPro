@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class BSConditionTypeRealMonth extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         //TODO: ???
@@ -40,10 +39,7 @@ public class BSConditionTypeRealMonth extends BSConditionTypeNumber {
         return new String[]{"realmonth", "month"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

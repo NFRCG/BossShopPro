@@ -11,15 +11,15 @@ import org.bukkit.event.inventory.ClickType;
 public class BSPriceTypeMoney extends BSPriceTypeNumber {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
         return InputReader.getDouble(o, -1);
     }
 
-    public boolean validityCheck(String item_name, Object o) {
+    public boolean validityCheck(String itemName, Object o) {
         if ((Double) o != -1) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The price object needs to be a valid number. Example: '4.0' or '10'.");
+        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + itemName + "! The price object needs to be a valid number. Example: '4.0' or '10'.");
         return false;
     }
 

@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.ClickType;
 public class BSRewardTypeCustom extends BSRewardType {
 
 
-    public Object createObject(Object o, boolean force_final_state) {
+    public Object createObject(Object o, boolean forceState) {
         return o; //Because nothing is known about the custom reward type
     }
 

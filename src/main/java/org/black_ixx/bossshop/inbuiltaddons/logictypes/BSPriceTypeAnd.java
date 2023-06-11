@@ -13,8 +13,8 @@ import java.util.List;
 public class BSPriceTypeAnd extends BSPriceType {
 
     @Override
-    public Object createObject(Object o, boolean force_final_state) {
-        List<BSPricePart> parts = new ArrayList<BSPricePart>();
+    public Object createObject(Object o, boolean forceState) {
+        List<BSPricePart> parts = new ArrayList<>();
 
         ConfigurationSection prices = (ConfigurationSection) o;
         for (int i = 1; prices.contains("PriceType" + i); i++) {

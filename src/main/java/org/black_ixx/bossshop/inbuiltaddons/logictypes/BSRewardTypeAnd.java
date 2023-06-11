@@ -13,8 +13,8 @@ import java.util.List;
 public class BSRewardTypeAnd extends BSRewardType {
 
     @Override
-    public Object createObject(Object o, boolean force_final_state) {
-        List<BSRewardPart> rewardparts = new ArrayList<BSRewardPart>();
+    public Object createObject(Object o, boolean forceState) {
+        List<BSRewardPart> rewardparts = new ArrayList<>();
 
         ConfigurationSection rewards = (ConfigurationSection) o;
         for (int i = 1; rewards.contains("RewardType" + i); i++) {

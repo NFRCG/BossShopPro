@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class BSConditionTypeRealYear extends BSConditionTypeNumber {
-
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         return Calendar.getInstance().get(Calendar.YEAR);
@@ -23,10 +22,7 @@ public class BSConditionTypeRealYear extends BSConditionTypeNumber {
         return new String[]{"realyear", "year"};
     }
 
-
     @Override
     public void enableType() {
     }
-
-
 }

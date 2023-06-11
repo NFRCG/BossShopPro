@@ -98,8 +98,8 @@ public abstract class BSConditionType {
     }
 
     public boolean isType(String s) {
-        if (names != null) {
-            for (String name : names) {
+        if (this.names != null) {
+            for (String name : this.names) {
                 if (name.equalsIgnoreCase(s)) {
                     return true;
                 }
@@ -109,7 +109,7 @@ public abstract class BSConditionType {
     }
 
     public String[] getNames() {
-        return names;
+        return this.names;
     }
 
     public void register() {
@@ -117,7 +117,7 @@ public abstract class BSConditionType {
     }
 
     public String name() {
-        return names[0].toUpperCase();
+        return this.names[0].toUpperCase();
     }
 
     public abstract void enableType(); //Here you can register classes that the type depends on

@@ -13,7 +13,7 @@ public class BSConditionSet implements BSCondition {
 
 
     public BSConditionSet() {
-        conditions = new ArrayList<>();
+        this.conditions = new ArrayList<>();
     }
 
     public BSConditionSet(List<BSCondition> conditions) {
@@ -22,12 +22,12 @@ public class BSConditionSet implements BSCondition {
 
 
     public void addCondition(BSCondition c) {
-        conditions.add(c);
+        this.conditions.add(c);
     }
 
     @Override
     public boolean meetsCondition(BSShopHolder holder, BSBuy buy, Player p) {
-        for (BSCondition c : conditions) {
+        for (BSCondition c : this.conditions) {
             if (!c.meetsCondition(holder, buy, p)) {
                 return false;
             }
@@ -37,11 +37,11 @@ public class BSConditionSet implements BSCondition {
 
 
     public boolean isEmpty() {
-        return conditions.isEmpty();
+        return this.conditions.isEmpty();
     }
 
     public List<BSCondition> getConditions() {
-        return conditions;
+        return this.conditions;
     }
 
 

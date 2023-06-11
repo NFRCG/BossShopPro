@@ -11,25 +11,17 @@ public class BSConditionTypeRealWeekDay extends BSConditionTypeNumber {
     @Override
     public double getNumber(BSBuy shopitem, BSShopHolder holder, Player p) {
         int weekday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-
-        switch (weekday) {
-            case Calendar.MONDAY:
-                return 1;
-            case Calendar.TUESDAY:
-                return 2;
-            case Calendar.WEDNESDAY:
-                return 3;
-            case Calendar.THURSDAY:
-                return 4;
-            case Calendar.FRIDAY:
-                return 5;
-            case Calendar.SATURDAY:
-                return 6;
-            case Calendar.SUNDAY:
-                return 7;
-        }
-
-        return 0;
+        //TODO: ???
+        return switch (weekday) {
+            case Calendar.MONDAY -> 1;
+            case Calendar.TUESDAY -> 2;
+            case Calendar.WEDNESDAY -> 3;
+            case Calendar.THURSDAY -> 4;
+            case Calendar.FRIDAY -> 5;
+            case Calendar.SATURDAY -> 6;
+            case Calendar.SUNDAY -> 7;
+            default -> 0;
+        };
     }
 
     @Override

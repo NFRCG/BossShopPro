@@ -21,14 +21,14 @@ public class BSAddonConfig implements BSAddonStorage {
 
     public BSAddonConfig(Plugin plugin, String file_name) {
         this.plugin = plugin;
-        file = new File(ClassManager.manager.getPlugin().getDataFolder().getAbsolutePath() + "/addons/" + plugin.getName() + "/" + file_name + ".yml");
-        config = YamlConfiguration.loadConfiguration(file);
+        this.file = new File(ClassManager.manager.getPlugin().getDataFolder().getAbsolutePath() + "/addons/" + plugin.getName() + "/" + file_name + ".yml");
+        this.config = YamlConfiguration.loadConfiguration(file);
     }
 
     public BSAddonConfig(Plugin plugin, File file) {
         this.plugin = plugin;
         this.file = file;
-        config = YamlConfiguration.loadConfiguration(file);
+        this.config = YamlConfiguration.loadConfiguration(file);
     }
 
     /**
@@ -36,20 +36,20 @@ public class BSAddonConfig implements BSAddonStorage {
      * @return saved or not
      */
     public boolean save() {
-        if (isSaving)
+        if (this.isSaving)
             return false;
 
-        isSaving = true;
+        this.isSaving = true;
 
         try {
-            config.save(file);
+            this.config.save(this.file);
         } catch (IOException e1) {
-            plugin.getLogger().warning("File I/O Exception on saving " + file.getName());
+            this.plugin.getLogger().warning("File I/O Exception on saving " + file.getName());
             e1.printStackTrace();
             return false;
         }
 
-        isSaving = false;
+        this.isSaving = false;
         return true;
     }
 
@@ -57,14 +57,7 @@ public class BSAddonConfig implements BSAddonStorage {
      * Save the addon config async
      */
     public void saveAsync() {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-
-            @Override
-            public void run() {
-                save();
-            }
-
-        });
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, this::save);
     }
 
     /**
@@ -105,7 +98,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public void set(String path, Object value) {
-        config.set(path, value);
+        this.config.set(path, value);
     }
 
     /**
@@ -116,7 +109,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public String getString(String path, String def) {
-        return config.getString(path, def);
+        return this.config.getString(path, def);
     }
 
     /**
@@ -127,7 +120,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public int getInt(String path, int def) {
-        return config.getInt(path, def);
+        return this.config.getInt(path, def);
     }
 
     /**
@@ -138,7 +131,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public double getDouble(String path, double def) {
-        return config.getDouble(path, def);
+        return this.config.getDouble(path, def);
     }
 
     /**
@@ -149,7 +142,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public boolean getBoolean(String path, boolean def) {
-        return config.getBoolean(path, def);
+        return this.config.getBoolean(path, def);
     }
 
     /**
@@ -159,7 +152,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public List<String> getStringList(String path) {
-        return config.getStringList(path);
+        return this.config.getStringList(path);
     }
 
     /**
@@ -168,8 +161,8 @@ public class BSAddonConfig implements BSAddonStorage {
      * @param value value
      */
     public void addDefault(String path, Object value) {
-        if (!config.contains(path)) {
-            config.set(path, value);
+        if (!this.config.contains(path)) {
+            this.config.set(path, value);
         }
     }
 
@@ -180,7 +173,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public boolean containsPath(String key) {
-        return config.contains(key);
+        return this.config.contains(key);
     }
 
     /**
@@ -191,7 +184,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public Set<String> listKeys(String section, boolean deep) {
-        ConfigurationSection s = config;
+        ConfigurationSection s = this.config;
         if (section != null) {
             s = s.getConfigurationSection(section);
         }
@@ -207,7 +200,7 @@ public class BSAddonConfig implements BSAddonStorage {
      */
     @Override
     public void deleteAll(String section) {
-        ConfigurationSection s = config;
+        ConfigurationSection s = this.config;
         if (section != null) {
             s = s.getConfigurationSection(section);
         }
@@ -215,7 +208,7 @@ public class BSAddonConfig implements BSAddonStorage {
             for (String key : s.getKeys(true)) {
                 s.set(key, null);
             }
-            config.set(s.getCurrentPath(), null);
+            this.config.set(s.getCurrentPath(), null);
         }
     }
 
@@ -230,10 +223,10 @@ public class BSAddonConfig implements BSAddonStorage {
             BSAddonConfig c = (BSAddonConfig) source;
             try {
                 source.save();
-                Files.copy(c.getFile(), file);
+                Files.copy(c.getFile(), this.file);
                 reload();
             } catch (IOException e) {
-                ClassManager.manager.getBugFinder().warn("Unable to copy storage file from '" + c.getFile().getPath() + "' to '" + file.getPath() + "'.");
+                ClassManager.manager.getBugFinder().warn("Unable to copy storage file from '" + c.getFile().getPath() + "' to '" + this.file.getPath() + "'.");
                 return false;
             }
             return true;

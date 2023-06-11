@@ -1,3 +1,5 @@
+The goal of this project is to create an opinionated, modern fork/rewrite of BSP. Original description below.
+
 # BossShopPro
 
 BossShopPro is one of the most player-friendly and multifunctional GUI plugins ever! Say goodbye to all the annoying command- or signshops!

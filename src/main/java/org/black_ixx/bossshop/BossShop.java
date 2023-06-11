@@ -18,9 +18,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BossShop extends JavaPlugin {
-
-    public final static String NAME = "BossShopPro";
-    String USER = "%%__USER__%%";
     private ClassManager manager;
     private InventoryListener il;
 
@@ -30,7 +27,7 @@ public class BossShop extends JavaPlugin {
     private BossShopAPI api;
 
     public static void log(String s) {
-        Bukkit.getLogger().info("[" + NAME + "] " + s);
+        Bukkit.getLogger().info("[" + "BossShopPro" + "] " + s);
     }
 
     public static void debug(String s) {
@@ -38,8 +35,6 @@ public class BossShop extends JavaPlugin {
             log(s);
         }
     }
-
-    /////////////////////////////////////////////////
 
     @Override
     public void onEnable() {
@@ -58,9 +53,6 @@ public class BossShop extends JavaPlugin {
         if (getCommand("shop") != null) {
             getCommand("shop").setExecutor(commander);
         }
-
-
-        ////////////////<- Listeners
 
         il = new InventoryListener(this);
         getServer().getPluginManager().registerEvents(il, this);

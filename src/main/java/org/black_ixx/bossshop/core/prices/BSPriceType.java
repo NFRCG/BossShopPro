@@ -52,8 +52,8 @@ public abstract class BSPriceType {
     }
 
     public boolean isType(String s) {
-        if (names != null) {
-            for (String name : names) {
+        if (this.names != null) {
+            for (String name : this.names) {
                 if (name.equalsIgnoreCase(s)) {
                     return true;
                 }
@@ -67,11 +67,11 @@ public abstract class BSPriceType {
     }
 
     public String name() {
-        return names[0].toUpperCase();
+        return this.names[0].toUpperCase();
     }
 
     public void updateNames() {
-        names = createNames();
+        this.names = createNames();
     }
 
 

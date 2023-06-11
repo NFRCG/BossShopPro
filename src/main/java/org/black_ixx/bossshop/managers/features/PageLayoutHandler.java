@@ -33,7 +33,7 @@ public class PageLayoutHandler {
             setup(config);
 
         } catch (InvalidConfigurationException e) {
-            plugin.getClassManager().getBugFinder().severe("Unable to load '/plugins/" + BossShop.NAME + "/pagelayout.yml'. Reason: " + e.getMessage());
+            plugin.getClassManager().getBugFinder().severe("Unable to load '/plugins/" + "BossShopPro" + "/pagelayout.yml'. Reason: " + e.getMessage());
         }
     }
 

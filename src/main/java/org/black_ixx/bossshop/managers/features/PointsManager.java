@@ -24,7 +24,7 @@ public class PointsManager {
 
         if (p != PointsPlugin.NONE) {
             if (Bukkit.getPluginManager().getPlugin(p.getPluginName()) == null) {
-                ClassManager.manager.getBugFinder().severe("You defined " + p.getPluginName() + " as Points Plugin... BUT IT WAS NOT FOUND?! Please install it or use an alternative like PlayerPoints (http://dev.bukkit.org/server-mods/playerpoints/). If you want " + BossShop.NAME + " to auto-detect your Points plugin simply set 'PointsPlugin: auto-detect'.");
+                ClassManager.manager.getBugFinder().severe("You defined " + p.getPluginName() + " as Points Plugin... BUT IT WAS NOT FOUND?! Please install it or use an alternative like PlayerPoints (http://dev.bukkit.org/server-mods/playerpoints/). If you want " + "BossShopPro" + " to auto-detect your Points plugin simply set 'PointsPlugin: auto-detect'.");
                 this.pa = new BSPointsPluginFailed();
                 return;
             }

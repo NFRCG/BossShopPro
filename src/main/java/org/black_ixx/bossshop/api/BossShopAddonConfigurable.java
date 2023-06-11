@@ -2,28 +2,29 @@ package org.black_ixx.bossshop.api;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public abstract class BossShopAddonConfigurable extends BossShopAddon {
-
-
     private BSAddonConfig config;
-
 
     /**
      * Enables the config for the addon
      */
+    @Override
     protected void enable() {
-        config = new BSAddonConfig(this, "config");
+        this.config = new BSAddonConfig(this, "config");
         super.enable();
     }
 
     /**
      * Disables the addon for the config
      */
+    @Override
     protected void disable() {
         super.disable();
-        if (saveConfigOnDisable()) {
-            config.save();
+        if (this.saveConfigOnDisable()) {
+            this.config.save();
         }
     }
 
@@ -31,8 +32,9 @@ public abstract class BossShopAddonConfigurable extends BossShopAddon {
      * Reloads thje config for an addon
      * @param sender the execute of the command
      */
+    @Override
     public void reload(CommandSender sender) {
-        config.reload();
+        this.config.reload();
         super.reload(sender);
     }
 
@@ -42,8 +44,8 @@ public abstract class BossShopAddonConfigurable extends BossShopAddon {
      * @return config for addon
      */
     @Override
-    public FileConfiguration getConfig() {
-        return config.getConfig();
+    public @NotNull FileConfiguration getConfig() {
+        return this.config.getConfig();
     }
 
     /**
@@ -51,7 +53,7 @@ public abstract class BossShopAddonConfigurable extends BossShopAddon {
      * @return config for addon
      */
     public BSAddonConfig getAddonConfig() {
-        return config;
+        return this.config;
     }
 
     /**
@@ -59,7 +61,7 @@ public abstract class BossShopAddonConfigurable extends BossShopAddon {
      */
     @Override
     public void reloadConfig() {
-        config.reload();
+        this.config.reload();
     }
 
     /**
@@ -67,7 +69,7 @@ public abstract class BossShopAddonConfigurable extends BossShopAddon {
      */
     @Override
     public void saveConfig() {
-        config.save();
+        this.config.save();
     }
 
     /**

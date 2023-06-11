@@ -48,7 +48,7 @@ public class BugFinder {
         try {
             getConfig().save(file);
         } catch (IOException e) {
-            Bukkit.getLogger().severe("[" + BossShop.NAME + "] Could not save BugFinder config to " + file);
+            Bukkit.getLogger().severe("[" + "BossShopPro" + "] Could not save BugFinder config to " + file);
         }
     }
 
@@ -64,12 +64,12 @@ public class BugFinder {
 
     public void warn(String message) {
         addMessage(message);
-        Bukkit.getLogger().warning("[" + BossShop.NAME + "] " + message);
+        Bukkit.getLogger().warning("[" + "BossShopPro" + "] " + message);
     }
 
     public void severe(String message) {
         addMessage(message);
-        Bukkit.getLogger().severe("[" + BossShop.NAME + "] " + message);
+        Bukkit.getLogger().severe("[" + "BossShopPro" + "] " + message);
     }
 
 

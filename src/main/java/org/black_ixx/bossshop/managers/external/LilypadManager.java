@@ -15,7 +15,7 @@ public class LilypadManager {
     public LilypadManager(BossShop plugin) {
 
         if (plugin.getServer().getPluginManager().getPlugin("LilyPad-Connect") == null) {
-            ClassManager.manager.getBugFinder().warn("LilyPad-Connect was not found... You need it if you want " + BossShop.NAME + " to work with LilyPad. Get it here: http://ci.lilypadmc.org/job/Bukkit-Connect/");
+            ClassManager.manager.getBugFinder().warn("LilyPad-Connect was not found... You need it if you want " + "BossShopPro" + " to work with LilyPad. Get it here: http://ci.lilypadmc.org/job/Bukkit-Connect/");
             return;
         }
 
@@ -24,7 +24,7 @@ public class LilypadManager {
 
     private boolean canConnect() {
         if (connect == null) {
-            ClassManager.manager.getBugFinder().warn("LilyPad-Connect was not found... You need it if you want " + BossShop.NAME + " to work with LilyPad. Get it here: http://ci.lilypadmc.org/job/Bukkit-Connect/");
+            ClassManager.manager.getBugFinder().warn("LilyPad-Connect was not found... You need it if you want " + "BossShopPro" + " to work with LilyPad. Get it here: http://ci.lilypadmc.org/job/Bukkit-Connect/");
             return false;
         }
         return true;

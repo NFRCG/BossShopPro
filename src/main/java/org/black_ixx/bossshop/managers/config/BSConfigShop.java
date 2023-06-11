@@ -60,8 +60,8 @@ public class BSConfigShop extends BSShop {
             ItemStack i = new ItemStack(Material.WHITE_WOOL, 1);
             ItemMeta m = i.getItemMeta();
             m.setDisplayName(ChatColor.RED + "Your Config File contains mistakes! (" + ymlName + ")");
-            List<String> lore = new ArrayList<String>();
-            lore.add(ChatColor.YELLOW + "For more information check /plugins/" + BossShop.NAME + "/BugFinder.yml out!");
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.YELLOW + "For more information check /plugins/" + "BossShopPro" + "/BugFinder.yml out!");
             m.setLore(lore);
             i.setItemMeta(m);
             addShopItem(new BSBuy(BSRewardType.Command, BSPriceType.Nothing, "tell %player% the config file (" + ymlName + ") contains mistakes...", null, "", 0, "", name), i, ClassManager.manager);
@@ -152,11 +152,11 @@ public class BSConfigShop extends BSShop {
         if (section.getConfigurationSection("shop") == null && section.getConfigurationSection("itemshop") == null) {
             section.createSection("shop");
 
-            List<String> menuItem = new ArrayList<String>();
+            List<String> menuItem = new ArrayList<>();
             menuItem.add("type:STONE");
             menuItem.add("amount:1");
             menuItem.add("name:&8Example");
-            List<String> cmd = new ArrayList<String>();
+            List<String> cmd = new ArrayList<>();
             cmd.add("tell %name% Example");
             addDefault("Example", "command", "money", cmd, 5000, menuItem, "", 1, "");
             config.options().copyDefaults(true);

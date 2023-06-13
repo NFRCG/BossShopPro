@@ -11,36 +11,54 @@ import java.util.Map;
 
 public class Settings {
 
-    public final static int
-            HIDE_ITEMS_PLAYERS_DONT_HAVE_PERMISSIONS_FOR = 0,
-            ALLOW_UNSAFE_ENCHANTMENTS = 1,
-            ALLOW_SELLING_GREATER_ENCHANTS = 2,
-            CLOSE_SHOP_AFTER_PURCHASE = 3,
-            CLICK_DELAY = 4,
-            SOUND_SHOPITEM_PURCHASE = 5, //Actions with a price that is not nothing
-            SOUND_SHOPITEM_CLICK = 6, //Actions with pricetype nothing
-            SOUND_SHOPITEM_NOPERMISSION = 7,
-            SOUND_SHOPITEM_NOTENOUGHMONEY = 8,
-            SOUND_SHOP_OPEN = 9,
-            SOUND_SHOP_CLOSE = 10,
-            SOUND_SHOP_CHANGE_PAGE = 11,
-            SOUND_SHOP_CHANGE_SHOP = 12;
+    public static final int HIDE_ITEMS_PLAYERS_DONT_HAVE_PERMISSIONS_FOR = 0;
+    public static final int ALLOW_UNSAFE_ENCHANTMENTS = 1;
+    public static final int ALLOW_SELLING_GREATER_ENCHANTS = 2;
+    public static final int CLOSE_SHOP_AFTER_PURCHASE = 3;
+    public static final int CLICK_DELAY = 4;
+    public static final int SOUND_SHOPITEM_PURCHASE = 5; //Actions with a price that is not nothing
+    public static final int SOUND_SHOPITEM_CLICK = 6; //Actions with pricetype nothing
+    public static final int SOUND_SHOPITEM_NOPERMISSION = 7;
+    public static final int SOUND_SHOPITEM_NOTENOUGHMONEY = 8;
+    public static final int SOUND_SHOP_OPEN = 9;
+    public static final int SOUND_SHOP_CLOSE = 10;
+    public static final int SOUND_SHOP_CHANGE_PAGE = 11;
+    public static final int SOUND_SHOP_CHANGE_SHOP = 12;
 
-    private boolean signs, money, points, vault, permissions, bungeecord, pointsdisplay, moneydisplay, serverpinging, load_subfolders, transactionslog, check_stacksize, exp_use_level,
-            shopcommands, serverpinging_fixconnector, itemall_show_final_reward, inventory_full_drop_items, purchase_async, allow_selling_damaged_items;
+    private boolean signs;
+    private boolean money;
+    private boolean points;
+    private boolean vault;
+    private boolean permissions;
+    private boolean bungeecord;
+    private boolean pointsdisplay;
+    private boolean moneydisplay;
+    private boolean load_subfolders;
+    private boolean transactionslog;
+    private boolean check_stacksize;
+    private boolean exp_use_level;
+    private boolean shopcommands;
+    private boolean itemall_show_final_reward;
+    private boolean inventory_full_drop_items;
+    private boolean purchase_async;
+    private boolean allow_selling_damaged_items;
     private boolean metrics = true;
-    private int serverpinging_delay, serverpinging_waittime, serverpinging_timeout, autorefresh_delay, max_line_length, number_grouping_size, input_timeout;
+    private int autorefresh_delay;
+    private int max_line_length;
+    private int number_grouping_size;
+    private int input_timeout;
     private String mainshop, number_locale;
     private PointsPlugin pointsplugin;
     private List<String> money_formatting, points_formatting;
 
     private boolean debug;
 
-    private Map<Integer, SettingsProperty> properties = new LinkedHashMap<Integer, SettingsProperty>();
+    private Map<Integer, SettingsProperty> properties = new LinkedHashMap<>();
 
 
     /**
      * Load configuration settings from config
+     *
      * @param config config to load from
      */
     public void loadConfig(ConfigurationSection config) {
@@ -62,6 +80,7 @@ public class Settings {
 
     /**
      * Update a config
+     *
      * @param o config
      */
     public void update(Object o) {
@@ -82,6 +101,7 @@ public class Settings {
 
     /**
      * Get property
+     *
      * @param id id of property
      * @return property
      */
@@ -91,7 +111,8 @@ public class Settings {
 
     /**
      * Get property boolean
-     * @param id id of property
+     *
+     * @param id    id of property
      * @param input object to get
      * @return boolean
      */
@@ -105,9 +126,10 @@ public class Settings {
 
     /**
      * Get property int
-     * @param id id of property
+     *
+     * @param id    id of property
      * @param input object to get
-     * @param def default
+     * @param def   default
      * @return int
      */
     public int getPropertyInt(int id, Object input, int def) {
@@ -120,9 +142,10 @@ public class Settings {
 
     /**
      * Get property string
-     * @param id id of property
+     *
+     * @param id    id of property
      * @param input object to get
-     * @param def default
+     * @param def   default
      * @return string
      */
     public String getPropertyString(int id, Object input, String def) {
@@ -135,14 +158,6 @@ public class Settings {
 
     public void setPurchaseAsyncEnabled(boolean b) {
         purchase_async = b;
-    }
-
-    public void setServerPingingEnabled(boolean b) {
-        serverpinging = b;
-    }
-
-    public void setServerPingingWaitTime(int i) {
-        serverpinging_waittime = i;
     }
 
     public boolean getMetricsEnabled() {
@@ -270,41 +285,6 @@ public class Settings {
 
     public void setTransactionLogEnabled(boolean b) {
         transactionslog = b;
-    }
-
-    public boolean getServerPingingEnabled(boolean check_if_loaded_already) {
-        if (check_if_loaded_already) {
-            return ClassManager.manager.getServerPingingManager() != null;
-        }
-        return serverpinging;
-    }
-
-    public int getServerPingingSpeed() {
-        return serverpinging_delay;
-    }
-
-    public void setServerPingingSpeed(int i) {
-        serverpinging_delay = i;
-    }
-
-    public int getServerPingingWaittime() {
-        return serverpinging_waittime;
-    }
-
-    public int getServerPingingTimeout() {
-        return serverpinging_timeout;
-    }
-
-    public void setServerPingingTimeout(int i) {
-        serverpinging_timeout = i;
-    }
-
-    public boolean getServerPingingFixConnector() {
-        return serverpinging_fixconnector;
-    }
-
-    public void setServerPingingFixConnector(boolean b) {
-        serverpinging_fixconnector = b;
     }
 
     public boolean getInventoryFullDropItems() {

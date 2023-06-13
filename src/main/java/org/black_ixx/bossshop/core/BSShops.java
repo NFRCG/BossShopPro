@@ -7,11 +7,12 @@ import org.black_ixx.bossshop.managers.config.FileHandler;
 import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryView;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BSShops {
 
@@ -20,6 +21,7 @@ public class BSShops {
 
     /////////////////////////////// <- Variables
     private int id = 0;
+
     public BSShops(BossShop plugin, Settings settings) {
         shops = new HashMap<Integer, BSShop>();
         shopsIds = new HashMap<String, Integer>();
@@ -178,11 +180,11 @@ public class BSShops {
         return shops.containsKey(id);
     }
 
-    public HashMap<Integer, BSShop> getShops() {
+    public Map<Integer, BSShop> getShops() {
         return shops;
     }
 
-    public HashMap<String, Integer> getShopIds() {
+    public Map<String, Integer> getShopIds() {
         return shopsIds;
     }
 
@@ -191,27 +193,14 @@ public class BSShops {
         return id;
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////
-
-    public void refreshShops(boolean mode_serverpinging) {
-        for (Player p : Bukkit.getOnlinePlayers()) { //If players have a customizable inventory open it needs an update
-            if (ClassManager.manager.getPlugin().getAPI().isValidShop(p.getOpenInventory())) {
-                Inventory open_inventory = p.getOpenInventory().getTopInventory();
-                BSShopHolder h = (BSShopHolder) open_inventory.getHolder();
-
-                if (h.getShop().isCustomizable()) {
-                    if (!mode_serverpinging) {
-                        if (ClassManager.manager.getSettings().getServerPingingEnabled(true)) {
-                            if (ClassManager.manager.getServerPingingManager().containsServerpinging(h.getShop())) {
-                                continue;
-                            }
-                        }
-                        h.getShop().updateInventory(open_inventory, h, p, ClassManager.manager, h.getPage(), h.getHighestPage(), true);
-                    }
-                }
+    //If players have a customizable inventory open it needs an update
+    public void refreshShops() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            InventoryView view = p.getOpenInventory();
+            if (view.getType() != InventoryType.CRAFTING && ClassManager.manager.getPlugin().getAPI().isValidShop(view)) {
+                BSShopHolder holder = (BSShopHolder) view.getTopInventory().getHolder();
+                holder.getShop().updateInventory(view.getTopInventory(), holder, p, ClassManager.manager, holder.getPage(), holder.getHighestPage(), true);
             }
         }
     }
-
 }

@@ -58,7 +58,7 @@ configurations {
 
 tasks {
     assemble {
-        dependsOn(shadowJar)
+        dependsOn(reobfJar)
     }
 
     test {

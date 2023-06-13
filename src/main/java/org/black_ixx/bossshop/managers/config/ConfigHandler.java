@@ -24,15 +24,10 @@ public class ConfigHandler {
         String main = config.getString("MainShop");
         settings.setMainShop(main.toLowerCase());
         settings.setTransactionLogEnabled(config.getBoolean("EnableTransactionLog"));
-        settings.setServerPingingSpeed((config.getInt("ServerPinging.Delay")));
-        settings.setServerPingingTimeout((config.getInt("ServerPinging.Timeout")));
-        settings.setServerPingingWaitTime((config.getInt("ServerPinging.WaitTimeAfterFail")));
-        settings.setServerPingingFixConnector((config.getBoolean("ServerPinging.FixConnector")));
         settings.setAutoRefreshSpeed((config.getInt("AutoRefreshDelay")));
         settings.setMetricsEnabled((!config.getBoolean("DisableMetrics")));
         settings.setPointsPlugin(findPointsPlugin(config.getString("PointsPlugin")));
         settings.setLoadSubfoldersEnabled(config.getBoolean("SearchSubfoldersForShops"));
-        settings.setServerPingingEnabled(config.getBoolean("ServerPinging.Enabled"));
         settings.setInventoryFullDropItems(config.getBoolean("InventoryFullDropItems"));
         settings.setMaxLineLength(config.getInt("MaxLineLength"));
         settings.setCheckStackSize(config.getBoolean("CheckStackSize"));

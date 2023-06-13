@@ -9,7 +9,6 @@ import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSCheckStringForFeaturesEvent;
 import org.black_ixx.bossshop.events.BSTransformStringEvent;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.serverpinging.ConnectedBuyItem;
 import org.black_ixx.bossshop.misc.MathTools;
 import org.black_ixx.bossshop.misc.Misc;
 import org.bukkit.Bukkit;
@@ -67,9 +66,7 @@ public class StringManager {
 
         s = ChatColor.translateAlternateColorCodes('&', s);
 
-        if (ClassManager.manager.getSettings().getServerPingingEnabled(true)) {
-            s = ClassManager.manager.getServerPingingManager().transform(s);
-        }
+
 
         s = MathTools.transform(s);
 
@@ -187,13 +184,12 @@ public class StringManager {
                 b = true;
             }
 
-            if (buy != null && shop != null && ClassManager.manager.getSettings().getServerPingingEnabled(true)) {
+            if (buy != null && shop != null) {
                 String server_names = StringManipulationLib.figureOutVariable(s, 0, "players", "motd");
                 if (server_names != null) {
                     b = true;
                     if (buy.getItem() != null) {
                         String[] servers = server_names.split(":");
-                        ClassManager.manager.getServerPingingManager().registerShopItem(servers[0].trim(), new ConnectedBuyItem(buy, menu_item));
                     }
                 }
             }

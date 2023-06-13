@@ -22,7 +22,6 @@ import org.black_ixx.bossshop.managers.item.ItemStackChecker;
 import org.black_ixx.bossshop.managers.item.ItemStackCreator;
 import org.black_ixx.bossshop.managers.item.ItemStackTranslator;
 import org.black_ixx.bossshop.managers.misc.StringManager;
-import org.black_ixx.bossshop.managers.serverpinging.ServerPingingManager;
 import org.black_ixx.bossshop.misc.MathTools;
 import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
@@ -53,7 +52,7 @@ public class ClassManager {
     private BungeeCordManager bungeeCordManager;
     private ShopCustomizer customizer;
     private TransactionLog transactionLog;
-    private ServerPingingManager serverPingingManager;
+
     private AutoRefreshHandler autoRefreshHandler;
     private MultiplierHandler multiplierHandler;
     private StorageManager storageManager;
@@ -146,16 +145,10 @@ public class ClassManager {
             transactionLog = new TransactionLog(plugin);
         }
 
-        if (settings.getServerPingingEnabled(false)) {
-            serverPingingManager = new ServerPingingManager(plugin);
-            getServerPingingManager().getServerPingingRunnableHandler().start(settings.getServerPingingSpeed(), plugin, getServerPingingManager());
-            getServerPingingManager().setReadyToTransform(true);
-        }
-
         if (settings.getBungeeCordServerEnabled()) { //Depends on ServerPinging
             bungeeCordManager = new BungeeCordManager();
             Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
-            Bukkit.getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", bungeeCordManager);
+            //Bukkit.getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", bungeeCordManager);
         }
 
         if (settings.getAutoRefreshSpeed() > 0) {
@@ -256,10 +249,6 @@ public class ClassManager {
 
     public TransactionLog getTransactionLog() {
         return transactionLog;
-    }
-
-    public ServerPingingManager getServerPingingManager() {
-        return serverPingingManager;
     }
 
     public MultiplierHandler getMultiplierHandler() {

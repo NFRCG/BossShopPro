@@ -163,11 +163,6 @@ public class BossShop extends JavaPlugin {
             manager.getTransactionLog().saveConfig();
         }
 
-        if (manager.getSettings().getServerPingingEnabled(true)) {
-            manager.getServerPingingManager().getServerPingingRunnableHandler().stop();
-            manager.getServerPingingManager().clear();
-        }
-
         if (manager.getAutoRefreshHandler() != null) {
             manager.getAutoRefreshHandler().stop();
         }

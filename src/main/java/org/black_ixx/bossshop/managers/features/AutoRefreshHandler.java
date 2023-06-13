@@ -22,7 +22,7 @@ public class AutoRefreshHandler {
     }
 
 
-    public class AutoRefreshRunnable extends BukkitRunnable {
+    public static class AutoRefreshRunnable extends BukkitRunnable {
 
         private BossShop plugin;
 
@@ -32,7 +32,7 @@ public class AutoRefreshHandler {
 
         @Override
         public void run() {
-            plugin.getClassManager().getShops().refreshShops(false);
+            plugin.getClassManager().getShops().refreshShops();
         }
     }
 

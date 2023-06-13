@@ -42,7 +42,6 @@ public abstract class BSConditionType {
 
     public static void loadTypes() {
         types = new ArrayList<>();
-        SERVERPINGING = registerType(new BSConditionTypeServerpinging());
         MONEY = registerType(new BSConditionTypeMoney());
         POINTS = registerType(new BSConditionTypePoints());
         GROUP = registerType(new BSConditionTypeGroup());

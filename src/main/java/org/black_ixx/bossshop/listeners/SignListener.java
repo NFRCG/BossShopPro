@@ -12,6 +12,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SignListener implements Listener {
 
@@ -29,7 +30,7 @@ public class SignListener implements Listener {
             return null;
         }
         line = line.toLowerCase();
-        HashMap<Integer, BSShop> set = plugin.getClassManager().getShops().getShops();
+        Map<Integer, BSShop> set = plugin.getClassManager().getShops().getShops();
 
         for (Integer s : set.keySet()) {
 

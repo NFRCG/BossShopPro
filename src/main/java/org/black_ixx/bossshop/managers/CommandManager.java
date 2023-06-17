@@ -161,7 +161,7 @@ public class CommandManager implements CommandExecutor {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
 
-                String shop = ClassManager.manager.getSettings().getMainShop();
+                String shop = ClassManager.manager.getFactory().settings().mainShop();
                 if (args.length != 0) {
                     shop = args[0].toLowerCase();
                 }

@@ -16,25 +16,27 @@ repositories {
     maven("https://repo.worldguard.com.au/repository/maven-public") //TODO: find way to remove
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") //PlaceholderAPI
     maven("https://jitpack.io") //Vault, Jobs
-    maven("https://ci.lilypadmc.org/plugin/repository/project/Client-Connect-API/Build/19/repository/") //LilyPad
     maven("https://nexus.bencodez.com/repository/maven-public/") //VotingPlugin
     maven("https://raw.githubusercontent.com/TeamVK/maven-repository/master/release/") //TokenEnchant
     maven("https://repo.rosewooddev.io/repository/public/") //PlayerPoints
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
-    compileOnly("lilypad.client.connect:api:0.0.1-SNAPSHOT") //LilyPad
+    implementation("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
+    implementation("net.kyori:adventure-serializer-configurate4:4.14.0") {
+        isTransitive = false
+    }
+    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT") //Paper
+    //compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT") //Paper
+    compileOnly("net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT") //Bungeecord
+
     compileOnly("com.bencodez:votingplugin:6.13") //VotingPlugin
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1") //Vault
     compileOnly("me.clip:placeholderapi:2.11.3") //PlaceholderAPI
-    compileOnly("net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT") //Bungeecord
-    //compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT") //Paper
     compileOnly("org.black_ixx:playerpoints:3.2.5") //PlayerPoints
     compileOnly("com.vk2gpz.tokenenchant:TokenEnchantAPI:18.37.1") //TokenEnchant
     compileOnly("com.github.JustEli:Coins:1.10.3") //TODO: new version
     compileOnly("com.yapzhenyie.GadgetsMenu:GadgetsMenu:4.3.32") //GadgetsMenu //TODO: new version
-    compileOnly("de.dustplanet.silkspawners.SilkSpawners:SilkSpawners:5.0.2") //SilkSpawners //TODO: new version
     compileOnly("com.meowj:LangUtils:1.6.1") //LangUtils //TODO: new version
     compileOnly("com.github.Realizedd:TokenManager:3.2.4") {
         isTransitive = false
@@ -88,23 +90,9 @@ tasks {
     shadowJar {
         archiveClassifier.set("")
         minimize()
-//        fun reloc(pkg: String) = relocate(pkg, "org.black_ixx.relocate.$pkg")
-//        reloc("cloud.commandframework")
-//        reloc("com.github")
-//        reloc("com.google.common")
-//        reloc("com.google.inject")
-//        reloc("com.google.errorprone")
-//        reloc("com.google.j2objc")
-//        reloc("com.zaxxer")
-//        reloc("io.leangen")
-//        reloc("javax.annotation")
-//        reloc("javax.inject")
-//        reloc("org.aopalliance")
-//        reloc("org.bstats")
-//        reloc("org.checkerframework")
-//        reloc("org.jdbi")
-//        reloc("org.incendo")
-//        reloc("org.spongepowered")
+        fun reloc(pkg: String) = relocate(pkg, "org.black_ixx.relocate.$pkg")
+        reloc("io.leangen")
+        reloc("org.spongepowered")
         manifest {
             attributes(Pair("Main-Class", "org.black_ixx.bossshop.BossShop"))
         }

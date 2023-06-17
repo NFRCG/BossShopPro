@@ -4,8 +4,8 @@ import com.vk2gpz.tokenenchant.api.TokenEnchantAPI;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.misc.InputReader;
-import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +33,7 @@ public class ItemDataPartEnchantment extends ItemDataPart {
             return item;
         }
 
-        Enchantment e = InputReader.readEnchantment(enchantment);
+        Enchantment e = Enchantment.getByKey(NamespacedKey.minecraft(enchantment.toLowerCase()));
 
         if (e == null && Bukkit.getPluginManager().isPluginEnabled("TokenEnchant")) {
             TokenEnchantAPI te = TokenEnchantAPI.getInstance();
@@ -129,7 +129,7 @@ public class ItemDataPartEnchantment extends ItemDataPart {
                 return false;
             }
         }
-        if (!ClassManager.manager.getSettings().getPropertyBoolean(Settings.ALLOW_SELLING_GREATER_ENCHANTS, buy)) {
+        if (!ClassManager.manager.getFactory().settings().sellItemsWithDifferentEnchants()) {
             for (Enchantment e : ep.keySet()) {
                 if (!es.containsKey(e)) {
                     return false;

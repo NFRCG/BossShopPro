@@ -23,8 +23,9 @@ public class BSRewardTypePoints extends BSRewardTypeNumber {
         return false;
     }
 
+    @Override
     public void enableType() {
-        ClassManager.manager.getSettings().setPointsEnabled(true);
+
     }
 
     @Override

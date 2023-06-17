@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.managers.misc;
 
+import net.kyori.adventure.key.Key;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.misc.Enchant;
-import org.black_ixx.bossshop.misc.MathTools;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -20,7 +20,8 @@ public class InputReader {
 
     /**
      * Get a string from an object
-     * @param o object to check
+     *
+     * @param o         object to check
      * @param lowercase lowercase or not
      * @return string
      */
@@ -37,6 +38,7 @@ public class InputReader {
 
     /**
      * Get a string list from an object
+     *
      * @param o object to check
      * @return string list
      */
@@ -55,6 +57,7 @@ public class InputReader {
 
     /**
      * Get a list of string list from an object
+     *
      * @param o object to check
      * @return list of string list
      */
@@ -78,7 +81,8 @@ public class InputReader {
 
     /**
      * Get list of itemstacks from object
-     * @param o object to check
+     *
+     * @param o            object to check
      * @param finalVersion final version or not
      * @return list of itemstacks
      */
@@ -96,7 +100,8 @@ public class InputReader {
 
     /**
      * Get itemstack from object
-     * @param o object to check
+     *
+     * @param o            object to check
      * @param finalVersion final version or not
      * @return itemstack
      */
@@ -110,6 +115,7 @@ public class InputReader {
 
     /**
      * Get enchant from an object
+     *
      * @param o object to check
      * @return enchant
      */
@@ -129,7 +135,7 @@ public class InputReader {
                     ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + level + "' is not a valid enchantment level.");
                     return null;
                 }
-                e = readEnchantment(name);
+                e = Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
 
 				/* Enchantment seems to somehow not be detected.
 				if(e == null && Bukkit.getPluginManager().isPluginEnabled("TokenEnchant")){
@@ -152,141 +158,33 @@ public class InputReader {
         return null;
     }
 
-
-    /**
-     * Get enchant by name
-     * @param name name of enchant
-     * @return enchant
-     */
-    public static Enchantment readEnchantment(String name) {
-        if (name != null) {
-            return EnchantmentWrapper.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
-        }
-        return null;
-    }
-
-
-    /**
-     * Get boolean from string
-     * @param s string to get from
-     * @param def default value
-     * @return boolean
-     */
-    public static boolean getBoolean(String s, boolean def) {
-        if (s != null) {
-            if (s.equalsIgnoreCase(Boolean.TRUE.toString()) || s.equalsIgnoreCase("yes")) {
-                return true;
-            }
-            if (s.equalsIgnoreCase(Boolean.FALSE.toString()) || s.equalsIgnoreCase("no")) {
-                return false;
-            }
-        }
-        return def;
-    }
-
     /**
      * Get a double from an object
-     * @param o objecct to get from
+     *
+     * @param o         objecct to get from
      * @param exception exception
      * @return double
      */
     public static double getDouble(Object o, double exception) {
-        if (o instanceof String) {
-            String s = (String) o;
-            try {
-                return Double.parseDouble(s);
-            } catch (NumberFormatException e) {
-                return MathTools.calculate(s, exception);
-            }
+        try {
+            return Double.parseDouble(o.toString());
+        } catch (NumberFormatException e) {
+            return exception;
         }
-        if (o instanceof Double) {
-            return (Double) o;
-        }
-        if (o instanceof Integer) {
-            return (Integer) o;
-        }
-        if (o instanceof Long) {
-            return (Long) o;
-        }
-        return exception;
     }
 
     /**
      * Get an int from an object
-     * @param o object to get from
+     *
+     * @param o         object to get from
      * @param exception exception
      * @return int
      */
     public static int getInt(Object o, int exception) {
-        if (o instanceof String) {
-            String s = (String) o;
-            try {
-                return Integer.parseInt(s);
-            } catch (NumberFormatException e) { //String does not represent an integer? Maybe a double value!
-                return (int) getDouble(s, exception);
-            }
+        try {
+            return Integer.parseInt(o.toString());
+        } catch (NumberFormatException e) {
+            return exception;
         }
-        if (o instanceof Integer) {
-            return (Integer) o;
-        }
-        if (o instanceof Double) {
-            double d = (Double) o;
-            return (int) d;
-        }
-        return exception;
     }
-
-    /**
-     * Get timed commands from an object
-     * @param o object to check
-     * @return timed commands
-     */
-    public static HashMap<Integer, String> readTimedCommands(Object o) {
-        List<String> list = readStringList(o);
-        if (list != null) {
-            HashMap<Integer, String> cmds = new HashMap<Integer, String>();
-            for (String s : list) {
-                try {
-                    String[] parts = s.split(":", 2);
-                    String a1 = parts[0].trim();
-                    int i = Integer.parseInt(a1);
-                    String cmd = parts[1].trim();
-                    cmds.put(i, cmd);
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-            return cmds;
-        }
-        return null;
-    }
-
-
-    /**
-     * Read material from string
-     * @param s string to check
-     * @return material
-     */
-    public static Material readMaterial(String s) {
-        Material m = Material.matchMaterial(s, false);
-        if (m == null) {
-            m = Material.matchMaterial(s, true);
-        }
-        return m;
-    }
-
-    /**
-     * Read entity type from string
-     * @param s string to check
-     * @return entity type
-     */
-    public static EntityType readEntityType(String s) {
-        for (EntityType e : EntityType.values()) {
-            if (e.name().replace("_", "").equalsIgnoreCase(s.replace("_", ""))) {
-                return e;
-            }
-        }
-        return null;
-    }
-
 }

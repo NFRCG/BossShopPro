@@ -1,9 +1,10 @@
 package org.black_ixx.bossshop.pointsystem;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BSPointsAPI {
-    private static LinkedHashMap<String, BSPointsPlugin> interfaces = new LinkedHashMap<String, BSPointsPlugin>();
+    private static final Map<String, BSPointsPlugin> interfaces = new LinkedHashMap<>();
 
     /**
      * Register a points plugin

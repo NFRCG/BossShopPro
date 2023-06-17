@@ -35,7 +35,7 @@ public class BSRewardTypeItem extends BSRewardType {
     @SuppressWarnings("unchecked")
     @Override
     public boolean canBuy(Player p, BSBuy buy, boolean message_if_no_success, Object reward, ClickType clickType) {
-        if (!ClassManager.manager.getSettings().getInventoryFullDropItems()) {
+        if (!ClassManager.manager.getFactory().settings().inventoryFullDropItems()) {
             List<ItemStack> items = (List<ItemStack>) reward;
             if (!ClassManager.manager.getItemStackChecker().hasFreeSpace(p, items)) {
                 if (message_if_no_success) {

@@ -39,7 +39,7 @@ public class ItemStackTranslator {
                     for (int i = 0; i < lore.size(); i++) {
                         lore.set(i, ClassManager.manager.getStringManager().transform(lore.get(i), buy, shop, holder, target));
                     }
-                    meta.setLore(splitLore(lore, ClassManager.manager.getSettings().getMaxLineLength(), finalVersion));
+                    meta.setLore(lore);
                 }
 
 
@@ -84,39 +84,6 @@ public class ItemStackTranslator {
             }
         }
     }
-
-    private List<String> splitLore(List<String> lore, int maxLength, boolean finalVersion) {
-        if (maxLength > 0 && finalVersion) {
-            List<String> goal = new ArrayList<>();
-            for (String line : lore) {
-
-                String[] words = line.split(" ");
-                String current = null;
-
-                for (String word : words) {
-                    if (current == null) {
-                        current = word;
-                        continue;
-                    }
-                    String next = current + " " + word;
-                    if (ChatColor.stripColor(next).length() > maxLength) {
-                        goal.add(current);
-                        String colors = current == null ? "" : ChatColor.getLastColors(current);
-                        current = colors + word;
-                    } else {
-                        current = next;
-                    }
-                }
-                goal.add(current);
-
-            }
-
-            return goal;
-        } else {
-            return lore;
-        }
-    }
-
 
     public String getFriendlyText(List<ItemStack> items) {
         if (items != null) {

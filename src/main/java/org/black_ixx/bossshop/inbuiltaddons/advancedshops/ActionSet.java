@@ -3,85 +3,67 @@ package org.black_ixx.bossshop.inbuiltaddons.advancedshops;
 import org.black_ixx.bossshop.core.BSInputType;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
-import org.black_ixx.bossshop.managers.ClassManager;
 
 public class ActionSet {
-
-
-    private BSRewardType rewardT;
-    private BSPriceType priceT;
-
-    private Object reward;
-    private Object price;
-
-    private String msg;
+    private final BSRewardType rewardT;
+    private final BSPriceType priceT;
+    private final Object reward;
+    private final Object price;
+    private final String msg;
+    private final BSInputType inputType;
+    private final String inputText;
+    private final boolean isGroupPerm;
     private String permission;
 
-    private BSInputType inputtype;
-    private String inputtext;
-
-    private boolean perm_is_group;
-
-
-    public ActionSet(BSRewardType rewardType, BSPriceType priceType, Object reward, Object price, String msg, String extrapermission, BSInputType inputtype, String inputtext) {
+    public ActionSet(BSRewardType rewardType, BSPriceType priceType, Object reward, Object price, String msg, String permission, BSInputType inputType, String inputText) {
         this.rewardT = rewardType;
         this.priceT = priceType;
         this.reward = reward;
         this.price = price;
         this.msg = msg;
-        this.inputtype = inputtype;
-        this.inputtext = inputtext;
-
-        if (extrapermission != null && extrapermission != "") {
-            this.permission = extrapermission;
-            if (permission.startsWith("[") && permission.endsWith("]")) {
-                if (permission.length() > 2) {
-                    String group = permission.substring(1, permission.length() - 1);
-                    if (group != null) {
-                        ClassManager.manager.getSettings().setVaultEnabled(true);
-                        this.permission = group;
-                        perm_is_group = true;
-                    }
-                }
-            }
+        this.inputType = inputType;
+        this.inputText = inputText;
+        this.permission = permission;
+        this.isGroupPerm = this.permission.startsWith("[") && this.permission.endsWith("]") && this.permission.length() > 2;
+        if (this.isGroupPerm) {
+            this.permission = this.permission.substring(1, this.permission.length() - 1);
         }
     }
 
-
     public BSRewardType getRewardType() {
-        return rewardT;
+        return this.rewardT;
     }
 
     public BSPriceType getPriceType() {
-        return priceT;
+        return this.priceT;
     }
 
     public Object getReward() {
-        return reward;
+        return this.reward;
     }
 
     public Object getPrice() {
-        return price;
+        return this.price;
     }
 
     public String getMessage() {
-        return msg;
+        return this.msg;
     }
 
     public String getExtraPermission() {
-        return permission;
+        return this.permission;
     }
 
     public boolean isExtraPermissionGroup() {
-        return perm_is_group;
+        return this.isGroupPerm;
     }
 
     public BSInputType getInputType() {
-        return inputtype;
+        return this.inputType;
     }
 
     public String getInputText() {
-        return inputtext;
+        return this.inputText;
     }
 
 }

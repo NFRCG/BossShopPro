@@ -1,39 +1,19 @@
 package org.black_ixx.bossshop.managers.features;
 
 import org.black_ixx.bossshop.BossShop;
+import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class AutoRefreshHandler {
+    private final BukkitTask task;
 
-    private int id = -1;
-
-    public void start(int speed, BossShop plugin) {
-        BukkitTask t = new AutoRefreshRunnable(plugin).runTaskTimer(plugin, speed, speed);
-        id = t.getTaskId();
+    //TODO: ensure task is re-initialized on reload.
+    public AutoRefreshHandler(final BossShop plugin, final long speed) {
+        this.task = Bukkit.getScheduler().runTaskTimer(plugin, () -> ClassManager.manager.getShops().refreshShops(), speed, speed);
     }
 
     public void stop() {
-        if (id == -1) {
-            return;
-        }
-        Bukkit.getScheduler().cancelTask(id);
+        this.task.cancel();
     }
-
-
-    public static class AutoRefreshRunnable extends BukkitRunnable {
-
-        private BossShop plugin;
-
-        public AutoRefreshRunnable(BossShop plugin) {
-            this.plugin = plugin;
-        }
-
-        @Override
-        public void run() {
-            plugin.getClassManager().getShops().refreshShops();
-        }
-    }
-
 }

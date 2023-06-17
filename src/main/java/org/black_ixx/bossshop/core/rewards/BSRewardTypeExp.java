@@ -34,7 +34,7 @@ public class BSRewardTypeExp extends BSRewardTypeNumber {
     @Override
     public void giveReward(Player p, BSBuy buy, Object reward, ClickType clickType, int multiplier) {
         int exp = (int) ClassManager.manager.getMultiplierHandler().calculateRewardWithMultiplier(p, buy, clickType, ((Integer) reward)) * multiplier;
-        if (ClassManager.manager.getSettings().getExpUseLevel()) {
+        if (ClassManager.manager.getFactory().settings().expUseLevels()) {
             p.setLevel(p.getLevel() + exp);
         } else {
             p.giveExp(exp);

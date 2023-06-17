@@ -115,7 +115,7 @@ public abstract class BSRewardType {
     }
 
     public boolean isPlayerDependent(BSBuy buy, ClickType clicktype) {
-        return supportsMultipliers() && ClassManager.manager.getMultiplierHandler().hasMultipliers() || (buy.getRewardType(clicktype) == BSRewardType.ItemAll && ClassManager.manager.getSettings().getItemAllShowFinalReward());
+        return supportsMultipliers() && ClassManager.manager.getMultiplierHandler().hasMultipliers() || (buy.getRewardType(clicktype) == BSRewardType.ItemAll);
     }
 
     public boolean supportsMultipliers() {

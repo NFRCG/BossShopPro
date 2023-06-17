@@ -29,8 +29,8 @@ public class ItemDataPartPotion extends ItemDataPart {
         PotionMeta meta = (PotionMeta) item.getItemMeta();
 
         String potiontype = parts[0].trim();
-        boolean extended = InputReader.getBoolean(parts[1].trim(), false);
-        boolean upgraded = InputReader.getBoolean(parts[2].trim(), false);
+        boolean extended = Boolean.parseBoolean(parts[1].trim());
+        boolean upgraded = Boolean.parseBoolean(parts[2].trim());
 
         PotionType type = null;
         for (PotionType t : PotionType.values()) {

@@ -8,9 +8,7 @@ import org.black_ixx.bossshop.events.BSPlayerPurchaseEvent;
 import org.black_ixx.bossshop.events.BSPlayerPurchasedEvent;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.config.BSConfigShop;
-import org.black_ixx.bossshop.misc.Misc;
 import org.black_ixx.bossshop.misc.ShopItemPurchaseTask;
-import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -60,7 +58,6 @@ public class BSBuy {
                 if (permission.length() > 2) {
                     String group = permission.substring(1, permission.length() - 1);
                     if (group != null) {
-                        ClassManager.manager.getSettings().setVaultEnabled(true);
                         this.permission = group;
                         this.isGroup = true;
                     }
@@ -328,7 +325,7 @@ public class BSBuy {
     }
 
     public void updateShop(BSShop shop, ItemStack menuitem, ClassManager manager, boolean addItem) {
-        if (manager.getSettings().getPropertyBoolean(Settings.HIDE_ITEMS_PLAYERS_DONT_HAVE_PERMISSIONS_FOR, this)) {
+        if (manager.getFactory().settings().hideItemsWhenNoPermission()) {
             if (!shop.isCustomizable()) {
                 if (isExtraPermissionExisting(null)) {
                     shop.setCustomizable(true);
@@ -382,7 +379,7 @@ public class BSBuy {
 
     public void click(Player p, BSShop shop, BSShopHolder holder, ClickType clicktype, InventoryClickEvent event, BossShop plugin) {
         if (!hasPermission(p, true, clicktype)) {
-            Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOPITEM_NOPERMISSION, this, null));
+            p.playSound(ClassManager.manager.getFactory().settings().sounds().get("noPermission"));
             return;
         }
         if (!meetsCondition(holder, p)) {
@@ -416,7 +413,7 @@ public class BSBuy {
             return;
         }
         if (!pricetype.hasPrice(p, this, getPrice(clicktype), clicktype, true)) {
-            Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOPITEM_NOTENOUGHMONEY, this, null));
+            p.playSound(ClassManager.manager.getFactory().settings().sounds().get("notEnoughMoney"));
             return;
         }
 
@@ -425,7 +422,7 @@ public class BSBuy {
 
     /**
      * Triggers {@link BSBuy#purchase(Player, BSShop, BSShopHolder, ClickType, BSRewardType, BSPriceType, InventoryClickEvent, BossShop, boolean)}.
-     * This is done asynchronously if {@link Settings#getPurchaseAsync()} = true.
+     * This is done asynchronously if async-actions = true.
      *
      * @param p          Player to purchase the item.
      * @param shop       Shop this shopitem belongs to.
@@ -443,7 +440,7 @@ public class BSBuy {
             return;
         }
 
-        if (ClassManager.manager.getSettings().getPurchaseAsync()) {
+        if (ClassManager.manager.getFactory().settings().asyncActions()) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, new ShopItemPurchaseTask(p, this, shop, holder, clicktype, rewardtype, pricetype, event));
         } else {
             purchase(p, shop, holder, clicktype, rewardtype, pricetype, event, plugin, false);
@@ -489,10 +486,7 @@ public class BSBuy {
 
 
         //Close shop if wanted
-        if (plugin.getClassManager().getSettings().getPropertyBoolean(Settings.CLOSE_SHOP_AFTER_PURCHASE, this)) {
-            p.closeInventory(); //NEW!!! MIGHT CAUSE BUGS!! Before it was executed async and after all other actions are executed.
-        }
-
+        //TODO: check shop item for this property: CloseShopAfterPurchase and then close inventory if true.
         if (!pricetype.overridesReward()) {
             //Give Reward
             //Some rewardtypes may not be async!
@@ -525,7 +519,7 @@ public class BSBuy {
         boolean need_update = rewardtype.mightNeedShopUpdate() || pricetype.mightNeedShopUpdate();
 
         //Transactionslog
-        if (plugin.getClassManager().getSettings().getTransactionLogEnabled()) {
+        if (plugin.getClassManager().getFactory().settings().enableTransactionLog()) {
             plugin.getClassManager().getTransactionLog().addTransaction(p, this, clicktype);
         }
 
@@ -536,10 +530,10 @@ public class BSBuy {
         //Send message and play sound
         ClassManager.manager.getMessageHandler().sendMessageDirect(message, p);
         if (pricetype != BSPriceType.Nothing) {
-            Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOPITEM_PURCHASE, this, null));
+            p.playSound(ClassManager.manager.getFactory().settings().sounds().get("purchase"));
         } else {
             if (rewardtype.isActualReward()) {
-                Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOPITEM_CLICK, this, null));
+                p.playSound(ClassManager.manager.getFactory().settings().sounds().get("click"));
             }
         }
 
@@ -548,12 +542,7 @@ public class BSBuy {
             if (p.getOpenInventory() == event.getView()) { //only if inventory is still open
 
                 if (async) {
-                    Bukkit.getScheduler().runTask(ClassManager.manager.getPlugin(), new Runnable() {
-                        @Override
-                        public void run() {
-                            shop.updateInventory(event.getInventory(), holder, p, plugin.getClassManager(), holder.getPage(), holder.getHighestPage(), false);
-                        }
-                    });
+                    Bukkit.getScheduler().runTask(ClassManager.manager.getPlugin(), () -> shop.updateInventory(event.getInventory(), holder, p, plugin.getClassManager(), holder.getPage(), holder.getHighestPage(), false));
                 } else {
                     shop.updateInventory(event.getInventory(), holder, p, plugin.getClassManager(), holder.getPage(), holder.getHighestPage(), false);
                 }

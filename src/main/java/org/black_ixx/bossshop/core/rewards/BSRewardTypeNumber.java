@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.ClickType;
 public abstract class BSRewardTypeNumber extends BSRewardType {
     @Override
     public boolean isPlayerDependent(BSBuy buy, ClickType clicktype) {
-        return super.isPlayerDependent(buy, clicktype) || (buy.getPriceType(clicktype) == BSPriceType.ItemAll && ClassManager.manager.getSettings().getItemAllShowFinalReward());
+        return super.isPlayerDependent(buy, clicktype) || (buy.getPriceType(clicktype) == BSPriceType.ItemAll);
     }
 
     @Override

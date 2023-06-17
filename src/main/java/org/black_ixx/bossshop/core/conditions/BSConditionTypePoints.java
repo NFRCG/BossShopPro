@@ -23,6 +23,5 @@ public class BSConditionTypePoints extends BSConditionTypeNumber {
 
     @Override
     public void enableType() {
-        ClassManager.manager.getSettings().setPointsEnabled(true);
     }
 }

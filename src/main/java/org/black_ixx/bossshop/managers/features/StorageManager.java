@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.features;
 
 import org.black_ixx.bossshop.BossShop;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -34,7 +35,7 @@ public class StorageManager {
         try {
             getConfig().save(file);
         } catch (IOException e) {
-            BossShop.log("Could not save plugin data to " + file);
+            Bukkit.getLogger().info("Could not save plugin data to " + file);
         }
     }
 

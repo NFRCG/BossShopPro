@@ -25,7 +25,7 @@ public class ItemDataPartMaterial extends ItemDataPart {
         }
 
 
-        m = InputReader.readMaterial(argument);
+        m = Material.valueOf(argument);
 
         if (m == null) {
             ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. Unable to find a fitting material.");

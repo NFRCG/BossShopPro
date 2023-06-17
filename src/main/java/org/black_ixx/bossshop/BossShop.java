@@ -5,7 +5,8 @@ import org.black_ixx.bossshop.api.BossShopAPI;
 import org.black_ixx.bossshop.api.BossShopAddon;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.events.BSReloadedEvent;
-import org.black_ixx.bossshop.inbuiltaddons.InbuiltAddonLoader;
+import org.black_ixx.bossshop.listeners.ShopItemCreationListener;
+import org.black_ixx.bossshop.listeners.TypeRegisterListener;
 import org.black_ixx.bossshop.listeners.InventoryListener;
 import org.black_ixx.bossshop.listeners.PlayerListener;
 import org.black_ixx.bossshop.listeners.SignListener;
@@ -32,12 +33,11 @@ public class BossShop extends JavaPlugin {
         this.api = new BossShopAPI(this);
         CommandManager commander = new CommandManager();
         Stream.of("bs", "bossshop", "shop").filter(x -> this.getCommand(x) != null).forEach(x -> this.getCommand(x).setExecutor(commander));
-        //TODO: fix
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this, () -> {
-            new InbuiltAddonLoader().load(this);
-            this.manager.setupDependentClasses();
-        }, 5L);
+        Bukkit.getPluginManager().registerEvents(new ShopItemCreationListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TypeRegisterListener(), this);
+        this.manager.setupDependentClasses();
     }
+
     @Override
     public void onDisable() {
         this.closeShops();
@@ -56,15 +56,10 @@ public class BossShop extends JavaPlugin {
     public void reloadPlugin(CommandSender sender) {
         this.closeShops();
         this.reloadConfig();
-
-        closeShops();
-
-        reloadConfig();
-        manager.getMessageHandler().reloadConfig();
-
-        if (manager.getShops() != null) {
-            for (String s : manager.getShops().getShopIds().keySet()) {
-                BSShop shop = manager.getShops().getShops().get(s);
+        this.manager.getMessageHandler().reloadConfig();
+        if (this.manager.getShops() != null) {
+            for (String s : this.manager.getShops().getShopIds().keySet()) {
+                BSShop shop = this.manager.getShops().getShops().get(s);
                 if (shop != null) {
                     shop.reloadShop();
                 }
@@ -75,20 +70,14 @@ public class BossShop extends JavaPlugin {
                 p.closeInventory();
             }
         }
-
-        unloadClasses();
-
-        manager = new ClassManager(this);
-
+        this.unloadClasses();
+        this.manager = new ClassManager(this);
         if (api.getEnabledAddons() != null) {
             for (BossShopAddon addon : api.getEnabledAddons()) {
                 addon.reload(sender);
             }
         }
-
-        manager.setupDependentClasses();
-
-
+        this.manager.setupDependentClasses();
         BSReloadedEvent event = new BSReloadedEvent(this);
         Bukkit.getPluginManager().callEvent(event);
     }

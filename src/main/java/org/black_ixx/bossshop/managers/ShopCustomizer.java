@@ -182,7 +182,7 @@ public class ShopCustomizer {
         if (displaying && p != null) {
             if (item.hasItemMeta()) {
                 if (!buy.isItemFix()) {
-                    item = ClassManager.manager.getItemStackTranslator().translateItemStack(buy, shop, holder, item.clone(), p, true);
+                    item = ClassManager.manager.getItemStackTranslator().translateItemStack(buy, shop, holder, item.clone(), p);
                 }
             }
         }

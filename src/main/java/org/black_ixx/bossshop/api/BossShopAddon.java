@@ -15,12 +15,12 @@ public abstract class BossShopAddon extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.disabled = false;
         this.bs = (BossShop) Bukkit.getPluginManager().getPlugin("BossShopPro");
         if (this.bs != null && this.getWorth(this.bs.getDescription().getVersion()) >= this.getWorth(this.getRequiredBossShopVersion())) {
             this.bs.getAPI().addEnabledAddon(this);
             this.getSLF4JLogger().info("Enabling Addon: {}", this.getAddonName());
             this.enable();
+            return;
         }
         this.getSLF4JLogger().error("[{}] BSP is outdated or not found! You need version: {} in order to run this addon! Disabling Addon...", this.getAddonName(), this.getRequiredBossShopVersion());
         this.disabled = true;

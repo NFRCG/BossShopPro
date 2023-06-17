@@ -24,7 +24,7 @@ import java.util.List;
 public class ItemStackTranslator {
 
 
-    public ItemStack translateItemStack(BSBuy buy, BSShop shop, BSShopHolder holder, ItemStack item, Player target, boolean finalVersion) {
+    public ItemStack translateItemStack(BSBuy buy, BSShop shop, BSShopHolder holder, ItemStack item, Player target) {
         if (item != null) {
             if (item.hasItemMeta()) {
                 ItemMeta meta = item.getItemMeta();
@@ -99,17 +99,11 @@ public class ItemStackTranslator {
     }
 
     public String readItemStack(ItemStack i) {
-        if (ClassManager.manager.getLanguageManager() != null) {
-            return i.getAmount() + " " + ClassManager.manager.getLanguageManager().getDisplayNameItem(i);
-        }
         String material = readMaterial(i);
         return i.getAmount() + " " + material;
     }
 
     public String readEnchantment(Enchantment e) {
-        if (ClassManager.manager.getLanguageManager() != null) {
-            return ClassManager.manager.getLanguageManager().getDisplayNameEnchantment(e);
-        }
         return e.getName().toLowerCase().replace("_", "");
     }
 
@@ -165,57 +159,8 @@ public class ItemStackTranslator {
     }
 
     public String readMaterial(ItemStack item) {
-        if (ClassManager.manager.getLanguageManager() != null) {
-            ItemStack i = new ItemStack(item.getType());
-            return ClassManager.manager.getLanguageManager().getDisplayNameItem(i);
-        }
         String material = item.getType().name().toLowerCase().replace("_", " ");
         material = material.replaceFirst(material.substring(0, 1), material.substring(0, 1).toUpperCase());
         return material;
-    }
-
-    public void copyTexts(ItemStack receiver, ItemStack source) {
-        if (source.hasItemMeta()) {
-            ItemMeta metaSource = source.getItemMeta();
-            ItemMeta metaReceiver = receiver.getItemMeta();
-
-            if (metaSource.hasDisplayName()) {
-                metaReceiver.setDisplayName(metaSource.getDisplayName());
-            }
-            if (metaSource.hasLore()) {
-                metaReceiver.setLore(metaSource.getLore());
-            }
-
-            if (metaSource instanceof SkullMeta && metaReceiver instanceof SkullMeta) {
-                SkullMeta skullSource = (SkullMeta) metaSource;
-                SkullMeta skullReceiver = (SkullMeta) metaReceiver;
-
-                if (skullSource.hasOwner()) {
-                    skullReceiver.setOwner(skullSource.getOwner());
-                }
-            }
-
-            receiver.setItemMeta(metaReceiver);
-        }
-    }
-
-
-    public boolean isItemList(Object o) {
-        if (o instanceof List<?>) {
-            return isItemList((List<?>) o);
-        }
-        return false;
-    }
-
-    public boolean isItemList(List<?> list) {
-        if (list != null) {
-            if (list.size() >= 1) {
-                Object first = list.get(0);
-                if (first instanceof ItemStack) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

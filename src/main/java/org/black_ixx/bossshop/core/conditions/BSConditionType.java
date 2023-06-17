@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BSConditionType {
-    public static BSConditionType SERVERPINGING;
     public static BSConditionType MONEY;
     public static BSConditionType POINTS;
     public static BSConditionType GROUP;

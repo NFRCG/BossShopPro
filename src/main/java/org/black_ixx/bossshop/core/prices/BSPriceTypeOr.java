@@ -1,7 +1,6 @@
-package org.black_ixx.bossshop.inbuiltaddons.logictypes;
+package org.black_ixx.bossshop.core.prices;
 
 import org.black_ixx.bossshop.core.BSBuy;
-import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -10,7 +9,7 @@ import org.bukkit.event.inventory.ClickType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BSPriceTypeAnd extends BSPriceType {
+public class BSPriceTypeOr extends BSPriceType {
 
     @Override
     public Object createObject(Object o, boolean forceState) {
@@ -63,7 +62,7 @@ public class BSPriceTypeAnd extends BSPriceType {
 
     @Override
     public String[] createNames() {
-        return new String[]{"and"};
+        return new String[]{"or"};
     }
 
     @Override
@@ -76,30 +75,32 @@ public class BSPriceTypeAnd extends BSPriceType {
     public boolean hasPrice(Player p, BSBuy buy, Object price, ClickType clickType, boolean messageOnFailure) {
         List<BSPricePart> priceparts = (List<BSPricePart>) price;
         for (BSPricePart part : priceparts) {
-            if (!part.getPriceType().hasPrice(p, buy, part.getPrice(), clickType, messageOnFailure)) {
-                return false;
+            if (part.getPriceType().hasPrice(p, buy, part.getPrice(), clickType, false)) {
+                return true;
             }
         }
-        return true;
+        if (messageOnFailure) {
+            ClassManager.manager.getMessageHandler().sendMessage("NotEnough.Or", p);
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public String takePrice(Player p, BSBuy buy, Object price, ClickType clickType) {
-        String sep = ClassManager.manager.getMessageHandler().get("Main.ListAndSeparator");
-        String s = "";
         List<BSPricePart> priceparts = (List<BSPricePart>) price;
-        for (int i = 0; i < priceparts.size(); i++) {
-            BSPricePart part = priceparts.get(i);
-            s += part.getPriceType().takePrice(p, buy, part.getPrice(), clickType) + (i < priceparts.size() - 1 ? sep : "");
+        for (BSPricePart part : priceparts) {
+            if (part.getPriceType().hasPrice(p, buy, part.getPrice(), clickType, false)) {
+                return part.getPriceType().takePrice(p, buy, part.getPrice(), clickType);
+            }
         }
-        return s;
+        throw new RuntimeException("Unable to take price '" + price + "' of type AND: Player does not have the required price anymore");
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public String getDisplayPrice(Player p, BSBuy buy, Object price, ClickType clickType) {
-        String sep = ClassManager.manager.getMessageHandler().get("Main.ListAndSeparator");
+        String sep = ClassManager.manager.getMessageHandler().get("Main.ListOrSeparator");
         String s = "";
 
         List<BSPricePart> priceparts = (List<BSPricePart>) price;

@@ -1,4 +1,4 @@
-package org.black_ixx.bossshop.inbuiltaddons.advancedshops;
+package org.black_ixx.bossshop.core;
 
 
 import org.black_ixx.bossshop.core.BSBuy;
@@ -6,6 +6,7 @@ import org.black_ixx.bossshop.core.BSInputType;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.conditions.BSCondition;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
+import org.black_ixx.bossshop.core.ActionSet;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -34,10 +35,9 @@ public class BSBuyAdvanced extends BSBuy {
 
     @Override
     public BSPriceType getPriceType(ClickType clicktype) {
-        if (actions != null) {
-            if (actions.containsKey(clicktype)) {
+        if (actions != null && (actions.containsKey(clicktype))) {
                 return actions.get(clicktype).getPriceType();
-            }
+
         }
         return super.getPriceType(clicktype);
     }

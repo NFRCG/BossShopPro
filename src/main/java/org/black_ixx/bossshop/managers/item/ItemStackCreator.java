@@ -19,11 +19,9 @@ import java.util.List;
 public class ItemStackCreator {
 
 
-    public ItemStack createItemStack(List<String> itemData, BSBuy buy, BSShop shop, boolean final_version) { //This allows to work with %rewarditem_<id>% and %priceitem_<id>%
-
+    public ItemStack createItemStack(List<String> itemData, BSBuy buy, BSShop shop) { //This allows to work with %rewarditem_<id>% and %priceitem_<id>%
         if (shop instanceof BSConfigShop) {
             BSConfigShop cshop = (BSConfigShop) shop;
-
             List<String> new_list = null;
             for (String line : itemData) {
 
@@ -46,7 +44,7 @@ public class ItemStackCreator {
                 }
 
                 if (new_list != null) {
-                    return createItemStack(new_list, final_version);
+                    return createItemStack(new_list);
                 }
 
             }
@@ -54,7 +52,7 @@ public class ItemStackCreator {
 
         }
 
-        return createItemStack(itemData, final_version);
+        return createItemStack(itemData);
     }
 
     private List<String> transform(String line, int index, List<String> new_list, BSBuy buy, BSConfigShop shop, String path) {
@@ -79,7 +77,7 @@ public class ItemStackCreator {
 
     private List<String> cloneList(List<String> list) {
         if (list != null & !list.isEmpty()) {
-            List<String> clone = new ArrayList<String>();
+            List<String> clone = new ArrayList<>();
             for (String line : list) {
                 clone.add(line);
             }
@@ -88,28 +86,15 @@ public class ItemStackCreator {
         return list;
     }
 
-    public ItemStack createItemStack(List<String> itemData, boolean final_version) {
+    public ItemStack createItemStack(List<String> itemData) {
         ItemStack i = new ItemStack(Material.STONE);
 
         itemData = Misc.fixLore(itemData);
 
         i = ItemDataPart.transformItem(i, itemData);
-        ClassManager.manager.getItemStackTranslator().translateItemStack(null, null, null, i, null, final_version);
+        ClassManager.manager.getItemStackTranslator().translateItemStack(null, null, null, i, null);
         return i;
     }
-
-    /**
-     * Gives the selected item to the player.
-     * If clone_item = false the item is modified (placeholders adapted to player and amount changed).
-     * @param p          Player to give the item to.
-     * @param buy        Shopitem linked to the item.
-     * @param i          Item to add to the player.
-     * @param clone_item Whether the item selected can be modified or if a clone of the selected item should be used instead, keeping the original item unchanged.
-     */
-    public void giveItem(Player p, BSBuy buy, ItemStack i, boolean clone_item) {
-        giveItem(p, buy, i, i.getAmount(), clone_item);
-    }
-
 
     /**
      * Gives the selected item to the player.
@@ -129,7 +114,7 @@ public class ItemStackCreator {
         int stacksize = ClassManager.manager.getItemStackChecker().getMaxStackSize(i);
 
         //First of all translate item
-        i = ClassManager.manager.getItemStackTranslator().translateItemStack(buy, null, null, (clone_item ? i.clone() : i), p, true);
+        i = ClassManager.manager.getItemStackTranslator().translateItemStack(buy, null, null, (clone_item ? i.clone() : i), p);
 
         while (to_give > 0) {
             i.setAmount(Math.min(stacksize, to_give));

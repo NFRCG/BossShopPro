@@ -1,6 +1,5 @@
 package org.black_ixx.bossshop.managers.config;
 
-import org.black_ixx.bossshop.BossShop;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShops;
@@ -100,11 +99,6 @@ public class BSConfigShop extends BSShop {
     public FileConfiguration getConfig() {
         return config;
     }
-
-    public ConfigurationSection getConfigurationSection() {
-        return section;
-    }
-
     //////////////////////////////////
 
     public void saveConfig() {

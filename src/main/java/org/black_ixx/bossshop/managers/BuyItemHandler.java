@@ -196,7 +196,7 @@ public class BuyItemHandler {
                 return null;
             }
 
-            ItemStack i = ClassManager.manager.getItemStackCreator().createItemStack(c.getStringList("MenuItem"), buy, shop, false);
+            ItemStack i = ClassManager.manager.getItemStackCreator().createItemStack(c.getStringList("MenuItem"), buy, shop);
             buy.setItem(i, false);
 
             //TODO: figure out what this does

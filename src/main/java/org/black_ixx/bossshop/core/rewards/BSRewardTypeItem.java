@@ -14,7 +14,7 @@ public class BSRewardTypeItem extends BSRewardType {
 
     public Object createObject(Object o, boolean forceState) {
         if (forceState) {
-            return InputReader.readItemList(o, false);
+            return InputReader.readItemList(o);
         } else {
             return InputReader.readStringListList(o);
         }

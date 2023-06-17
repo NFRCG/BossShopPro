@@ -2,20 +2,18 @@ package org.black_ixx.bossshop.core.rewards;
 
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.prices.BSPriceTypeNumber;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.misc.InputReader;
-import org.black_ixx.bossshop.misc.CurrencyTools.BSCurrency;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 public class BSRewardTypeItemAll extends BSRewardType {
-
-
     public Object createObject(Object o, boolean forceState) {
         if (forceState) {
-            ItemStack i = InputReader.readItem(o, false);
+            ItemStack i = InputReader.readItem(o);
             i.setAmount(1);
             return i;
         } else {
@@ -23,11 +21,11 @@ public class BSRewardTypeItemAll extends BSRewardType {
         }
     }
 
-    public boolean validityCheck(String item_name, Object o) {
+    public boolean validityCheck(String itemName, Object o) {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be a valid list of ItemData (https://www.spigotmc.org/wiki/bossshoppro-rewardtypes/).");
+        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + itemName + "! The reward object needs to be a valid list of ItemData (https://www.spigotmc.org/wiki/bossshoppro-rewardtypes/).");
         return false;
     }
 
@@ -44,44 +42,25 @@ public class BSRewardTypeItemAll extends BSRewardType {
             }
             return false;
         }
-
-        int items_amount_possible_space = ClassManager.manager.getItemStackChecker().getAmountOfFreeSpace(p, item);
-        BSCurrency price_currency = BSCurrency.detectCurrency(buy.getPriceType(clickType).name());
-        double price_per_item = (double) buy.getPrice(clickType);
-        int items_amount_possible_money = (int) (price_currency.getBalance(p) / price_per_item);
-        int items_amount = Math.max(1, Math.min(items_amount_possible_space, items_amount_possible_money));
-
-        BSPriceTypeNumber pricetype = (BSPriceTypeNumber) buy.getPriceType(clickType);
-        if (!pricetype.hasPrice(p, buy, buy.getPrice(clickType), clickType, items_amount, messageOnFailure)) {
-            return false;
-        }
-
-
-        return true;
+        BSPriceTypeNumber priceType = (BSPriceTypeNumber) buy.getPriceType(clickType);
+        int items = this.calculateItems(buy, clickType, p, item);
+        return priceType.hasPrice(p, buy, buy.getPrice(clickType), clickType, items, messageOnFailure);
     }
 
     @Override
     public void giveReward(Player p, BSBuy buy, Object reward, ClickType clickType) {
         ItemStack item = (ItemStack) reward;
-
-        int items_amount_possible_space = ClassManager.manager.getItemStackChecker().getAmountOfFreeSpace(p, item);
-        BSCurrency price_currency = BSCurrency.detectCurrency(buy.getPriceType(clickType).name());
-        double price_per_item = (double) buy.getPrice(clickType);
-        int items_amount_possible_money = (int) (price_currency.getBalance(p) / price_per_item);
-        int items_amount = Math.max(1, Math.min(items_amount_possible_space, items_amount_possible_money));
-
-        BSPriceTypeNumber pricetype = (BSPriceTypeNumber) buy.getPriceType(clickType);
-        pricetype.takePrice(p, buy, buy.getPrice(clickType), clickType, items_amount);
-
-
-        ClassManager.manager.getItemStackCreator().giveItem(p, buy, item, items_amount, true);
+        BSPriceTypeNumber priceType = (BSPriceTypeNumber) buy.getPriceType(clickType);
+        int items = this.calculateItems(buy, clickType, p, item);
+        priceType.takePrice(p, buy, buy.getPrice(clickType), clickType, items);
+        ClassManager.manager.getItemStackCreator().giveItem(p, buy, item, items, true);
     }
 
     @Override
     public String getDisplayReward(Player p, BSBuy buy, Object reward, ClickType clickType) {
         ItemStack item = (ItemStack) reward;
-        String item_name = ClassManager.manager.getItemStackTranslator().readMaterial(item);
-        return ClassManager.manager.getMessageHandler().get("Display.ItemAllBuy").replace("%item%", item_name);
+        String itemName = ClassManager.manager.getItemStackTranslator().readMaterial(item);
+        return ClassManager.manager.getMessageHandler().get("Display.ItemAllBuy").replace("%item%", itemName);
     }
 
     @Override
@@ -95,19 +74,30 @@ public class BSRewardTypeItemAll extends BSRewardType {
     }
 
     @Override
-    public boolean allowAsync() {
-        return false;
-    }
-
-
-    @Override
     public boolean overridesPrice() {
         return true;
     }
 
     @Override
     public String getPriceReturnMessage(Player p, BSBuy buy, Object price, ClickType clickType) {
-        BSPriceTypeNumber pricetype = (BSPriceTypeNumber) buy.getPriceType(clickType);
-        return pricetype.getDisplayBalance(p, buy, price, clickType);
+        BSPriceTypeNumber priceType = (BSPriceTypeNumber) buy.getPriceType(clickType);
+        return priceType.getDisplayBalance(p, buy, price, clickType);
+    }
+
+    private double getBalance(final Player p, final BSPriceType type) {
+        return switch (type.name()) {
+            case "MONEY" -> ClassManager.manager.getVaultHandler().getEconomy().getBalance(p);
+            case "POINTS" -> ClassManager.manager.getPointsManager().getPoints(p);
+            case "EXP" -> p.getExpToLevel();
+            default -> 0;
+        };
+    }
+
+    private int calculateItems(final BSBuy buy, final ClickType clickType, final Player player, final ItemStack item) {
+        int possibleSpace = ClassManager.manager.getItemStackChecker().getAmountOfFreeSpace(player, item);
+        Object price = buy.getPrice(clickType);
+        BSPriceTypeNumber priceType = (BSPriceTypeNumber) buy.getPriceType(clickType);
+        int itemRatio = (int) (this.getBalance(player, priceType) / (double) price);
+        return Math.max(1, Math.min(possibleSpace, itemRatio));
     }
 }

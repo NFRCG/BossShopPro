@@ -1,7 +1,6 @@
 package org.black_ixx.bossshop.managers.external;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.black_ixx.bossshop.BossShop;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

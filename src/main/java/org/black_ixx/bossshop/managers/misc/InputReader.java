@@ -83,15 +83,14 @@ public class InputReader {
      * Get list of itemstacks from object
      *
      * @param o            object to check
-     * @param finalVersion final version or not
      * @return list of itemstacks
      */
-    public static List<ItemStack> readItemList(Object o, boolean finalVersion) {
+    public static List<ItemStack> readItemList(Object o) {
         List<List<String>> list = readStringListList(o);
         if (list != null) {
-            List<ItemStack> items = new ArrayList<ItemStack>();
+            List<ItemStack> items = new ArrayList<>();
             for (List<String> s : list) {
-                items.add(ClassManager.manager.getItemStackCreator().createItemStack(s, finalVersion));
+                items.add(ClassManager.manager.getItemStackCreator().createItemStack(s));
             }
             return items;
         }
@@ -102,11 +101,10 @@ public class InputReader {
      * Get itemstack from object
      *
      * @param o            object to check
-     * @param finalVersion final version or not
      * @return itemstack
      */
-    public static ItemStack readItem(Object o, boolean finalVersion) {
-        List<ItemStack> list = readItemList(o, finalVersion);
+    public static ItemStack readItem(Object o) {
+        List<ItemStack> list = readItemList(o);
         if (list != null & !list.isEmpty()) {
             return list.get(0);
         }

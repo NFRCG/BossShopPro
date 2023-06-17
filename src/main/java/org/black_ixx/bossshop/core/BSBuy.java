@@ -8,7 +8,6 @@ import org.black_ixx.bossshop.events.BSPlayerPurchaseEvent;
 import org.black_ixx.bossshop.events.BSPlayerPurchasedEvent;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.config.BSConfigShop;
-import org.black_ixx.bossshop.misc.ShopItemPurchaseTask;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -22,36 +21,33 @@ import java.util.HashMap;
 
 
 public class BSBuy {
-
-
     private BSShop shop;
     private HashMap<Plugin, Object> specialInformation;
-
-    private boolean fixItem; // In order for an item to not be fix it must contain a player-dependent placeholder (detected by StringManager.checkStringForFeatures)
     private ItemStack item;
-    private String name;
-    private BSInputType inputtype; // null by default. A value if players need to enter input before they can purchase the item.
-    private String inputtext;
-    private BSRewardType rewardT;
-    private BSPriceType priceT;
-    private Object reward;
-    private Object price;
+    private final String name;
+    private BSInputType inputType; // null by default. A value if players need to enter input before they can purchase the item.
+    private String inputText;
+    private final BSRewardType rewardT;
+    private final BSPriceType priceT;
+    private final Object reward;
+    private final Object price;
     private BSCondition condition;
+    private final String msg;
     private String permission;
     private boolean isGroup = false;
-    private String msg;
+    private boolean fixItem; // In order for an item to not be fix it must contain a player-dependent placeholder (detected by StringManager.checkStringForFeatures)
     private int location;
 
-    public BSBuy(BSRewardType rewardT, BSPriceType priceT, Object reward, Object price, String msg, int location, String permission, String name, BSCondition condition, BSInputType inputtype, String inputtext) {
+    public BSBuy(BSRewardType rewardT, BSPriceType priceT, Object reward, Object price, String msg, int location, String permission, String name, BSCondition condition, BSInputType inputType, String inputText) {
         this(rewardT, priceT, reward, price, msg, location, permission, name);
         this.condition = condition;
-        this.inputtype = inputtype;
-        this.inputtext = ClassManager.manager.getStringManager().transform(inputtext, this, null, null, null);
+        this.inputType = inputType;
+        this.inputText = ClassManager.manager.getStringManager().transform(inputText, this, null, null, null);
     }
+
     public BSBuy(BSRewardType rewardT, BSPriceType priceT, Object reward, Object price, String msg, int location, String permission, String name) {
         this.priceT = priceT;
         this.rewardT = rewardT;
-
         if (permission != null && permission != "") {
             this.permission = permission;
             if (permission.startsWith("[") && permission.endsWith("]")) {
@@ -64,14 +60,12 @@ public class BSBuy {
                 }
             }
         }
-
         this.reward = reward;
         this.price = price;
         this.name = name;
         this.msg = ClassManager.manager.getStringManager().transform(msg, this, null, null, null);
         this.location = location;
     }
-
 
 
     public BSShop getShop() {
@@ -103,11 +97,11 @@ public class BSBuy {
     }
 
     public BSInputType getInputType(ClickType clicktype) {
-        return inputtype;
+        return inputType;
     }
 
     public String getInputText(ClickType clicktype) {
-        return inputtext;
+        return inputText;
     }
 
     /**
@@ -201,7 +195,6 @@ public class BSBuy {
     }
 
 
-
     public String getExtraPermission(ClickType clicktype) {
         return permission;
     }
@@ -214,7 +207,6 @@ public class BSBuy {
     }
 
 
-
     /**
      * Transforms the selected message by replacing price and reward placeholders with descriptions of price or reward.
      * If player is null only player-independent placeholders are replaced.
@@ -223,7 +215,7 @@ public class BSBuy {
      * The method needs to be executed once the item is created (player=null):
      * <br>- to replace all player-independent placeholders
      * <br>- to mark the related shop as customizable if it contains player-dependent placeholders
-     * <br>- to detect the inputtype of this shopitem. If it is not null (default is null) players need to enter input before purchases are made
+     * <br>- to detect the inputType of this shopitem. If it is not null (default is null) players need to enter input before purchases are made
      * <br>
      * <br>The method also needs to be executed when a certain player accesses the item (player!=null):
      * <br>- to replace all player-dependent placeholders
@@ -244,11 +236,11 @@ public class BSBuy {
         if (p == null) {
             //Player null -> first item creation
             if (msg.contains("%input_text%")) {
-                inputtype = BSInputType.TEXT;
+                inputType = BSInputType.TEXT;
             } else if (msg.contains("%input_player%")) {
-                inputtype = BSInputType.PLAYER;
+                inputType = BSInputType.PLAYER;
             }
-            if (inputtype != null && shop != null) {
+            if (inputType != null && shop != null) {
                 shop.setCustomizable(true);
                 shop.setDisplaying(true);
             }
@@ -351,12 +343,12 @@ public class BSBuy {
             }
 
             if (!isItemFix()) { //Addons can make items fix instantly. In normal cases this check is not needed.
-                ClassManager.manager.getItemStackTranslator().translateItemStack(this, shop, null, menuitem, null, false);
+                ClassManager.manager.getItemStackTranslator().translateItemStack(this, shop, null, menuitem, null);
             }
         }
         setItem(menuitem, !ClassManager.manager.getItemStackTranslator().checkItemStackForFeatures(shop, this, menuitem));
         if (isItemFix()) { //When all placeholders are replaced the plugin can finally cut the lore and do final stuff
-            ClassManager.manager.getItemStackTranslator().translateItemStack(null, null, null, getItem(), null, true);
+            ClassManager.manager.getItemStackTranslator().translateItemStack(null, null, null, getItem(), null);
         }
         if (addItem) {
             shop.getItems().add(this);
@@ -435,13 +427,12 @@ public class BSBuy {
      */
     @Deprecated
     public void purchaseTask(final Player p, final BSShop shop, final BSShopHolder holder, final ClickType clicktype, final BSRewardType rewardtype, final BSPriceType pricetype, final InventoryClickEvent event, final BossShop plugin) {
-        if (inputtype != null) {
-            inputtype.forceInput(p, shop, this, holder, clicktype, rewardtype, pricetype, event, plugin);
+        if (inputType != null) {
+            inputType.forceInput(p, shop, this, holder, clicktype, rewardtype, pricetype, event, plugin);
             return;
         }
-
         if (ClassManager.manager.getFactory().settings().asyncActions()) {
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, new ShopItemPurchaseTask(p, this, shop, holder, clicktype, rewardtype, pricetype, event));
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> this.purchase(p, shop, holder, clicktype, rewardtype, pricetype, event, ClassManager.manager.getPlugin(), true));
         } else {
             purchase(p, shop, holder, clicktype, rewardtype, pricetype, event, plugin, false);
         }
@@ -538,18 +529,12 @@ public class BSBuy {
         }
 
         //Update shop if needed
-        if (shop.isCustomizable() && need_update && event != null) { //'event' is null in case of a simulated click
-            if (p.getOpenInventory() == event.getView()) { //only if inventory is still open
-
-                if (async) {
-                    Bukkit.getScheduler().runTask(ClassManager.manager.getPlugin(), () -> shop.updateInventory(event.getInventory(), holder, p, plugin.getClassManager(), holder.getPage(), holder.getHighestPage(), false));
-                } else {
-                    shop.updateInventory(event.getInventory(), holder, p, plugin.getClassManager(), holder.getPage(), holder.getHighestPage(), false);
-                }
-
+        if (shop.isCustomizable() && need_update && event != null && (p.getOpenInventory() == event.getView())) { //only if inventory is still open
+            if (async) {
+                Bukkit.getScheduler().runTask(ClassManager.manager.getPlugin(), () -> shop.updateInventory(event.getInventory(), holder, p, plugin.getClassManager(), holder.getPage(), holder.getHighestPage(), false));
+            } else {
+                shop.updateInventory(event.getInventory(), holder, p, plugin.getClassManager(), holder.getPage(), holder.getHighestPage(), false);
             }
         }
-
     }
-
 }

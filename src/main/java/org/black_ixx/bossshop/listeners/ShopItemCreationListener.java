@@ -1,10 +1,12 @@
-package org.black_ixx.bossshop.inbuiltaddons.advancedshops;
+package org.black_ixx.bossshop.listeners;
 
 import org.black_ixx.bossshop.core.BSInputType;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSCheckStringForFeaturesEvent;
 import org.black_ixx.bossshop.events.BSCreateShopItemEvent;
+import org.black_ixx.bossshop.core.ActionSet;
+import org.black_ixx.bossshop.core.BSBuyAdvanced;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
@@ -16,10 +18,8 @@ import java.util.Map;
 
 
 public class ShopItemCreationListener implements Listener {
-
-
     @EventHandler
-    public void onCreate(BSCreateShopItemEvent event) {
+    public void onCreate(final BSCreateShopItemEvent event) {
         ConfigurationSection c = event.getConfigurationSection();
 
         Map<ClickType, ActionSet> map = null;

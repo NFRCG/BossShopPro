@@ -11,12 +11,8 @@ import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSRegisterTypesEvent;
 import org.black_ixx.bossshop.managers.config.FileHandler;
 import org.black_ixx.bossshop.managers.external.BungeeCordManager;
-import org.black_ixx.bossshop.managers.external.LanguageManager;
 import org.black_ixx.bossshop.managers.external.PlaceholderAPIHandler;
 import org.black_ixx.bossshop.managers.external.VaultHandler;
-import org.black_ixx.bossshop.managers.external.spawners.ISpawnEggHandler;
-import org.black_ixx.bossshop.managers.external.spawners.ISpawnerHandler;
-import org.black_ixx.bossshop.managers.external.spawners.SpawnerHandler;
 import org.black_ixx.bossshop.managers.features.AutoRefreshHandler;
 import org.black_ixx.bossshop.managers.features.BugFinder;
 import org.black_ixx.bossshop.managers.features.ItemDataStorage;
@@ -59,9 +55,6 @@ public class ClassManager {
     private ShopCustomizer customizer;
     private TransactionLog transactionLog;
     private AutoRefreshHandler autoRefreshHandler;
-    private ISpawnEggHandler spawnEggHandler;
-    private ISpawnerHandler spawnerHandler;
-    private LanguageManager languageManager;
 
     public ClassManager(BossShop plugin) {
         this.plugin = plugin;
@@ -93,23 +86,6 @@ public class ClassManager {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholderhandler = new PlaceholderAPIHandler();
         }
-
-        if (Bukkit.getPluginManager().isPluginEnabled("LangUtils")) {
-            languageManager = new LanguageManager();
-        }
-
-        if (Bukkit.getPluginManager().isPluginEnabled("SilkSpawners")) {
-            try {
-                Class.forName("de.dustplanet.util.SilkUtil");
-                SpawnerHandler h = new SpawnerHandler();
-                spawnerHandler = h;
-                spawnEggHandler = h;
-            } catch (ClassNotFoundException e) {
-                getBugFinder().warn("It seems like you have 'SilkSpawners' installed, but BossShopPro does not recognize the API of the plugin. " +
-                        "Note: There are different SilkSpawners plugins around. The one BossShopPro can hook into is https://www.spigotmc.org/resources/7811/. " +
-                        "Others are simply ignored.");
-            }
-        }
     }
 
     /**
@@ -118,7 +94,7 @@ public class ClassManager {
     public void setupDependentClasses() {
         Bukkit.getPluginManager().callEvent(new BSRegisterTypesEvent());
         SettingsData config = this.factory.settings();
-        this.pagelayoutHandler = new PageLayoutHandler(this.plugin);
+        this.pagelayoutHandler = new PageLayoutHandler();
         //TODO: impl
         this.pointsmanager = new PointsManager(null);
         //TODO: fix
@@ -235,18 +211,6 @@ public class ClassManager {
 
     public StorageManager getStorageManager() {
         return storageManager;
-    }
-
-    public ISpawnerHandler getSpawnerHandler() {
-        return spawnerHandler;
-    }
-
-    public ISpawnEggHandler getSpawnEggHandler() {
-        return spawnEggHandler;
-    }
-
-    public LanguageManager getLanguageManager() {
-        return languageManager;
     }
 
     public ItemDataStorage getItemDataStorage() {

@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void shopCommand(PlayerCommandPreprocessEvent e) {
+    public void shopCommand(final PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
         BSShops shops = ClassManager.manager.getShops();
         if (shops == null) {

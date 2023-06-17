@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public abstract class ItemDataPart {
@@ -54,7 +52,7 @@ public abstract class ItemDataPart {
         ENCHANTMENT = registerType(new ItemDataPartEnchantment());
         PLAYERHEAD = registerType(new ItemDataPartPlayerhead());
         CUSTOMMODELDATA = registerType(new ItemDataPartCustomModelData());
-        MOBSPAWNER = registerType(new ItemDataPartMobspawner());
+        MOBSPAWNER = registerType(new ItemDataPartMobSpawner());
         MOBEGG = registerType(new ItemDataPartMobEgg());
         CUSTOMSKULL = registerType(new ItemDataPartCustomSkull());
         ITEMFLAGS = registerType(new ItemDataPartItemflags());
@@ -91,16 +89,13 @@ public abstract class ItemDataPart {
     }
 
     public static ItemStack transformItem(ItemStack item, List<String> itemdata) {
-        Collections.sort(itemdata, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {//TODO: test sorting out
-                ItemDataPart type1 = detectTypeSpecial(s1);
-                ItemDataPart type2 = detectTypeSpecial(s2);
-                if (type1 != null && type2 != null) {
-                    return Integer.compare(type1.getPriority(), type2.getPriority());
-                }
-                return 0;
+        itemdata.sort((s1, s2) -> {//TODO: test sorting out
+            ItemDataPart type1 = detectTypeSpecial(s1);
+            ItemDataPart type2 = detectTypeSpecial(s2);
+            if (type1 != null && type2 != null) {
+                return Integer.compare(type1.getPriority(), type2.getPriority());
             }
+            return 0;
         });
         for (String line : itemdata) {
             item = transformItem(item, line);

@@ -1,6 +1,5 @@
-package org.black_ixx.bossshop.inbuiltaddons.advancedshops;
+package org.black_ixx.bossshop.core;
 
-import org.black_ixx.bossshop.core.BSInputType;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 

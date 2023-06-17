@@ -14,7 +14,7 @@ public class BSPriceTypeItemAll extends BSPriceType {
 
     public Object createObject(Object o, boolean forceState) {
         if (forceState) {
-            ItemStack i = InputReader.readItem(o, false);
+            ItemStack i = InputReader.readItem(o);
             i.setAmount(1);
             return i;
         } else {

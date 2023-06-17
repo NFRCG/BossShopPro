@@ -1,7 +1,6 @@
-package org.black_ixx.bossshop.inbuiltaddons.logictypes;
+package org.black_ixx.bossshop.core.rewards;
 
 import org.black_ixx.bossshop.core.BSBuy;
-import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

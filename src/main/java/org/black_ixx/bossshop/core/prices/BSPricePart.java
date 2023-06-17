@@ -1,4 +1,4 @@
-package org.black_ixx.bossshop.inbuiltaddons.logictypes;
+package org.black_ixx.bossshop.core.prices;
 
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 

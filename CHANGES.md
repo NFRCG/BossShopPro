@@ -18,6 +18,7 @@ Is this release usable (Yes/No): No
 - MaxLoreLine config option removed: Lore modification is already slow, adding additional logic to
   shift around lore lines adds even more overhead. Onus is on users to solve this.
 - Remove requirement to have SilkSpawners installed for usage of spawners.
+- Remove LangUtils support. Outdated plugin.
 - [NOT YET CHANGED] Shops will have to be in shops subfolder: Creates easier path to shop registration. No discerning
   between configs and shops.
 - [NOT YET CHANGED] Users will have to specify points plugin to use: This is a short term change. One goal of the

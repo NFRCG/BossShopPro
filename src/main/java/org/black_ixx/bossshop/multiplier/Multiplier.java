@@ -11,7 +11,6 @@ public record Multiplier(MultiplierType type, String permission, double multipli
             return d;
         }
         //TODO: implement after conditions/prices/rewards re-work.
-        //
         return 1;
     }
 

@@ -60,7 +60,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void closeShop(InventoryCloseEvent e) {
+    public void closeShop(final InventoryCloseEvent e) {
         if (e.getInventory().getHolder() instanceof BSShopHolder holder && e.getPlayer() instanceof Player player) {
             ClassManager.manager.getMessageHandler().sendMessage(this.factory.messages().closeShop(), player, null, player, holder.getShop(), holder, null);
             Bukkit.getScheduler().runTask(this.plugin, () -> {
@@ -80,7 +80,7 @@ public class InventoryListener implements Listener {
      * if last click time and memory is less than current system time, remove the user from the violations map.
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void purchase(InventoryClickEvent e) {
+    public void purchase(final InventoryClickEvent e) {
         if (!(e.getInventory().getHolder() instanceof BSShopHolder holder) || !(e.getWhoClicked() instanceof Player player)) {
             return;
         }
@@ -117,7 +117,7 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void drag(InventoryDragEvent event) {
+    public void drag(final InventoryDragEvent event) {
         if (!(event.getInventory().getHolder() instanceof BSShopHolder)) {
             return;
         }
@@ -127,14 +127,14 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void quit(PlayerQuitEvent e) {
+    public void quit(final PlayerQuitEvent e) {
         Player player = e.getPlayer();
         this.clickTimes.remove(player);
         this.violations.remove(player);
     }
 
     @EventHandler
-    public void kick(PlayerKickEvent e) {
+    public void kick(final PlayerKickEvent e) {
         Player player = e.getPlayer();
         this.clickTimes.remove(player);
         this.violations.remove(player);

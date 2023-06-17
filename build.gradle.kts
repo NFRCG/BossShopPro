@@ -37,7 +37,6 @@ dependencies {
     compileOnly("com.vk2gpz.tokenenchant:TokenEnchantAPI:18.37.1") //TokenEnchant
     compileOnly("com.github.JustEli:Coins:1.10.3") //TODO: new version
     compileOnly("com.yapzhenyie.GadgetsMenu:GadgetsMenu:4.3.32") //GadgetsMenu //TODO: new version
-    compileOnly("com.meowj:LangUtils:1.6.1") //LangUtils //TODO: new version
     compileOnly("com.github.Realizedd:TokenManager:3.2.4") {
         isTransitive = false
     } //TODO: new version

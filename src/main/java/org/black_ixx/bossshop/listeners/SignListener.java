@@ -42,7 +42,7 @@ public class SignListener implements Listener {
 
     //TODO: signs can have writing on multiple sides.
     @EventHandler
-    public void interactSign(PlayerInteractEvent e) {
+    public void interactSign(final PlayerInteractEvent e) {
         if (e.getClickedBlock() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK && (e.getClickedBlock() instanceof Sign sign)) {
                 Optional<BSShop> shop = this.getBossShopSign(this.parse(sign.line(0)));
                 shop.ifPresentOrElse(bsShop -> ClassManager.manager.getShops().openShop(e.getPlayer(), bsShop), () -> this.sendNoPermMessage(e.getPlayer()));

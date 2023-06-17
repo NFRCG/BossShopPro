@@ -40,17 +40,4 @@ public class BSPointsAPI {
         }
         return null;
     }
-
-    /**
-     * Get the first available points plugin
-     * @return points plugin
-     */
-    public static BSPointsPlugin getFirstAvailable() {
-        for (BSPointsPlugin api : interfaces.values()) {
-            if (api.isAvailable()) {
-                return api;
-            }
-        }
-        return null;
-    }
 }

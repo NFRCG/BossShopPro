@@ -21,8 +21,5 @@ public class BSConditionTypeGroup extends BSConditionTypeMatch {
 
     @Override
     public void enableType() {
-        //TODO: move to constructor?
-        ClassManager.manager.getSettings().setVaultEnabled(true);
-        ClassManager.manager.getSettings().setPermissionsEnabled(true);
     }
 }

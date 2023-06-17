@@ -23,7 +23,9 @@ repositories {
 
 dependencies {
     implementation("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
-
+    implementation("net.kyori:adventure-serializer-configurate4:4.14.0") {
+        isTransitive = false
+    }
     paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT") //Paper
     //compileOnly("io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT") //Paper
     compileOnly("net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT") //Bungeecord
@@ -35,7 +37,6 @@ dependencies {
     compileOnly("com.vk2gpz.tokenenchant:TokenEnchantAPI:18.37.1") //TokenEnchant
     compileOnly("com.github.JustEli:Coins:1.10.3") //TODO: new version
     compileOnly("com.yapzhenyie.GadgetsMenu:GadgetsMenu:4.3.32") //GadgetsMenu //TODO: new version
-    compileOnly("de.dustplanet.silkspawners.SilkSpawners:SilkSpawners:5.0.2") //SilkSpawners //TODO: new version
     compileOnly("com.meowj:LangUtils:1.6.1") //LangUtils //TODO: new version
     compileOnly("com.github.Realizedd:TokenManager:3.2.4") {
         isTransitive = false

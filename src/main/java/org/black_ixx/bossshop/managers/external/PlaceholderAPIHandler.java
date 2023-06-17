@@ -2,12 +2,13 @@ package org.black_ixx.bossshop.managers.external;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.black_ixx.bossshop.BossShop;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PlaceholderAPIHandler {
 
     public PlaceholderAPIHandler() {
-        BossShop.log("Hooked into PlaceholderAPI.");
+        Bukkit.getLogger().info("Hooked into PlaceholderAPI");
     }
 
     public String transformString(String s, Player p) {

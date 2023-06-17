@@ -11,6 +11,7 @@ import java.nio.file.Path;
 /**
  * Factory for Configuration creation.
  */
+//TODO: de-duplicate when shops are reimplemented.
 public final class DataFactory {
     private final Path path;
     private Config<PageLayoutData> pageLayouts;
@@ -24,6 +25,9 @@ public final class DataFactory {
      */
     public DataFactory(final Path path) {
         this.path = path;
+        this.loadSettings();
+        this.loadMessages();
+        this.loadPageLayouts();
     }
 
     /**

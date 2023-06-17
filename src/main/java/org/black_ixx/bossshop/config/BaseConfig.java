@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.config;
 
 import io.leangen.geantyref.TypeToken;
+import net.kyori.adventure.serializer.configurate4.ConfigurateComponentSerializer;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.objectmapping.ObjectMapper;
@@ -35,7 +36,7 @@ public class BaseConfig<T extends ConfigData> implements Config<T> {
     @Override
     public T load(final Path path, final TypeToken<T> type) {
         if (this.loader == null) {
-            this.loader = YamlConfigurationLoader.builder().path(path).indent(2).nodeStyle(NodeStyle.BLOCK).build();
+            this.loader = this.createYamlLoader(path);
         }
         try {
             this.root = this.loader.load();
@@ -65,5 +66,19 @@ public class BaseConfig<T extends ConfigData> implements Config<T> {
         } catch (ConfigurateException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Creates the config loader.
+     *
+     * @return The loader.
+     */
+    private YamlConfigurationLoader createYamlLoader(final Path path) {
+        return YamlConfigurationLoader.builder()
+                .defaultOptions(x -> x.serializers(ConfigurateComponentSerializer.configurate().serializers()))
+                .path(path)
+                .indent(2)
+                .nodeStyle(NodeStyle.BLOCK)
+                .build();
     }
 }

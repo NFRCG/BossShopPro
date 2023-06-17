@@ -1,193 +1,119 @@
 package org.black_ixx.bossshop.listeners;
 
-
 import org.black_ixx.bossshop.BossShop;
+import org.black_ixx.bossshop.config.DataFactory;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.misc.MathTools;
-import org.black_ixx.bossshop.misc.Misc;
-import org.black_ixx.bossshop.misc.userinput.BSAnvilHolder;
-import org.black_ixx.bossshop.settings.Settings;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.WeakHashMap;
 
+/**
+ * Handles all inventory event listeners.
+ */
+//TODO: ?????????????
 public class InventoryListener implements Listener {
+    private final BossShop plugin;
+    private final DataFactory factory;
+    private final WeakHashMap<Player, Long> clickTimes;
+    private final WeakHashMap<Player, Integer> violations;
+    private final long delay;
+    private final long warnings;
+    private final long memory;
+    private final List<InventoryAction> actions;
 
-
-    private WeakHashMap<Player, Long> lastClicks;
-    private WeakHashMap<Player, Integer> clickspamCounts;
-    private int clickDelay, clickspamDelay, clickspamWarnings, clickSpamForgetTime;
-    private BossShop plugin;
-
-    public InventoryListener(BossShop plugin) {
+    public InventoryListener(final BossShop plugin, final DataFactory factory) {
         this.plugin = plugin;
-        lastClicks = new WeakHashMap<>();
-        clickspamCounts = new WeakHashMap<>();
-    }
-
-    public void init(int clickDelay, int clickspamDelay, int clickspamWarnings, int clickSpamForgetTime) {
-        this.clickDelay = clickDelay;
-        this.clickspamDelay = clickspamDelay;
-        this.clickspamWarnings = clickspamWarnings;
-        this.clickSpamForgetTime = clickSpamForgetTime;
+        this.factory = factory;
+        this.clickTimes = new WeakHashMap<>();
+        this.violations = new WeakHashMap<>();
+        this.delay = this.factory.settings().clickDelay();
+        this.warnings = this.factory.settings().clickWarnings();
+        this.memory = this.factory.settings().forgetClickSpam();
+        this.actions = List.of(InventoryAction.DROP_ALL_SLOT, InventoryAction.DROP_ONE_SLOT,
+                InventoryAction.HOTBAR_MOVE_AND_READD,
+                InventoryAction.HOTBAR_SWAP,
+                InventoryAction.PICKUP_ALL,
+                InventoryAction.PICKUP_HALF,
+                InventoryAction.PICKUP_ONE,
+                InventoryAction.PICKUP_SOME,
+                InventoryAction.PLACE_ALL,
+                InventoryAction.PLACE_ONE,
+                InventoryAction.PLACE_SOME,
+                InventoryAction.SWAP_WITH_CURSOR);
     }
 
     @EventHandler
     public void closeShop(InventoryCloseEvent e) {
-        if (!(e.getInventory().getHolder() instanceof BSShopHolder)) {
-            return;
-        }
-        BSShopHolder holder = (BSShopHolder) e.getInventory().getHolder();
-
-        if (e.getPlayer() instanceof Player) {
-            final Player p = (Player) e.getPlayer();
-            plugin.getClassManager().getMessageHandler().sendMessage("Main.CloseShop", p, null, (Player) e.getPlayer(), holder.getShop(), holder, null);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (!ClassManager.manager.getPlugin().getAPI().isValidShop(p.getOpenInventory())) {
-                        Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOP_CLOSE, this, null));
-                    }
+        if (e.getInventory().getHolder() instanceof BSShopHolder holder && e.getPlayer() instanceof Player player) {
+            ClassManager.manager.getMessageHandler().sendMessage(this.factory.messages().closeShop(), player, null, player, holder.getShop(), holder, null);
+            Bukkit.getScheduler().runTask(this.plugin, () -> {
+                if (!this.plugin.getAPI().isValidShop(player.getOpenInventory())) {
+                    player.playSound(this.factory.settings().sounds().get("close"));
                 }
-            }.runTask(plugin);
+            });
         }
     }
 
-
+    /**
+     * if player doesnt have perm
+     * check map for last time clicked.
+     * if the delay + last click time is less than current time, add a violation to the player.
+     * if the new violation amount is more than or equal to the configured warning count, kick the player.
+     * else, send warning message to player.
+     * if last click time and memory is less than current system time, remove the user from the violations map.
+     */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void purchase(InventoryClickEvent event) {
-        if (!(event.getInventory().getHolder() instanceof BSShopHolder)) {
+    public void purchase(InventoryClickEvent e) {
+        if (!(e.getInventory().getHolder() instanceof BSShopHolder holder) || !(e.getWhoClicked() instanceof Player player)) {
             return;
         }
-
-        boolean cancel = true;
-        try {
-            if (!(ClassManager.manager.getPlugin().getAPI().isValidShop(event.getClickedInventory()))) {
-                switch (event.getAction()) {
-                    case DROP_ALL_SLOT:
-                    case DROP_ONE_SLOT:
-                    case HOTBAR_MOVE_AND_READD:
-                    case HOTBAR_SWAP:
-                    case PICKUP_ALL:
-                    case PICKUP_HALF:
-                    case PICKUP_ONE:
-                    case PICKUP_SOME:
-                    case PLACE_ALL:
-                    case PLACE_ONE:
-                    case PLACE_SOME:
-                    case SWAP_WITH_CURSOR:
-                        cancel = false;
-                        break;
-                    default:
-                        break;
-                }
-            }
-        } catch (NoSuchMethodError e) {
-            //error when not using spigot api
+        ClickType clickType = e.getClick();
+        BSBuy buy = holder.getShopItem(e.getRawSlot());
+        if (e.getCurrentItem() == null || clickType == ClickType.DOUBLE_CLICK || e.getCursor() == null || e.getSlotType() == SlotType.QUICKBAR || buy == null) {
+            return;
         }
-        if (cancel) {
-            event.setCancelled(true);
-            event.setResult(Result.DENY);
+        if (!this.actions.contains(e.getAction())) {
+            e.setCancelled(true);
+            e.setResult(Result.DENY);
         }
-
-
-        BSShopHolder holder = (BSShopHolder) event.getInventory().getHolder();
-
-
-        if (event.getWhoClicked() instanceof Player) {
-
-            if (event.getCurrentItem() == null) {
-                return;
-            }
-
-            if (event.getClick() == ClickType.DOUBLE_CLICK) {
-                return;
-            }
-
-            if (event.getCursor() == null) {
-                return;
-            }
-
-            if (event.getSlotType() == SlotType.QUICKBAR) {
-                return;
-            }
-
-            BSBuy buy = holder.getShopItem(event.getRawSlot());
-            if (buy == null) {
-                return;
-            }
-            event.setCancelled(true);
-            event.setResult(Result.DENY);
-            //event.setCurrentItem(null);
-
-            final Player p = (Player) event.getWhoClicked();
-            ClickType clicktype = event.getClick();
-
-
-            BSShop shop = ((BSShopHolder) event.getInventory().getHolder()).getShop();
-
-            //Anti spam delay
-            if (!p.hasPermission("BossShop.bypasss")) {
-                if (lastClicks.containsKey(p)) {
-                    long lastClick = lastClicks.get(p);
-
-
-                    //Offensive clickspam
-                    if (System.currentTimeMillis() < lastClick + clickspamDelay) {
-                        int clickspamCount = 0;
-                        if (clickspamCounts.containsKey(p)) {
-                            clickspamCount = clickspamCounts.get(p);
-                        }
-                        clickspamCount++;
-
-                        if (clickspamCount > clickspamWarnings) {
-                            p.kickPlayer(ClassManager.manager.getMessageHandler().get("Main.OffensiveClickSpamKick"));
-                        } else {
-                            double timeLeft = lastClicks.get(p) + clickspamDelay - System.currentTimeMillis();
-                            timeLeft = Math.max(0.1f, timeLeft / 1000);
-                            ClassManager.manager.getMessageHandler().sendMessageDirect(ClassManager.manager.getStringManager().transform(ClassManager.manager.getMessageHandler().get("Main.OffensiveClickSpamWarning").replace("%time_left%", MathTools.displayNumber(timeLeft, 1)), buy, shop, holder, p), p);
-                        }
-                        clickspamCounts.put(p, clickspamCount);
-                        return;
-                    }
-
-                    //Clickspam
-                    if (System.currentTimeMillis() < lastClick + clickDelay) {
-                        double timeLeft = lastClicks.get(p) + clickDelay - System.currentTimeMillis();
-                        timeLeft = Math.max(0.1f, timeLeft / 1000);
-                        ClassManager.manager.getMessageHandler().sendMessageDirect(ClassManager.manager.getStringManager().transform(ClassManager.manager.getMessageHandler().get("Main.ClickSpamWarning").replace("%time_left%", MathTools.displayNumber(timeLeft, 1)), buy, shop, holder, p), p);
-                        return;
-                    }
-
-                    //Forget old clickspam
-                    if (clickspamCounts.containsKey(p)) {
-                        if (lastClick + clickSpamForgetTime < System.currentTimeMillis()) {
-                            clickspamCounts.remove(p);
-                        }
-                    }
-
-                }
-                lastClicks.put(p, System.currentTimeMillis());
-            }
-
-            buy.click(p, shop, holder, clicktype, event, plugin);
+        BSShop shop = holder.getShop();
+        if (player.hasPermission("BossShop.bypass")) {
+            buy.click(player, shop, holder, clickType, e, this.plugin);
+            return;
         }
+        long click = this.clickTimes.containsKey(player) ? this.clickTimes.get(player) : System.currentTimeMillis();
+        if (System.currentTimeMillis() < click + this.delay) {
+            int count = this.violations.get(player) == null ? 1 : this.violations.get(player) + 1;
+            this.violations.put(player, count);
+        }
+        if (this.violations.get(player) >= this.warnings) {
+            player.kickPlayer(ClassManager.manager.getMessageHandler().get("Main.OffensiveClickSpamKick"));
+        } else {
+            double timeLeft = this.clickTimes.get(player) + (double) (this.delay - System.currentTimeMillis());
+            timeLeft = Math.max(0.1f, timeLeft / 1000);
+            ClassManager.manager.getMessageHandler().sendMessageDirect(ClassManager.manager.getStringManager().transform(ClassManager.manager.getMessageHandler().get("Main.ClickSpamWarning").replace("%time_left%", String.valueOf(timeLeft)), buy, shop, holder, player), player);
+        }
+        if (click + this.memory < System.currentTimeMillis()) {
+            this.violations.put(player, 0);
+        }
+        buy.click(player, shop, holder, clickType, e, this.plugin);
     }
 
     @EventHandler
@@ -200,47 +126,17 @@ public class InventoryListener implements Listener {
         event.setResult(Result.DENY);
     }
 
+    @EventHandler
+    public void quit(PlayerQuitEvent e) {
+        Player player = e.getPlayer();
+        this.clickTimes.remove(player);
+        this.violations.remove(player);
+    }
 
     @EventHandler
-    public void quit(PlayerQuitEvent event) {
-        playerLeave(event);
+    public void kick(PlayerKickEvent e) {
+        Player player = e.getPlayer();
+        this.clickTimes.remove(player);
+        this.violations.remove(player);
     }
-
-    @EventHandler
-    public void kick(PlayerKickEvent event) {
-        playerLeave(event);
-    }
-
-    public void playerLeave(PlayerEvent event) {
-        if (lastClicks != null) {
-            if (lastClicks.containsKey(event.getPlayer())) {
-                lastClicks.remove(event.getPlayer());
-            }
-        }
-        if (clickspamCounts != null) {
-            if (clickspamCounts.containsKey(event.getPlayer())) {
-                clickspamCounts.remove(event.getPlayer());
-            }
-        }
-    }
-
-
-    @EventHandler
-    public void onAnvilEvent(InventoryClickEvent e) {
-        if (e.getWhoClicked() instanceof Player) {
-            Player p = (Player) e.getWhoClicked();
-
-            if (e.getInventory().getHolder() instanceof BSAnvilHolder) {
-                e.setResult(Result.DENY);
-                e.setCancelled(true);
-                BSAnvilHolder holder = (BSAnvilHolder) e.getInventory().getHolder();
-                String text = holder.getOutputText();
-                if (text != null) {
-                    holder.userClickedResult(p);
-                }
-            }
-        }
-    }
-
-
 }

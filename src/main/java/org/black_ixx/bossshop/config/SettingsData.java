@@ -1,25 +1,27 @@
 package org.black_ixx.bossshop.config;
 
 import net.kyori.adventure.key.Key;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import net.kyori.adventure.sound.Sound;
+import org.black_ixx.bossshop.config.data.Formats;
+import org.black_ixx.bossshop.multiplier.Multiplier;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents data from config.yml
+ * Represents data from config.yml.
  */
 @ConfigSerializable
 @SuppressWarnings({"unused", "FieldMayBeFinal", "FieldCanBeLocal"})
+//TODO: make user specify the points plugin.
+//TODO: serverpinging, multiplier groups
 public class SettingsData implements ConfigData {
     private boolean enableSigns = true;
     private String mainShop = "Menu";
     private boolean hideItemsWhenNoPermission = false;
     private boolean sellItemsWithDifferentEnchants = false;
     private boolean enableTransactionLog = false;
-    //SearchSubfoldersForShops is always enabled. Will be a requirement.
     private boolean allowUnsafeEnchantments = false;
     private boolean sellDamagedItems = false;
     private boolean checkStackSize = true;
@@ -27,28 +29,29 @@ public class SettingsData implements ConfigData {
     private long clickDelay = 200L;
     private int clickWarnings = 1;
     private long forgetClickSpam = 5000L;
-    //MaxLineLength is removed. Onus is on the user to figure this out.
     private int inputTimeout = 45;
     private boolean sellAllPlaceholderShowFinalReward = false;
     private boolean expUseLevels = true;
     private long autoRefreshDelay = 100L;
-    //TODO: display options, serverpinging, multiplier groups
     private boolean bungeecord = false;
-    //TODO: make user specify the points plugin.
+    private boolean velocity = false;
+    private boolean asyncActions = false;
     private String pointsPlugin = "auto-detect";
-    private Map<String, SoundSetting> sounds;
+    private Formats moneyFormat = Formats.defaults();
+    private Formats pointsFormat = Formats.defaults();
+    private Map<String, Multiplier> multipliers;
+    private Map<String, Sound> sounds;
 
     public SettingsData() {
-        //TODO: Adventure Sound Interface - Sound Serializer for configurate is provided.
         this.sounds = new HashMap<>();
-        this.sounds.put("click", new SoundSetting(Sound.UI_BUTTON_CLICK.key(), 1f, 1f));
-        this.sounds.put("purchase", new SoundSetting(Sound.ENTITY_PLAYER_LEVELUP.key(), 1f, 1.8f));
-        this.sounds.put("noPermission", new SoundSetting(Sound.ENTITY_BLAZE_DEATH.key(), 1f, 1f));
-        this.sounds.put("notEnoughMoney", new SoundSetting(Sound.ENTITY_SHULKER_HURT.key(), 1f, 0.8f));
-        this.sounds.put("changeShop", new SoundSetting(Sound.UI_BUTTON_CLICK.key(), 0.2f, 1f));
-        this.sounds.put("changePage", new SoundSetting(Sound.BLOCK_CHEST_OPEN.key(), 0.2f, 1f));
-        this.sounds.put("open", new SoundSetting(Sound.ENTITY_ELDER_GUARDIAN_CURSE.key(), 1f, 1.8f));
-        this.sounds.put("close", new SoundSetting(Sound.ENTITY_ELDER_GUARDIAN_CURSE.key(), 1f, 1.8f));
+        this.sounds.put("click", this.createSound("ui.button.click", 1f, 1f));
+        this.sounds.put("purchase", this.createSound("entity.player.levelup", 1f, 1.8f));
+        this.sounds.put("noPermission", this.createSound("entity.blaze.death", 1f, 1f));
+        this.sounds.put("notEnoughMoney", this.createSound("entity.shulker.hurt", 1f, 0.8f));
+        this.sounds.put("changeShop", this.createSound("ui.button.click", 0.2f, 1f));
+        this.sounds.put("changePage", this.createSound("block.chest.open", 0.2f, 1f));
+        this.sounds.put("open", this.createSound("entity.elder_guardian.curse", 1f, 1.8f));
+        this.sounds.put("close", this.createSound("entity.elder_guardian.curse", 1f, 1.8f));
     }
 
     public boolean enableSigns() {
@@ -123,14 +126,35 @@ public class SettingsData implements ConfigData {
         return this.pointsPlugin;
     }
 
-    public Map<String, SoundSetting> sounds() {
+    public Map<String, Sound> sounds() {
         return this.sounds;
     }
 
-    @ConfigSerializable
-    private record SoundSetting(Key type, float volume, float pitch) {
-        public net.kyori.adventure.sound.Sound toSound() {
-            return net.kyori.adventure.sound.Sound.sound(this.type, SoundCategory.AMBIENT, this.volume, this.pitch);
-        }
+    public boolean velocity() {
+        return this.velocity;
+    }
+
+    public boolean asyncActions() {
+        return this.asyncActions;
+    }
+
+    public Formats moneyFormat() {
+        return this.moneyFormat;
+    }
+
+    public Formats pointsFormat() {
+        return this.pointsFormat;
+    }
+
+    /**
+     * Builds a sound for config.
+     *
+     * @param type   The type of sound.
+     * @param volume The volume of the sound.
+     * @param pitch  The pitch of the sound.
+     * @return The sound.
+     */
+    private Sound createSound(final String type, final float volume, final float pitch) {
+        return Sound.sound(x -> x.volume(volume).pitch(pitch).type(Key.key(type)));
     }
 }

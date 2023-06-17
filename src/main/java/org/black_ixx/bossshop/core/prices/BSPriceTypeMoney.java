@@ -24,8 +24,6 @@ public class BSPriceTypeMoney extends BSPriceTypeNumber {
     }
 
     public void enableType() {
-        ClassManager.manager.getSettings().setMoneyEnabled(true);
-        ClassManager.manager.getSettings().setVaultEnabled(true);
     }
 
 

@@ -26,8 +26,7 @@ public class BSRewardTypePermission extends BSRewardType {
     }
 
     public void enableType() {
-        ClassManager.manager.getSettings().setPermissionsEnabled(true);
-        ClassManager.manager.getSettings().setVaultEnabled(true);
+
     }
 
     @SuppressWarnings("unchecked")

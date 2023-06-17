@@ -5,7 +5,6 @@ import org.black_ixx.bossshop.events.BSChoosePageLayoutEvent;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.features.PageLayoutHandler;
 import org.black_ixx.bossshop.misc.Misc;
-import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -29,8 +28,6 @@ public abstract class BSShop {
     private String displayname;
     private String[] commands;
 
-    private boolean needPermToCreateSign = true;
-
     private boolean customizable = !ClassManager.manager.getPageLayoutHandler().showIfMultiplePagesOnly(); //Automatically customizable when there special PageLayout components are shown
     private boolean displaying = false; //When displaying custom variables
 
@@ -45,12 +42,11 @@ public abstract class BSShop {
 
     //////////////////////////// <- Constructor
 
-    public BSShop(int id, String shopName, String signText, boolean needPermToCreateSign, BossShop plugin, String displayname, int manualInventoryRows, String[] commands) {
+    public BSShop(int id, String shopName, String signText, BossShop plugin, String displayname, int manualInventoryRows, String[] commands) {
         this.id = id;
         this.shopName = shopName;
         this.signText = signText;
         this.manualInventoryRows = manualInventoryRows;
-        this.needPermToCreateSign = needPermToCreateSign;
         setCommands(commands);
 
         setDisplayName(displayname);
@@ -108,10 +104,6 @@ public abstract class BSShop {
         this.commands = commands;
     }
 
-    public boolean needPermToCreateSign() {
-        return needPermToCreateSign;
-    }
-
     /**
      * Checks whether anything within the shop is player-dependent.
      *
@@ -157,10 +149,6 @@ public abstract class BSShop {
         this.manualInventoryRows = i;
     }
 
-    public void setNeedPermToCreateSign(boolean b) {
-        needPermToCreateSign = b;
-    }
-
     //////////////////////////// <- Methods to get Items
 
     public Set<BSBuy> getItems() {
@@ -200,7 +188,7 @@ public abstract class BSShop {
 
     public void updateInventory(Inventory i, BSShopHolder holder, Player p, ClassManager manager, int page, int highestPage, boolean autoRefresh) {
         if (holder.getPage() != page) {
-            Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOP_CHANGE_PAGE, this, null));
+            p.playSound(ClassManager.manager.getFactory().settings().sounds().get("changePage"));
         }
         holder.setPage(page);
         holder.setHighestPage(highestPage);
@@ -285,9 +273,9 @@ public abstract class BSShop {
 
         ClassManager.manager.getMessageHandler().sendMessage("Main.OpenShop", p, null, p, this, null, null);
         if (ClassManager.manager.getPlugin().getAPI().isValidShop(p.getOpenInventory())) {
-            Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOP_CHANGE_SHOP, this, null));
+            p.playSound(ClassManager.manager.getFactory().settings().sounds().get("changeShop"));
         } else {
-            Misc.playSound(p, ClassManager.manager.getSettings().getPropertyString(Settings.SOUND_SHOP_OPEN, this, null));
+            p.playSound(ClassManager.manager.getFactory().settings().sounds().get("open"));
         }
         p.openInventory(createInventory(p, ClassManager.manager, page, highestPage, oldshopholder));
         ClassManager.manager.getPlayerDataHandler().openedShop(p, this);//TODO: only store previous shop, not current shop somehow.
@@ -304,29 +292,9 @@ public abstract class BSShop {
         }
     }
 
-    public boolean isBeingAccessed(Player exclusion) {
-        for (Player p : Bukkit.getOnlinePlayers()) { //NEW!
-            if (ClassManager.manager.getPlugin().getAPI().isValidShop(p.getOpenInventory())) {
-                BSShopHolder holder = ((BSShopHolder) p.getOpenInventory().getTopInventory().getHolder());
-                if (holder.getShop() == this) {
-                    if (p != exclusion) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    //////////////////////////// <- Load Methods
-
     public void finishedAddingItems() {
         loadInventorySize();
     }
 
-    //////////////////////////// <- Abstract
-
     public abstract void reloadShop();
-
-
 }

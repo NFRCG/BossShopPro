@@ -66,10 +66,6 @@ public class StringManager {
 
         s = ChatColor.translateAlternateColorCodes('&', s);
 
-
-
-        s = MathTools.transform(s);
-
         s = s.replace("[and]", "&");
         s = s.replace("[colon]", ":");
         s = s.replace("[hashtag]", "#");
@@ -160,15 +156,10 @@ public class StringManager {
         if (s.contains("%")) {
 
             if (s.contains("%balance%")) {
-                ClassManager.manager.getSettings().setBalanceVariableEnabled(true);
-                ClassManager.manager.getSettings().setVaultEnabled(true);
-                ClassManager.manager.getSettings().setMoneyEnabled(true);
                 b = true;
             }
 
             if (s.contains("%balancepoints%")) {
-                ClassManager.manager.getSettings().setBalancePointsVariableEnabled(true);
-                ClassManager.manager.getSettings().setPointsEnabled(true);
                 b = true;
             }
 
@@ -182,16 +173,6 @@ public class StringManager {
 
             if (s.contains("%world%")) {
                 b = true;
-            }
-
-            if (buy != null && shop != null) {
-                String server_names = StringManipulationLib.figureOutVariable(s, 0, "players", "motd");
-                if (server_names != null) {
-                    b = true;
-                    if (buy.getItem() != null) {
-                        String[] servers = server_names.split(":");
-                    }
-                }
             }
 
             if (s.contains("%reward%") || s.contains("%price%")) {
@@ -225,6 +206,4 @@ public class StringManager {
         }
         return b;
     }
-
-
 }

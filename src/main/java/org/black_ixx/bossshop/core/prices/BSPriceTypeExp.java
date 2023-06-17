@@ -23,8 +23,8 @@ public class BSPriceTypeExp extends BSPriceTypeNumber {
 
     @Override
     public void enableType() {
-    }
 
+    }
 
     @Override
     public boolean hasPrice(Player p, BSBuy buy, Object price, ClickType clickType, int multiplier, boolean messageOnFailure) {

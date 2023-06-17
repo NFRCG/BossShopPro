@@ -5,15 +5,95 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 @ConfigSerializable
 @SuppressWarnings({"unused", "FieldMayBeFinal", "FieldCanBeLocal"})
 public class MessagesData implements ConfigData {
-    private Messages messages = new Messages();
+    private String noPermission = "&cYou are not allowed to do this!";
+    private String alreadyBought = "&cYou already purchased that!";
+    private String shopNotExisting = "&cThat shop is not existing...";
+    private String shopItemNotExisting = "&cThat shop item is not existing...";
+    private String openShop = "";
+    private String openShopOtherPlayer = "&6Opening Shop &c%shop% &6for %player%&6.";
+    private String closeShopOtherPlayer = "&6Closed inventory of %player%&6.";
+    private String closeShop = "";
+    private String inventoryFull = "&cYour inventory does not have enough free space left!";
+    private String playerNotFound = "&cPlayer %name% not found!";
+    private String clickSpamWarning = "&cPlease wait for an other %time_left% seconds until you can use this again.";
+    private String offensiveClickSpamWarning = "&4Warning: Please do not click that fast.";
+    private String offensiveClickSpamKick = "&4Kicked for clickspam.";
+    private String needItemInHand = "&cYou need an item in your main hand in order to be able to execute this command.";
+    private String printedItemInfo = "&6All item information has successfully been saved here: &7''/plugins/BossShopPro/ItemDataStorage.yml''&6.";
+    private String listAndSeparator = " & ";
+    private String listOrSeparator = " or ";
     private Economy economy = new Economy();
     private NotEnough notEnough = new NotEnough();
     private Enchantment enchantment = new Enchantment();
     private Display display = new Display();
     private Time time = new Time();
 
-    public Messages messages() {
-        return this.messages;
+    public String noPermission() {
+        return this.noPermission;
+    }
+
+    public String alreadyBought() {
+        return this.alreadyBought;
+    }
+
+    public String shopNotExisting() {
+        return this.shopNotExisting;
+    }
+
+    public String shopItemNotExisting() {
+        return this.shopItemNotExisting;
+    }
+
+    public String openShop() {
+        return this.openShop;
+    }
+
+    public String openShopOtherPlayer() {
+        return this.openShopOtherPlayer;
+    }
+
+    public String closeShopOtherPlayer() {
+        return this.closeShopOtherPlayer;
+    }
+
+    public String closeShop() {
+        return this.closeShop;
+    }
+
+    public String inventoryFull() {
+        return this.inventoryFull;
+    }
+
+    public String playerNotFound() {
+        return this.playerNotFound;
+    }
+
+    public String clickSpamWarning() {
+        return this.clickSpamWarning;
+    }
+
+    public String offensiveClickSpamWarning() {
+        return this.offensiveClickSpamWarning;
+    }
+
+    public String offensiveClickSpamKick() {
+        return this.offensiveClickSpamKick;
+    }
+
+    public String needItemInHand() {
+        return this.needItemInHand;
+    }
+
+    public String printedItemInfo() {
+        return this.printedItemInfo;
+    }
+
+    public String listAndSeparator() {
+        return this.listAndSeparator;
+    }
+
+    public String listOrSeparator() {
+        return this.listOrSeparator;
     }
 
     public Economy economy() {
@@ -34,95 +114,6 @@ public class MessagesData implements ConfigData {
 
     public Time time() {
         return this.time;
-    }
-
-    @ConfigSerializable
-    public static class Messages {
-        private String noPermission = "&cYou are not allowed to do this!";
-        private String alreadyBought = "&cYou already purchased that!";
-        private String shopNotExisting = "&cThat shop is not existing...";
-        private String shopItemNotExisting = "&cThat shop item is not existing...";
-        private String openShop = "";
-        private String openShopOtherPlayer = "&6Opening Shop &c%shop% &6for %player%&6.";
-        private String closeShopOtherPlayer = "&6Closed inventory of %player%&6.";
-        private String closeShop = "";
-        private String inventoryFull = "&cYour inventory does not have enough free space left!";
-        private String playerNotFound = "&cPlayer %name% not found!";
-        private String clickSpamWarning = "&cPlease wait for an other %time_left% seconds until you can use this again.";
-        private String offensiveClickSpamWarning = "&4Warning: Please do not click that fast.";
-        private String offensiveClickSpamKick = "&4Kicked for clickspam.";
-        private String needItemInHand = "&cYou need an item in your main hand in order to be able to execute this command.";
-        private String printedItemInfo = "&6All item information has successfully been saved here: &7''/plugins/BossShopPro/ItemDataStorage.yml''&6.";
-        private String listAndSeparator = " & ";
-        private String listOrSeparator = " or ";
-
-        public String noPermission() {
-            return this.noPermission;
-        }
-
-        public String alreadyBought() {
-            return this.alreadyBought;
-        }
-
-        public String shopNotExisting() {
-            return this.shopNotExisting;
-        }
-
-        public String shopItemNotExisting() {
-            return this.shopItemNotExisting;
-        }
-
-        public String openShop() {
-            return this.openShop;
-        }
-
-        public String openShopOtherPlayer() {
-            return this.openShopOtherPlayer;
-        }
-
-        public String closeShopOtherPlayer() {
-            return this.closeShopOtherPlayer;
-        }
-
-        public String closeShop() {
-            return this.closeShop;
-        }
-
-        public String inventoryFull() {
-            return this.inventoryFull;
-        }
-
-        public String playerNotFound() {
-            return this.playerNotFound;
-        }
-
-        public String clickSpamWarning() {
-            return this.clickSpamWarning;
-        }
-
-        public String offensiveClickSpamWarning() {
-            return this.offensiveClickSpamWarning;
-        }
-
-        public String offensiveClickSpamKick() {
-            return this.offensiveClickSpamKick;
-        }
-
-        public String needItemInHand() {
-            return this.needItemInHand;
-        }
-
-        public String printedItemInfo() {
-            return this.printedItemInfo;
-        }
-
-        public String listAndSeparator() {
-            return this.listAndSeparator;
-        }
-
-        public String listOrSeparator() {
-            return this.listOrSeparator;
-        }
     }
 
     @ConfigSerializable

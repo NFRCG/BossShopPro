@@ -4,7 +4,6 @@ import org.black_ixx.bossshop.BossShop;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.config.BSConfigShop;
 import org.black_ixx.bossshop.managers.config.FileHandler;
-import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -22,29 +21,27 @@ public class BSShops {
     /////////////////////////////// <- Variables
     private int id = 0;
 
-    public BSShops(BossShop plugin, Settings settings) {
-        shops = new HashMap<Integer, BSShop>();
-        shopsIds = new HashMap<String, Integer>();
+    public BSShops(BossShop plugin) {
+        shops = new HashMap<>();
+        shopsIds = new HashMap<>();
 
         File folder = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "shops" + File.separator);
         new FileHandler().exportShops(plugin);
 
-        boolean enable_shop_commands = loadShops(folder, settings, "");
-        ClassManager.manager.getSettings().setShopCommandsEnabled(enable_shop_commands);
-
-        BossShop.log("Loaded " + shops.size() + " Shops!");
+        loadShops(folder, "");
+        Bukkit.getLogger().info("Loaded " + shops.size() + " Shops!");
     }
 
-    private boolean loadShops(File folder, Settings settings, String parent_path) {
+    private boolean loadShops(File folder, String parent_path) {
         boolean enable_shop_commands = false;
 
         for (File f : folder.listFiles()) {
+            if (f != null && f.isDirectory()) {
+            }
             if (f != null) {
                 if (f.isDirectory()) {
-                    if (settings.getLoadSubfoldersEnabled()) {
-                        if (loadShops(f, settings, f.getName() + File.separator)) {
-                            enable_shop_commands = true;
-                        }
+                    if (loadShops(f, f.getName() + File.separator)) {
+                        enable_shop_commands = true;
                     }
                     continue;
                 }
@@ -64,8 +61,6 @@ public class BSShops {
         return enable_shop_commands;
     }
 
-    /////////////////////////////// <- Load Shop
-
     public void addShop(BSShop shop) {
         shops.put(shop.getShopId(), shop);
 
@@ -84,14 +79,6 @@ public class BSShops {
 
         return shop;
     }
-
-    public void unloadShop(BSShop shop) {
-        int id = getShopId(shop.getShopName());
-        shopsIds.remove(shop.getShopName());
-        shops.remove(id);
-        shop.close();
-    }
-
 
     /////////////////////////////// <- Simple Methods
 

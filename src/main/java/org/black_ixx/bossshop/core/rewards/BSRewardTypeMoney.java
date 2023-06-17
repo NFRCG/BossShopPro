@@ -24,8 +24,6 @@ public class BSRewardTypeMoney extends BSRewardTypeNumber {
     }
 
     public void enableType() {
-        ClassManager.manager.getSettings().setMoneyEnabled(true);
-        ClassManager.manager.getSettings().setVaultEnabled(true);
     }
 
     @Override
@@ -38,11 +36,11 @@ public class BSRewardTypeMoney extends BSRewardTypeNumber {
         double money = ClassManager.manager.getMultiplierHandler().calculateRewardWithMultiplier(p, buy, clickType, (double) reward) * multiplier;
 
         if (ClassManager.manager.getVaultHandler() == null) {
-            ClassManager.manager.getBugFinder().severe("Unable to give " + p.getName() + " his/her money: Vault manager not loaded. Property: " + ClassManager.manager.getSettings().getVaultEnabled());
+            ClassManager.manager.getBugFinder().severe("Unable to give " + p.getName() + " his/her money: Vault manager not loaded.");
             return;
         }
         if (ClassManager.manager.getVaultHandler().getEconomy() == null) {
-            ClassManager.manager.getBugFinder().severe("Unable to give " + p.getName() + " his/her money: Economy manager not loaded. Property: " + ClassManager.manager.getSettings().getMoneyEnabled());
+            ClassManager.manager.getBugFinder().severe("Unable to give " + p.getName() + " his/her money: Economy manager not loaded.");
             return;
         }
 

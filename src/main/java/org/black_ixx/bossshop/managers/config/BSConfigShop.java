@@ -54,7 +54,6 @@ public class BSConfigShop extends BSShop {
             ClassManager.manager.getBugFinder().severe("Invalid Configuration! File: /shops/" + ymlName + " Cause: " + e.getMessage());
             String name = ymlName.replace(".yml", "");
             setSignText("[" + name + "]");
-            setNeedPermToCreateSign(true);
             setShopName(name);
 
             ItemStack i = new ItemStack(Material.WHITE_WOOL, 1);
@@ -82,15 +81,12 @@ public class BSConfigShop extends BSShop {
         setShopName(section.getString("ShopName"));
         setDisplayName(section.getString("DisplayName"));
         setSignText(section.getString("signs.text"));
-        setNeedPermToCreateSign(section.getBoolean("signs.NeedPermissionToCreateSign"));
         setManualInventoryRows(section.getInt("InventoryRows", -1));
 
         String commands = section.getString("Command");
         if (commands != null) {
             setCommands(commands.split(":"));
         }
-
-        ClassManager.manager.getSettings().update(this);
 
         //Load Items
         loadItems();

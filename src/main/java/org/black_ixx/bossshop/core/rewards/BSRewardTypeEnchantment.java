@@ -6,7 +6,6 @@ import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.black_ixx.bossshop.misc.Enchant;
 import org.black_ixx.bossshop.misc.Misc;
-import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -48,7 +47,7 @@ public class BSRewardTypeEnchantment extends BSRewardType {
             return false;
         }
 
-        if (!ClassManager.manager.getSettings().getPropertyBoolean(Settings.ALLOW_UNSAFE_ENCHANTMENTS, buy)) {
+        if (!ClassManager.manager.getFactory().settings().allowUnsafeEnchantments()) {
             if (!(enchant.getType().canEnchantItem(item))) {
                 if (message_if_no_success) {
                     ClassManager.manager.getMessageHandler().sendMessage("Enchantment.Invalid", p);

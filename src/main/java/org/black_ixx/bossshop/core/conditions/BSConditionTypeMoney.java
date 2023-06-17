@@ -32,7 +32,5 @@ public class BSConditionTypeMoney extends BSConditionTypeNumber {
 
     @Override
     public void enableType() {
-        ClassManager.manager.getSettings().setVaultEnabled(true);
-        ClassManager.manager.getSettings().setMoneyEnabled(true);
     }
 }

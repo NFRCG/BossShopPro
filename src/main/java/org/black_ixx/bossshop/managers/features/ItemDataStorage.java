@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.features;
 
 import org.black_ixx.bossshop.BossShop;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -47,7 +48,7 @@ public class ItemDataStorage {
         try {
             getConfig().save(file);
         } catch (IOException e) {
-            BossShop.log("Could not save " + fileName + " to " + file);
+            Bukkit.getLogger().info("Could not save " + fileName + " to " + file);
         }
     }
 

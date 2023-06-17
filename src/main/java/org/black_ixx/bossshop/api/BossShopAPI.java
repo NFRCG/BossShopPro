@@ -96,7 +96,7 @@ public class BossShopAPI {
     public void openShop(Player p, String name) {
         BSShop shop = this.getShop(name);
         if (shop == null) {
-            BossShop.log("[API] Error: Tried to open Shop " + name + " but it was not found...");
+            Bukkit.getLogger().info("[API] Error: Tried to open Shop " + name + " but it was not found...");
             return;
         }
         this.openShop(p, shop);
@@ -352,7 +352,7 @@ public class BossShopAPI {
     }
 
     //TODO: see if we can just change to Set
-    public List<BossShopAddon> getEnabledAddons() {
-        return this.addons.stream().toList();
+    public Set<BossShopAddon> getEnabledAddons() {
+        return this.addons;
     }
 }

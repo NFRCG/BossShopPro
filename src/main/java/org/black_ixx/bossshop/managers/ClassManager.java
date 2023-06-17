@@ -2,12 +2,13 @@ package org.black_ixx.bossshop.managers;
 
 import org.black_ixx.bossshop.BossShop;
 import org.black_ixx.bossshop.api.BossShopAddon;
+import org.black_ixx.bossshop.config.DataFactory;
+import org.black_ixx.bossshop.config.SettingsData;
 import org.black_ixx.bossshop.core.BSShops;
 import org.black_ixx.bossshop.core.conditions.BSConditionType;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSRegisterTypesEvent;
-import org.black_ixx.bossshop.managers.config.ConfigHandler;
 import org.black_ixx.bossshop.managers.config.FileHandler;
 import org.black_ixx.bossshop.managers.external.BungeeCordManager;
 import org.black_ixx.bossshop.managers.external.LanguageManager;
@@ -15,56 +16,58 @@ import org.black_ixx.bossshop.managers.external.PlaceholderAPIHandler;
 import org.black_ixx.bossshop.managers.external.VaultHandler;
 import org.black_ixx.bossshop.managers.external.spawners.ISpawnEggHandler;
 import org.black_ixx.bossshop.managers.external.spawners.ISpawnerHandler;
-import org.black_ixx.bossshop.managers.external.spawners.SpawnersHandlerSilkSpawners;
-import org.black_ixx.bossshop.managers.features.*;
+import org.black_ixx.bossshop.managers.external.spawners.SpawnerHandler;
+import org.black_ixx.bossshop.managers.features.AutoRefreshHandler;
+import org.black_ixx.bossshop.managers.features.BugFinder;
+import org.black_ixx.bossshop.managers.features.ItemDataStorage;
+import org.black_ixx.bossshop.managers.features.MultiplierHandler;
+import org.black_ixx.bossshop.managers.features.PageLayoutHandler;
+import org.black_ixx.bossshop.managers.features.PlayerDataHandler;
+import org.black_ixx.bossshop.managers.features.PointsManager;
+import org.black_ixx.bossshop.managers.features.StorageManager;
+import org.black_ixx.bossshop.managers.features.TransactionLog;
 import org.black_ixx.bossshop.managers.item.ItemDataPart;
 import org.black_ixx.bossshop.managers.item.ItemStackChecker;
 import org.black_ixx.bossshop.managers.item.ItemStackCreator;
 import org.black_ixx.bossshop.managers.item.ItemStackTranslator;
 import org.black_ixx.bossshop.managers.misc.StringManager;
-import org.black_ixx.bossshop.misc.MathTools;
-import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
 
 public class ClassManager {
 
     public static ClassManager manager;
-    private ItemStackChecker itemstackChecker;
-    private StringManager stringmanager;
-
-
+    private final ItemStackChecker itemstackChecker;
+    private final StringManager stringmanager;
+    private final DataFactory factory;
+    private final MessageHandler messagehandler;
+    private final ItemStackCreator itemstackCreator;
+    private final ItemStackTranslator itemstackTranslator;
+    private final BuyItemHandler buyItemHandler;
+    private final BugFinder bugfinder;
+    private final BossShop plugin;
+    private final MultiplierHandler multiplierHandler;
+    private final StorageManager storageManager;
+    private final ItemDataStorage itemdataStorage;
+    private final PlayerDataHandler playerdataHandler;
     ///////////////////////////////
     private PointsManager pointsmanager;
     private VaultHandler vaulthandler;
     private PlaceholderAPIHandler placeholderhandler;
-    private MessageHandler messagehandler;
-    private ItemStackCreator itemstackCreator;
-    private ItemStackTranslator itemstackTranslator;
-    private BuyItemHandler buyItemHandler;
-    private ConfigHandler configHandler;
-    private BugFinder bugfinder;
-    private BossShop plugin;
-    private Settings settings;
     private BSShops shops;
     private PageLayoutHandler pagelayoutHandler;
     private BungeeCordManager bungeeCordManager;
     private ShopCustomizer customizer;
     private TransactionLog transactionLog;
-
     private AutoRefreshHandler autoRefreshHandler;
-    private MultiplierHandler multiplierHandler;
-    private StorageManager storageManager;
     private ISpawnEggHandler spawnEggHandler;
     private ISpawnerHandler spawnerHandler;
     private LanguageManager languageManager;
-    private ItemDataStorage itemdataStorage;
-    private PlayerDataHandler playerdataHandler;
+
     public ClassManager(BossShop plugin) {
         this.plugin = plugin;
+        //TODO: DI- Temporarily using the monolith to replace usages of removed code.
+        this.factory = new DataFactory(plugin.getDataFolder().toPath());
         manager = this;
-        settings = new Settings();
 
         new FileHandler().exportConfigs(plugin);
 
@@ -76,8 +79,6 @@ public class ClassManager {
         //////////////// <- Independent Classes
 
         playerdataHandler = new PlayerDataHandler();
-        configHandler = new ConfigHandler(plugin);
-        MathTools.init(settings.getNumberLocale(), settings.getNumberGroupingSize());
         storageManager = new StorageManager(plugin);
         bugfinder = new BugFinder(plugin);
         itemdataStorage = new ItemDataStorage(plugin);
@@ -100,7 +101,7 @@ public class ClassManager {
         if (Bukkit.getPluginManager().isPluginEnabled("SilkSpawners")) {
             try {
                 Class.forName("de.dustplanet.util.SilkUtil");
-                SpawnersHandlerSilkSpawners h = new SpawnersHandlerSilkSpawners();
+                SpawnerHandler h = new SpawnerHandler();
                 spawnerHandler = h;
                 spawnEggHandler = h;
             } catch (ClassNotFoundException e) {
@@ -116,58 +117,38 @@ public class ClassManager {
      */
     public void setupDependentClasses() {
         Bukkit.getPluginManager().callEvent(new BSRegisterTypesEvent());
-
-        FileConfiguration config = plugin.getConfig();
-        plugin.getInventoryListener().init(config.getInt("ClickDelay"), config.getInt("ClickSpamKick.ClickDelay"), config.getInt("ClickSpamKick.Warnings"), config.getInt("ClickSpamKick.ForgetTime"));
-
-        pagelayoutHandler = new PageLayoutHandler(plugin);
-
-        //if (settings.getPointsEnabled()){ Is not known because shops are not yet loaded. But is required before shops are loaded in order to be able to display items properly.
-        pointsmanager = new PointsManager();
-        //}
-
-        shops = new BSShops(plugin, settings);
-
-        if (settings.getVaultEnabled()) {
-            Plugin VaultPlugin = Bukkit.getServer().getPluginManager().getPlugin("Vault");
-            if (VaultPlugin == null) {
-                ClassManager.manager.getBugFinder().warn("Vault was not found... You need it if you want to work with Permissions, Permission Groups or Money! Get it there: http://dev.bukkit.org/server-mods/vault/");
-            } else {
-                vaulthandler = new VaultHandler(settings.getMoneyEnabled(), settings.getPermissionsEnabled());
-            }
+        SettingsData config = this.factory.settings();
+        this.pagelayoutHandler = new PageLayoutHandler(this.plugin);
+        //TODO: impl
+        this.pointsmanager = new PointsManager(null);
+        //TODO: fix
+        this.shops = new BSShops(plugin);
+        if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
+            //TODO: replace with error log
+            Bukkit.getLogger().warning("Vault was not found! You will not be able to use currency or permission related features!");
         }
-
-        if (settings.getBalanceVariableEnabled() || settings.getBalancePointsVariableEnabled() || settings.getProperty(Settings.HIDE_ITEMS_PLAYERS_DONT_HAVE_PERMISSIONS_FOR).containsValueAny(true)) {
-            customizer = new ShopCustomizer();
-        }
-
-        if (settings.getTransactionLogEnabled()) {
-            transactionLog = new TransactionLog(plugin);
-        }
-
-        if (settings.getBungeeCordServerEnabled()) { //Depends on ServerPinging
-            bungeeCordManager = new BungeeCordManager();
+        this.vaulthandler = new VaultHandler();
+        this.customizer = new ShopCustomizer();
+        this.transactionLog = new TransactionLog(this.plugin);
+        if (config.bungeecord()) {
+            this.bungeeCordManager = new BungeeCordManager();
             Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, "BungeeCord");
             //Bukkit.getMessenger().registerIncomingPluginChannel(plugin, "BungeeCord", bungeeCordManager);
         }
-
-        if (settings.getAutoRefreshSpeed() > 0) {
-            autoRefreshHandler = new AutoRefreshHandler();
-            autoRefreshHandler.start(settings.getAutoRefreshSpeed(), plugin);
+        if (config.autoRefreshDelay() > 0) {
+            this.autoRefreshHandler = new AutoRefreshHandler(this.plugin, config.autoRefreshDelay());
         }
 
-
-        if (plugin.getAPI().getEnabledAddons() != null) {
+        if (this.plugin.getAPI().getEnabledAddons() != null) {
             for (BossShopAddon addon : plugin.getAPI().getEnabledAddons()) {
                 addon.bossShopFinishedLoading();
             }
         }
     }
 
-    ///////////////////////////////
-
-    public Settings getSettings() {
-        return settings;
+    //TODO: replace with DI
+    public DataFactory getFactory() {
+        return this.factory;
     }
 
     public ItemStackChecker getItemStackChecker() {
@@ -183,10 +164,7 @@ public class ClassManager {
     }
 
     public VaultHandler getVaultHandler() {
-        if (vaulthandler == null) {
-            return new VaultHandler(ClassManager.manager.getSettings().getMoneyEnabled(), ClassManager.manager.getSettings().getPointsEnabled());
-        }
-        return vaulthandler;
+        return this.vaulthandler;
     }
 
     public PlaceholderAPIHandler getPlaceholderHandler() {
@@ -207,10 +185,6 @@ public class ClassManager {
 
     public BuyItemHandler getBuyItemHandler() {
         return buyItemHandler;
-    }
-
-    public ConfigHandler getConfigHandler() {
-        return configHandler;
     }
 
     public BugFinder getBugFinder() {

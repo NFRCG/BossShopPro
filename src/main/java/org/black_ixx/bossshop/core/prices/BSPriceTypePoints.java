@@ -24,7 +24,6 @@ public class BSPriceTypePoints extends BSPriceTypeNumber {
     }
 
     public void enableType() {
-        ClassManager.manager.getSettings().setPointsEnabled(true);
     }
 
 

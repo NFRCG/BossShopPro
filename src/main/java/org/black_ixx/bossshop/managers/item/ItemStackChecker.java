@@ -176,7 +176,7 @@ public class ItemStackChecker {
             return false;
         }
 
-        ItemDataPart exception_durability = isTool(player_item) && ClassManager.manager.getSettings().getAllowSellingDamagedItems() ? ItemDataPart.DURABILITY : null;
+        ItemDataPart exception_durability = isTool(player_item) && ClassManager.manager.getFactory().settings().sellDamagedItems() ? ItemDataPart.DURABILITY : null;
         ItemDataPart[] exceptions = new ItemDataPart[]{exception_durability};
 
         return ItemDataPart.isSimilar(shop_item, player_item, exceptions, buy, false, p);
@@ -194,7 +194,7 @@ public class ItemStackChecker {
             }
 
             ItemDataPart[] exceptions;
-            ItemDataPart exception_durability = isTool(a) && ClassManager.manager.getSettings().getAllowSellingDamagedItems() ? ItemDataPart.DURABILITY : null;
+            ItemDataPart exception_durability = isTool(a) && ClassManager.manager.getFactory().settings().sellDamagedItems() ? ItemDataPart.DURABILITY : null;
             if (!compare_text) {
                 exceptions = new ItemDataPart[]{exception_durability, ItemDataPart.NAME, ItemDataPart.LORE, ItemDataPart.PLAYERHEAD};
             } else {
@@ -220,7 +220,7 @@ public class ItemStackChecker {
     }
 
     public int getMaxStackSize(ItemStack i) {
-        if (ClassManager.manager.getSettings().getCheckStackSize()) {
+        if (ClassManager.manager.getFactory().settings().checkStackSize()) {
             return i.getMaxStackSize();
         }
         return 64;

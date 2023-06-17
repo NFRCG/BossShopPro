@@ -6,7 +6,6 @@ import org.black_ixx.bossshop.core.BSShopHolder;
 import org.black_ixx.bossshop.events.BSChoosePageLayoutEvent;
 import org.black_ixx.bossshop.events.BSDisplayItemEvent;
 import org.black_ixx.bossshop.managers.features.PageLayoutHandler;
-import org.black_ixx.bossshop.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -220,7 +219,7 @@ public class ShopCustomizer {
         }
 
         if (p != null) {
-            if (ClassManager.manager.getSettings().getPropertyBoolean(Settings.HIDE_ITEMS_PLAYERS_DONT_HAVE_PERMISSIONS_FOR, buy) & !buy.hasPermission(p, false, null)) {
+            if (ClassManager.manager.getFactory().settings().hideItemsWhenNoPermission() && !buy.hasPermission(p, false, null)) {
                 return false;
             }
 

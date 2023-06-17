@@ -29,15 +29,12 @@ public enum BSInputType {
                         return;
                     }
                     ClassManager.manager.getPlayerDataHandler().enteredInput(p, text);
-                    Bukkit.getScheduler().callSyncMethod(plugin, new Callable<Boolean>() {
-                        @Override
-                        public Boolean call() {
-                            buy.purchase(p, shop, holder, clicktype, rewardtype, pricetype, event, plugin, false);
-                            return true;
-                        }
+                    Bukkit.getScheduler().callSyncMethod(plugin, () -> {
+                        buy.purchase(p, shop, holder, clicktype, rewardtype, pricetype, event, plugin, false);
+                        return true;
                     });
                 }
-            }.getUserInput(p, null, null, buy.getInputText(clicktype));
+            }.getUserInput(p, buy.getInputText(clicktype));
 
 
         }
@@ -52,15 +49,12 @@ public enum BSInputType {
                 @Override
                 public void receivedInput(final Player p, String text) {
                     ClassManager.manager.getPlayerDataHandler().enteredInput(p, text);
-                    Bukkit.getScheduler().callSyncMethod(plugin, new Callable<Boolean>() {
-                        @Override
-                        public Boolean call() {
-                            buy.purchase(p, shop, holder, clicktype, rewardtype, pricetype, event, plugin, false);
-                            return true;
-                        }
+                    Bukkit.getScheduler().callSyncMethod(plugin, () -> {
+                        buy.purchase(p, shop, holder, clicktype, rewardtype, pricetype, event, plugin, false);
+                        return true;
                     });
                 }
-            }.getUserInput(p, null, null, buy.getInputText(clicktype));
+            }.getUserInput(p, buy.getInputText(clicktype));
 
         }
     };

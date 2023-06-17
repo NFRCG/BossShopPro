@@ -14,7 +14,7 @@ public class ItemDataPartUnbreaking extends ItemDataPart {
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         boolean b = true;
         if (argument != null) {
-            b = InputReader.getBoolean(argument, true);
+            b = Boolean.parseBoolean(argument);
         }
         ItemMeta meta = item.getItemMeta();
         meta.setUnbreakable(b);

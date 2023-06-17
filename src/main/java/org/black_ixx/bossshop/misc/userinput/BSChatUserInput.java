@@ -6,38 +6,23 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 public class BSChatUserInput {
+    private final BSUserInput input;
+    private final long time;
 
-    private UUID uuid;
-    private BSUserInput input;
-    private long time;
-
-
-    public BSChatUserInput(Player p, BSUserInput input, long allowedDelay) {
-        this.uuid = p.getUniqueId();
+    public BSChatUserInput(final Player p, final BSUserInput input, final long time) {
         this.input = input;
-        time = System.currentTimeMillis() + allowedDelay;
-
-        if (ClassManager.manager.getSettings().getBungeeCordServerEnabled()) {
-            ClassManager.manager.getBungeeCordManager().playerInputNotification(p, "start", String.valueOf(time));
+        this.time = System.currentTimeMillis() + time;
+        if (ClassManager.manager.getFactory().settings().bungeecord()) {
+            ClassManager.manager.getBungeeCordManager().playerInputNotification(p, "start", String.valueOf(this.time));
         }
     }
 
-
     /**
-     * Check if time is up to date
+     * Check if this.time is up to date
      * @return up to date
      */
     public boolean isUpToDate() {
-        return time > System.currentTimeMillis();
-    }
-
-    /**
-     * Check if it's the correct player being checked
-     * @param p player to check
-     * @return correct or not
-     */
-    public boolean isCorrectPlayer(Player p) {
-        return p.getUniqueId().equals(uuid);
+        return this.time > System.currentTimeMillis();
     }
 
     /**
@@ -46,10 +31,9 @@ public class BSChatUserInput {
      * @param text string
      */
     public void input(Player p, String text) {
-        input.receivedInput(p, text);
-        if (ClassManager.manager.getSettings().getBungeeCordServerEnabled()) {
+        this.input.receivedInput(p, text);
+        if (ClassManager.manager.getFactory().settings().bungeecord()) {
             ClassManager.manager.getBungeeCordManager().playerInputNotification(p, "end", null);
         }
     }
-
 }

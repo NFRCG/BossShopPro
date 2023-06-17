@@ -27,7 +27,6 @@ public class BSRewardTypeBungeeCordCommand extends BSRewardType {
 
     @Override
     public void enableType() {
-        ClassManager.manager.getSettings().setBungeeCordServerEnabled(true);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class BSRewardTypeEnchantment extends BSRewardType {
         }
 
         if (!ClassManager.manager.getFactory().settings().allowUnsafeEnchantments()) {
-            if (!(enchant.getType().canEnchantItem(item))) {
+            if (!(enchant.type().canEnchantItem(item))) {
                 if (message_if_no_success) {
                     ClassManager.manager.getMessageHandler().sendMessage("Enchantment.Invalid", p);
                 }
@@ -63,14 +63,14 @@ public class BSRewardTypeEnchantment extends BSRewardType {
         Enchant enchant = (Enchant) reward;
         ItemStack item = Misc.getItemInMainHand(p);
         if (item != null && item.getType() != Material.AIR) {
-            item.addUnsafeEnchantment(enchant.getType(), enchant.getLevel());
+            item.addUnsafeEnchantment(enchant.type(), enchant.level());
         }
     }
 
     @Override
     public String getDisplayReward(Player p, BSBuy buy, Object reward, ClickType clickType) {
         Enchant enchant = (Enchant) reward;
-        return ClassManager.manager.getMessageHandler().get("Display.Enchantment").replace("%type%", ClassManager.manager.getItemStackTranslator().readEnchantment(enchant.getType())).replace("%level%", String.valueOf(enchant.getLevel()));
+        return ClassManager.manager.getMessageHandler().get("Display.Enchantment").replace("%type%", ClassManager.manager.getItemStackTranslator().readEnchantment(enchant.type())).replace("%level%", String.valueOf(enchant.level()));
     }
 
     @Override

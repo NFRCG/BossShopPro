@@ -76,16 +76,14 @@ public class ItemDataPartLore extends ItemDataPart {
             }
             for (int i = 0; i < ms.getLore().size(); i++) {
                 String shop_item_lore_line = ms.getLore().get(i);
-                if (ClassManager.manager.getStringManager().checkStringForFeatures(buy == null ? null : buy.getShop(), buy, buy == null ? null : buy.getItem(), shop_item_lore_line)) {
+                if (ClassManager.manager.getStringManager().checkStringForFeatures(buy == null ? null : buy.getShop(), buy, shop_item_lore_line)) {
                     shop_item_lore_line = ClassManager.manager.getStringManager().transform(shop_item_lore_line, buy, buy == null ? null : buy.getShop(), null, p);
                 }
                 if (!mp.getLore().get(i).equals(shop_item_lore_line)) {
                     return false;
                 }
             }
-
         }
         return true;
     }
-
 }

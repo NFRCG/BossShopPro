@@ -42,7 +42,7 @@ public abstract class BSShop {
 
     //////////////////////////// <- Constructor
 
-    public BSShop(int id, String shopName, String signText, BossShop plugin, String displayname, int manualInventoryRows, String[] commands) {
+    public BSShop(int id, String shopName, String signText, String displayname, int manualInventoryRows, String[] commands) {
         this.id = id;
         this.shopName = shopName;
         this.signText = signText;
@@ -73,7 +73,7 @@ public abstract class BSShop {
     public void setDisplayName(String displayname) {
         if (displayname != null) {
             this.displayname = ClassManager.manager.getStringManager().transform(displayname, null, this, null, null);
-            if (ClassManager.manager.getStringManager().checkStringForFeatures(this, null, null, this.displayname)) {
+            if (ClassManager.manager.getStringManager().checkStringForFeatures(this, null, this.displayname)) {
                 customizable = true;
                 displaying = true;
             }
@@ -192,12 +192,12 @@ public abstract class BSShop {
         }
         holder.setPage(page);
         holder.setHighestPage(highestPage);
-        if (ClassManager.manager.getStringManager().checkStringForFeatures(this, null, null, getDisplayName()) & !getValidDisplayName(p, holder).equals(p.getOpenInventory().getTitle()) & !autoRefresh) { //Title is customizable as well but shall only be updated through main thread to prevent errors
+        if (ClassManager.manager.getStringManager().checkStringForFeatures(this, null, getDisplayName()) & !getValidDisplayName(p, holder).equals(p.getOpenInventory().getTitle()) & !autoRefresh) { //Title is customizable as well but shall only be updated through main thread to prevent errors
             Inventory created = manager.getShopCustomizer().createInventory(this, items, p, manager, page, highestPage, holder.getPreviousShopHolder());
             p.openInventory(created);
             return;
         }
-        Inventory inventory = manager.getShopCustomizer().createInventory(this, items, p, manager, i, page, highestPage);
+        Inventory inventory = manager.getShopCustomizer().createInventory(this, items, p, manager, i, page);
         if (inventory != i) {
             p.openInventory(inventory);
         }

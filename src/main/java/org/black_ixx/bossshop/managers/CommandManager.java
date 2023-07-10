@@ -1,8 +1,13 @@
 package org.black_ixx.bossshop.managers;
 
 
+import org.black_ixx.bossshop.BossShop;
+import org.black_ixx.bossshop.config.DataFactory;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
+import org.black_ixx.bossshop.core.BSShops;
+import org.black_ixx.bossshop.managers.features.ItemDataStorage;
+import org.black_ixx.bossshop.managers.features.PlayerDataHandler;
 import org.black_ixx.bossshop.managers.item.ItemDataPart;
 import org.black_ixx.bossshop.misc.Misc;
 import org.bukkit.Bukkit;
@@ -14,10 +19,28 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import javax.inject.Inject;
 import java.util.List;
 
 public class CommandManager implements CommandExecutor {
+    private final BossShop plugin;
+    private final MessageHandler messageHandler;
+    private final ItemDataStorage itemDataStorage;
+    private final PlayerDataHandler playerDataHandler;
+    private final BSShops shops;
+    private final DataFactory factory;
 
+    @Inject
+    public CommandManager(BossShop plugin, MessageHandler messageHandler, ItemDataStorage itemDataStorage, PlayerDataHandler playerDataHandler, final BSShops shops, DataFactory factory) {
+        this.plugin = plugin;
+        this.messageHandler = messageHandler;
+        this.itemDataStorage = itemDataStorage;
+        this.playerDataHandler = playerDataHandler;
+        this.shops = shops;
+        this.factory = factory;
+    }
+
+    //TODO: nuke
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) {
 
@@ -29,11 +52,11 @@ public class CommandManager implements CommandExecutor {
                     if (sender.hasPermission("BossShop.reload")) {
 
                         sender.sendMessage(ChatColor.YELLOW + "Starting BossShop reload...");
-                        ClassManager.manager.getPlugin().reloadPlugin(sender);
+                        this.plugin.reloadPlugin(sender);
                         sender.sendMessage(ChatColor.YELLOW + "Done!");
 
                     } else {
-                        ClassManager.manager.getMessageHandler().sendMessage("Main.NoPermission", sender);
+                        this.messageHandler.sendMessage("Main.NoPermission", sender);
                         return false;
                     }
                     return true;
@@ -45,18 +68,18 @@ public class CommandManager implements CommandExecutor {
                             Player p = (Player) sender;
                             ItemStack item = Misc.getItemInMainHand(p);
                             if (item == null || item.getType() == Material.AIR) {
-                                ClassManager.manager.getMessageHandler().sendMessage("Main.NeedItemInHand", sender);
+                                this.messageHandler.sendMessage("Main.NeedItemInHand", sender);
                                 return false;
                             }
                             List<String> itemdata = ItemDataPart.readItem(item);
-                            ClassManager.manager.getItemDataStorage().addItemData(p.getName(), itemdata);
-                            ClassManager.manager.getMessageHandler().sendMessage("Main.PrintedItemInfo", sender);
+                            this.itemDataStorage.addItemData(p.getName(), itemdata);
+                            this.messageHandler.sendMessage("Main.PrintedItemInfo", sender);
                             for (String line : itemdata) {
                                 sender.sendMessage("- " + line);
                             }
                             return true;
                         } else {
-                            ClassManager.manager.getMessageHandler().sendMessage("Main.NoPermission", sender);
+                            this.messageHandler.sendMessage("Main.NoPermission", sender);
                             return false;
                         }
                     }
@@ -67,23 +90,23 @@ public class CommandManager implements CommandExecutor {
                         if (args.length == 4) {
                             Player p = Bukkit.getPlayer(args[1]);
                             if (p == null) {
-                                ClassManager.manager.getMessageHandler().sendMessage("Main.PlayerNotFound", sender, args[1]);
+                                this.messageHandler.sendMessage("Main.PlayerNotFound", sender, args[1]);
                                 return false;
                             }
 
-                            BSShop shop = ClassManager.manager.getShops().getShop(args[2]);
+                            BSShop shop = this.shops.getShop(args[2]);
                             if (shop == null) {
-                                ClassManager.manager.getMessageHandler().sendMessage("Main.ShopNotExisting", sender, null, p, null, null, null);
+                                this.messageHandler.sendMessage("Main.ShopNotExisting", sender, null, p, null, null, null);
                                 return false;
                             }
 
                             BSBuy buy = shop.getItem(args[3]);
                             if (buy == null) {
-                                ClassManager.manager.getMessageHandler().sendMessage("Main.ShopItemNotExisting", sender, null, p, shop, null, null);
+                                this.messageHandler.sendMessage("Main.ShopItemNotExisting", sender, null, p, shop, null, null);
                                 return false;
                             }
 
-                            buy.click(p, shop, null, null, null, ClassManager.manager.getPlugin());
+                            buy.click(p, shop, null, null, null, this.plugin);
                             return true;
                         }
                         sendCommandList(sender);
@@ -105,17 +128,17 @@ public class CommandManager implements CommandExecutor {
                         }
 
                         if (p == null) {
-                            ClassManager.manager.getMessageHandler().sendMessage("Main.PlayerNotFound", sender, name);
+                            this.messageHandler.sendMessage("Main.PlayerNotFound", sender, name);
                             return false;
                         }
 
                         p.closeInventory();
                         if (p != sender) {
-                            ClassManager.manager.getMessageHandler().sendMessage("Main.CloseShopOtherPlayer", sender, p);
+                            this.messageHandler.sendMessage("Main.CloseShopOtherPlayer", sender, p);
                         }
 
                     } else {
-                        ClassManager.manager.getMessageHandler().sendMessage("Main.NoPermission", sender);
+                        this.messageHandler.sendMessage("Main.NoPermission", sender);
                         return false;
                     }
                     return true;
@@ -129,7 +152,7 @@ public class CommandManager implements CommandExecutor {
                     }
 
                     String shopname = args[1].toLowerCase();
-                    BSShop shop = ClassManager.manager.getShops().getShop(shopname);
+                    BSShop shop = this.shops.getShop(shopname);
                     String name = args[2];
                     Player p = Bukkit.getPlayerExact(name);
                     String argument = args.length > 3 ? args[3] : null;
@@ -139,18 +162,18 @@ public class CommandManager implements CommandExecutor {
                     }
 
                     if (p == null) {
-                        ClassManager.manager.getMessageHandler().sendMessage("Main.PlayerNotFound", sender, name, null, shop, null, null);
+                        this.messageHandler.sendMessage("Main.PlayerNotFound", sender, name, null, shop, null, null);
                         return false;
                     }
 
                     if (shop == null) {
-                        ClassManager.manager.getMessageHandler().sendMessage("Main.ShopNotExisting", sender, null, p, shop, null, null);
+                        this.messageHandler.sendMessage("Main.ShopNotExisting", sender, null, p, shop, null, null);
                         return false;
                     }
 
                     playerCommandOpenShop(sender, p, shopname, argument);
                     if (p != sender) {
-                        ClassManager.manager.getMessageHandler().sendMessage("Main.OpenShopOtherPlayer", sender, null, p, shop, null, null);
+                        this.messageHandler.sendMessage("Main.OpenShopOtherPlayer", sender, null, p, shop, null, null);
                     }
 
                     return true;
@@ -161,7 +184,7 @@ public class CommandManager implements CommandExecutor {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
 
-                String shop = ClassManager.manager.getFactory().settings().mainShop();
+                String shop = this.factory.settings().mainShop();
                 if (args.length != 0) {
                     shop = args[0].toLowerCase();
                 }
@@ -180,25 +203,22 @@ public class CommandManager implements CommandExecutor {
     private boolean playerCommandOpenShop(CommandSender sender, Player target, String shop, String argument) {
         if (sender == target) {
             if (!(sender.hasPermission("BossShop.open") || sender.hasPermission("BossShop.open.command") || sender.hasPermission("BossShop.open.command." + shop))) {
-                ClassManager.manager.getMessageHandler().sendMessage("Main.NoPermission", sender);
+                this.messageHandler.sendMessage("Main.NoPermission", sender);
                 return false;
             }
         } else {
             if (!sender.hasPermission("BossShop.open.other")) {
-                ClassManager.manager.getMessageHandler().sendMessage("Main.NoPermission", sender);
+                this.messageHandler.sendMessage("Main.NoPermission", sender);
                 return false;
             }
         }
         if (argument != null) {
-            ClassManager.manager.getPlayerDataHandler().enteredInput(target, argument);
+            this.playerDataHandler.enteredInput(target, argument);
         }
-        if (ClassManager.manager == null) {
+        if (this.shops == null) {
             return false;
         }
-        if (ClassManager.manager.getShops() == null) {
-            return false;
-        }
-        ClassManager.manager.getShops().openShop(target, shop);
+        this.shops.openShop(target, shop);
         return true;
     }
 

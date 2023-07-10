@@ -199,13 +199,6 @@ public class BSBuy {
         return permission;
     }
 
-    public Object readSpecialInformation(Plugin plugin) {
-        if (specialInformation != null) {
-            return specialInformation.get(plugin);
-        }
-        return null;
-    }
-
 
     /**
      * Transforms the selected message by replacing price and reward placeholders with descriptions of price or reward.

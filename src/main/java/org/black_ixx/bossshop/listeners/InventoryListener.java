@@ -1,11 +1,13 @@
 package org.black_ixx.bossshop.listeners;
 
+import jakarta.inject.Inject;
 import org.black_ixx.bossshop.BossShop;
 import org.black_ixx.bossshop.config.DataFactory;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
-import org.black_ixx.bossshop.managers.ClassManager;
+import org.black_ixx.bossshop.managers.MessageHandler;
+import org.black_ixx.bossshop.managers.misc.StringManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -37,10 +39,15 @@ public class InventoryListener implements Listener {
     private final long warnings;
     private final long memory;
     private final List<InventoryAction> actions;
+    private final MessageHandler messageHandler;
+    private final StringManager stringManager;
 
-    public InventoryListener(final BossShop plugin, final DataFactory factory) {
+    @Inject
+    public InventoryListener(final BossShop plugin, final DataFactory factory, final MessageHandler messageHandler, final StringManager stringManager) {
         this.plugin = plugin;
         this.factory = factory;
+        this.messageHandler = messageHandler;
+        this.stringManager = stringManager;
         this.clickTimes = new WeakHashMap<>();
         this.violations = new WeakHashMap<>();
         this.delay = this.factory.settings().clickDelay();
@@ -62,7 +69,7 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void closeShop(final InventoryCloseEvent e) {
         if (e.getInventory().getHolder() instanceof BSShopHolder holder && e.getPlayer() instanceof Player player) {
-            ClassManager.manager.getMessageHandler().sendMessage(this.factory.messages().closeShop(), player, null, player, holder.getShop(), holder, null);
+            this.messageHandler.sendMessage(this.factory.messages().closeShop(), player, null, player, holder.getShop(), holder, null);
             Bukkit.getScheduler().runTask(this.plugin, () -> {
                 if (!this.plugin.getAPI().isValidShop(player.getOpenInventory())) {
                     player.playSound(this.factory.settings().sounds().get("close"));
@@ -104,11 +111,11 @@ public class InventoryListener implements Listener {
             this.violations.put(player, count);
         }
         if (this.violations.get(player) >= this.warnings) {
-            player.kickPlayer(ClassManager.manager.getMessageHandler().get("Main.OffensiveClickSpamKick"));
+            player.kickPlayer(this.messageHandler.get("Main.OffensiveClickSpamKick"));
         } else {
             double timeLeft = this.clickTimes.get(player) + (double) (this.delay - System.currentTimeMillis());
             timeLeft = Math.max(0.1f, timeLeft / 1000);
-            ClassManager.manager.getMessageHandler().sendMessageDirect(ClassManager.manager.getStringManager().transform(ClassManager.manager.getMessageHandler().get("Main.ClickSpamWarning").replace("%time_left%", String.valueOf(timeLeft)), buy, shop, holder, player), player);
+            this.messageHandler.sendMessageDirect(this.stringManager.transform(this.messageHandler.get("Main.ClickSpamWarning").replace("%time_left%", String.valueOf(timeLeft)), buy, shop, holder, player), player);
         }
         if (click + this.memory < System.currentTimeMillis()) {
             this.violations.put(player, 0);

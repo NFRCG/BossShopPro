@@ -54,7 +54,7 @@ public class ItemDataPartName extends ItemDataPart {
                 return false;
             }
             String shop_item_name = ms.getDisplayName();
-            if (ClassManager.manager.getStringManager().checkStringForFeatures(buy == null ? null : buy.getShop(), buy, buy == null ? null : buy.getItem(), shop_item_name)) {
+            if (ClassManager.manager.getStringManager().checkStringForFeatures(buy == null ? null : buy.getShop(), buy, shop_item_name)) {
                 shop_item_name = ClassManager.manager.getStringManager().transform(shop_item_name, buy, buy == null ? null : buy.getShop(), null, p);
             }
             return shop_item_name.equalsIgnoreCase(mp.getDisplayName());

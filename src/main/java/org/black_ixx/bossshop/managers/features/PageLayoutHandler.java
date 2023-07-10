@@ -1,9 +1,10 @@
 package org.black_ixx.bossshop.managers.features;
 
+import org.black_ixx.bossshop.config.DataFactory;
 import org.black_ixx.bossshop.config.PageLayoutData;
 import org.black_ixx.bossshop.core.BSBuy;
-import org.black_ixx.bossshop.managers.ClassManager;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,9 @@ public class PageLayoutHandler {
     private final int reservedSlotStart;
     private final boolean showIfMultiplePages;
 
-    public PageLayoutHandler() {
-        PageLayoutData data = ClassManager.manager.getFactory().pageLayouts();
+    @Inject
+    public PageLayoutHandler(final DataFactory factory) {
+        PageLayoutData data = factory.pageLayouts();
         this.maxRows = data.maxRows();
         this.reservedSlotStart = data.reservedSlotsStart();
         this.showIfMultiplePages = data.showIfMultiplePagesOnly();

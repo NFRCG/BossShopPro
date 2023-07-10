@@ -2,10 +2,11 @@ package org.black_ixx.bossshop.listeners;
 
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+import jakarta.inject.Inject;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShops;
-import org.black_ixx.bossshop.managers.ClassManager;
+import org.black_ixx.bossshop.managers.MessageHandler;
 import org.black_ixx.bossshop.managers.features.PlayerDataHandler;
 import org.black_ixx.bossshop.misc.userinput.BSChatUserInput;
 import org.bukkit.entity.Player;
@@ -19,41 +20,49 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.stream.Stream;
 
 public class PlayerListener implements Listener {
+    private final BSShops shops;
+    private final PlayerDataHandler playerDataHandler;
+    private final MessageHandler messageHandler;
+
+    @Inject
+    public PlayerListener(BSShops shops, PlayerDataHandler playerDataHandler, MessageHandler messageHandler) {
+        this.shops = shops;
+        this.playerDataHandler = playerDataHandler;
+        this.messageHandler = messageHandler;
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void shopCommand(final PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
-        BSShops shops = ClassManager.manager.getShops();
-        if (shops == null) {
-            return;
-        }
-        BSShop shop = shops.getShopByCommand(e.getMessage().substring(1));
+        BSShop shop = this.shops.getShopByCommand(e.getMessage().substring(1));
         //TODO: probably change this but works for now.
-        Stream.of("BossShop.open", "BossShop.open.command", "BossShop.open.command." + shop.getShopName()).filter(player::hasPermission).findAny().ifPresentOrElse(x -> shops.openShop(player, shop), () -> ClassManager.manager.getMessageHandler().sendMessage("Main.NoPermission", player));
+        Stream.of("BossShop.open", "BossShop.open.command", "BossShop.open.command." + shop.getShopName())
+                .filter(player::hasPermission)
+                .findAny()
+                .ifPresentOrElse(x -> this.shops.openShop(player, shop), () -> this.messageHandler.sendMessage("Main.NoPermission", player));
         e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void chat(final AsyncChatEvent e) {
-        PlayerDataHandler handler = ClassManager.manager.getPlayerDataHandler();
         Player player = e.getPlayer();
-        BSChatUserInput input = handler.getInputRequest(player);
+        BSChatUserInput input = this.playerDataHandler.getInputRequest(player);
         if (input != null) {
             if (input.isUpToDate()) {
                 input.input(player, PlainTextComponentSerializer.plainText().serialize(e.message()));
             } else {
-                handler.removeInputRequest(player);
+                this.playerDataHandler.removeInputRequest(player);
             }
         }
     }
 
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent e) {
-        ClassManager.manager.getPlayerDataHandler().leftServer(e.getPlayer());
+        this.playerDataHandler.leftServer(e.getPlayer());
     }
 
     @EventHandler
     public void onPlayerKick(final PlayerKickEvent e) {
-        ClassManager.manager.getPlayerDataHandler().leftServer(e.getPlayer());
+        this.playerDataHandler.leftServer(e.getPlayer());
     }
 }

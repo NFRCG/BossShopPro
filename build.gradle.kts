@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.google.inject:guice:7.0.0")
     implementation("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
     implementation("net.kyori:adventure-serializer-configurate4:4.14.0") {
         isTransitive = false

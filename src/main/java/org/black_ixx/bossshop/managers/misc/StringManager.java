@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.misc;
 
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
@@ -8,24 +9,40 @@ import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSCheckStringForFeaturesEvent;
 import org.black_ixx.bossshop.events.BSTransformStringEvent;
-import org.black_ixx.bossshop.managers.ClassManager;
+import org.black_ixx.bossshop.managers.external.VaultHandler;
+import org.black_ixx.bossshop.managers.features.MultiplierHandler;
+import org.black_ixx.bossshop.managers.features.PlayerDataHandler;
+import org.black_ixx.bossshop.managers.features.PointsManager;
 import org.black_ixx.bossshop.misc.MathTools;
 import org.black_ixx.bossshop.misc.Misc;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
+import javax.inject.Inject;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class StringManager {
-
     private static final Pattern hexPattern = Pattern.compile("(#[a-fA-F0-9]{6})");
+    private final VaultHandler vaultHandler;
+    private final PointsManager pointsManager;
+    private final PlayerDataHandler playerDataHandler;
+    private final MultiplierHandler multiplierHandler;
+
+    @Inject
+    public StringManager(VaultHandler vaultHandler, PointsManager pointsManager, PlayerDataHandler playerDataHandler, MultiplierHandler multiplierHandler) {
+        this.vaultHandler = vaultHandler;
+        this.pointsManager = pointsManager;
+        this.playerDataHandler = playerDataHandler;
+        this.multiplierHandler = multiplierHandler;
+    }
 
     /**
      * Transform specific strings from one thing to another
+     *
      * @param s input string
      * @return transformed string
      */
@@ -113,14 +130,14 @@ public class StringManager {
             s = s.replace("%displayname%", target.getDisplayName());
             s = s.replace("%uuid%", target.getUniqueId().toString());
 
-            if (s.contains("%balance%") && ClassManager.manager.getVaultHandler() != null) {
-                if (ClassManager.manager.getVaultHandler().getEconomy() != null) {
-                    double balance = ClassManager.manager.getVaultHandler().getEconomy().getBalance(target.getName());
+            if (s.contains("%balance%") && this.vaultHandler != null) {
+                if (this.vaultHandler.getEconomy() != null) {
+                    double balance = this.vaultHandler.getEconomy().getBalance(target.getName());
                     s = s.replace("%balance%", MathTools.displayNumber(balance, BSPriceType.Money));
                 }
             }
-            if (s.contains("%balancepoints%") && ClassManager.manager.getPointsManager() != null) {
-                double balance_points = ClassManager.manager.getPointsManager().getPoints(target);
+            if (s.contains("%balancepoints%") && this.pointsManager != null) {
+                double balance_points = this.pointsManager.getPoints(target);
                 s = s.replace("%balancepoints%", MathTools.displayNumber(balance_points, BSPriceType.Points));
             }
 
@@ -133,77 +150,35 @@ public class StringManager {
             }
 
             if (s.contains("%input%")) {
-                s = s.replace("%input%", ClassManager.manager.getPlayerDataHandler().getInput(target));
+                s = s.replace("%input%", this.playerDataHandler.getInput(target));
             }
-
-            if (ClassManager.manager.getPlaceholderHandler() != null) {
-                s = ClassManager.manager.getPlaceholderHandler().transformString(s, target);
-            }
+            s = PlaceholderAPI.setPlaceholders(target, s);
         }
 
         return transform(s);
     }
 
 
-    public boolean checkStringForFeatures(BSShop shop, BSBuy buy, ItemStack menu_item, String s) { //Returns true if this would make a shop customizable
-        boolean b = false;
-
-
-        if (s.matches(hexPattern.pattern())) {
-            b = true;
+    public boolean checkStringForFeatures(BSShop shop, BSBuy buy, String s) { //Returns true if this would make a shop customizable
+        if (s.matches(hexPattern.pattern()) || List.of("%balance%", "%balancepoints%", "%name%", "%player%", "%uuid%", "%page%", "%maxpage%", "%world%").contains(s)) {
+            return true;
         }
-
-        if (s.contains("%")) {
-
-            if (s.contains("%balance%")) {
-                b = true;
-            }
-
-            if (s.contains("%balancepoints%")) {
-                b = true;
-            }
-
-            if (s.contains("%name%") || s.contains("%player%") || s.contains("%uuid%")) {
-                b = true;
-            }
-
-            if (s.contains("%page%") || s.contains("%maxpage%")) {
-                b = true;
-            }
-
-            if (s.contains("%world%")) {
-                b = true;
-            }
-
-            if (s.contains("%reward%") || s.contains("%price%")) {
-                if (ClassManager.manager.getMultiplierHandler().hasMultipliers()) {
-                    b = true;
-                }
-                if (buy.getPriceType(null) == BSPriceType.ItemAll || buy.getRewardType(null) == BSRewardType.ItemAll) {
-                    b = true;
-                }
-            }
-
-            if (s.contains("%input%")) {
-                b = true;
-            }
-
-            if (ClassManager.manager.getPlaceholderHandler() != null) {
-                if (ClassManager.manager.getPlaceholderHandler().containsPlaceholder(s)) {
-                    b = true;
-                }
-            }
-
-            BSCheckStringForFeaturesEvent event = new BSCheckStringForFeaturesEvent(s, buy, shop);
-            Bukkit.getPluginManager().callEvent(event);
-            if (event.containsFeature()) {
-                b = true;
-            }
-        }
-
         if (s.contains("{") && s.contains("}")) {
-            b = true;
+            return true;
         }
-        return b;
+        if (s.contains("%input%") && PlaceholderAPI.containsPlaceholders(s)) {
+            return true;
+        }
+        if (s.contains("%reward%") || s.contains("%price%")) {
+            if (this.multiplierHandler.hasMultipliers()) {
+                return true;
+            }
+            if (buy.getPriceType(null) == BSPriceType.ItemAll || buy.getRewardType(null) == BSRewardType.ItemAll) {
+                return true;
+            }
+        }
+        BSCheckStringForFeaturesEvent event = new BSCheckStringForFeaturesEvent(s, buy, shop);
+        Bukkit.getPluginManager().callEvent(event);
+        return event.containsFeature();
     }
 }

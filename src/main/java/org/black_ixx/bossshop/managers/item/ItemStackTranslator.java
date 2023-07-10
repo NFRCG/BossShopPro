@@ -17,12 +17,18 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 import org.bukkit.inventory.meta.tags.ItemTagType;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ItemStackTranslator {
+    private final StringManager stringManager;
 
+    @Inject
+    public ItemStackTranslator(StringManager stringManager) {
+        this.stringManager = stringManager;
+    }
 
     public ItemStack translateItemStack(BSBuy buy, BSShop shop, BSShopHolder holder, ItemStack item, Player target) {
         if (item != null) {
@@ -31,13 +37,13 @@ public class ItemStackTranslator {
 
                 //Normal itemdata
                 if (meta.hasDisplayName()) {
-                    meta.setDisplayName(ClassManager.manager.getStringManager().transform(meta.getDisplayName(), buy, shop, holder, target));
+                    meta.setDisplayName(this.stringManager.transform(meta.getDisplayName(), buy, shop, holder, target));
                 }
 
                 if (meta.hasLore()) {
                     List<String> lore = meta.getLore();
                     for (int i = 0; i < lore.size(); i++) {
-                        lore.set(i, ClassManager.manager.getStringManager().transform(lore.get(i), buy, shop, holder, target));
+                        lore.set(i, this.stringManager.transform(lore.get(i), buy, shop, holder, target));
                     }
                     meta.setLore(lore);
                 }
@@ -51,7 +57,7 @@ public class ItemStackTranslator {
                     if (tagContainer.hasCustomTag(key, ItemTagType.STRING)) {
                         String placeholder = tagContainer.getCustomTag(key, ItemTagType.STRING);
                         if (placeholder != null) {
-                            String playerName = ClassManager.manager.getStringManager().transform(placeholder, target);
+                            String playerName = this.stringManager.transform(placeholder, target);
                             OfflinePlayer transformedPlayer = Bukkit.getOfflinePlayer(playerName);
                             if (transformedPlayer != null) {
                                 skullmeta.setOwningPlayer(transformedPlayer);
@@ -79,7 +85,7 @@ public class ItemStackTranslator {
     private void transformCustomSkull(BSBuy buy, BSShop shop, ItemStack item, BSShopHolder holder, Player target) {
         String skulltexture = ItemDataPartCustomSkull.readSkullTexture(item);
         if (skulltexture != null) {
-            if (ClassManager.manager.getStringManager().checkStringForFeatures(shop, buy, item, skulltexture)) {
+            if (ClassManager.manager.getStringManager().checkStringForFeatures(shop, buy, skulltexture)) {
                 item = ItemDataPartCustomSkull.transformSkull(item, ClassManager.manager.getStringManager().transform(skulltexture, buy, shop, holder, target));
             }
         }
@@ -112,12 +118,11 @@ public class ItemStackTranslator {
         boolean b = false;
         if (item != null) {
             if (item.hasItemMeta()) {
-                StringManager s = ClassManager.manager.getStringManager();
                 ItemMeta meta = item.getItemMeta();
 
                 //Normal itemdata
                 if (meta.hasDisplayName()) {
-                    if (s.checkStringForFeatures(shop, buy, item, meta.getDisplayName())) {
+                    if (this.stringManager.checkStringForFeatures(shop, buy,  meta.getDisplayName())) {
                         b = true;
                     }
                 }
@@ -125,7 +130,7 @@ public class ItemStackTranslator {
                 if (meta.hasLore()) {
                     List<String> lore = meta.getLore();
                     for (int i = 0; i < lore.size(); i++) {
-                        if (s.checkStringForFeatures(shop, buy, item, lore.get(i))) {
+                        if (this.stringManager.checkStringForFeatures(shop, buy,  lore.get(i))) {
                             b = true;
                         }
                     }
@@ -135,7 +140,7 @@ public class ItemStackTranslator {
                 if (meta instanceof SkullMeta) {
                     SkullMeta skullmeta = (SkullMeta) meta;
                     if (skullmeta.hasOwner()) {
-                        if (s.checkStringForFeatures(shop, buy, item, skullmeta.getOwner())) {
+                        if (this.stringManager.checkStringForFeatures(shop, buy,  skullmeta.getOwner())) {
                             b = true;
                         }
                     }

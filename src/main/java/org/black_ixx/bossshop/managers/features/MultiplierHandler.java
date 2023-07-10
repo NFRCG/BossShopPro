@@ -5,61 +5,56 @@ import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSMultiplier;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
-import org.black_ixx.bossshop.managers.ClassManager;
+import org.black_ixx.bossshop.managers.MessageHandler;
+import org.black_ixx.bossshop.managers.item.ItemStackChecker;
 import org.black_ixx.bossshop.misc.MathTools;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 
 public class MultiplierHandler {
+    private final ItemStackChecker itemStackChecker;
+    private final MessageHandler messageHandler;
+    private final Set<BSMultiplier> multipliers;
 
-    private final Set<BSMultiplier> multipliers = new HashSet<>();
-
-    public MultiplierHandler(BossShop plugin) {
-        if (plugin.getConfig().getBoolean("MultiplierGroups.Enabled") == false) {
+    @Inject
+    public MultiplierHandler(BossShop plugin, ItemStackChecker itemStackChecker, MessageHandler messageHandler) {
+        this.itemStackChecker = itemStackChecker;
+        this.messageHandler = messageHandler;
+        this.multipliers = new HashSet<>();
+        if (!plugin.getConfig().getBoolean("MultiplierGroups.Enabled")) {
             return;
         }
         List<String> lines = plugin.getConfig().getStringList("MultiplierGroups.List");
-        if (lines == null) {
-            return;
-        }
-        setup(lines);
-    }
-
-    public void setup(List<String> config_lines) {
-        multipliers.clear();
-        for (String s : config_lines) {
+        for (String s : lines) {
             BSMultiplier m = new BSMultiplier(s);
             if (m.isValid()) {
-                multipliers.add(m);
+                this.multipliers.add(m);
             }
         }
     }
 
     public String calculatePriceDisplayWithMultiplier(Player p, BSBuy buy, ClickType clicktype, double d, String message) {
-        BSPriceType t = buy.getPriceType(clicktype);
         d = calculatePriceWithMultiplier(p, buy, clicktype, d);
-
         if (buy.getRewardType(clicktype) == BSRewardType.ItemAll) {
             if (p != null) {
                 ItemStack i = (ItemStack) buy.getReward(clicktype);
-                int count = ClassManager.manager.getItemStackChecker().getAmountOfFreeSpace(p, i);
+                int count = this.itemStackChecker.getAmountOfFreeSpace(p, i);
 
                 if (count == 0) {
-                    return ClassManager.manager.getMessageHandler().get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
+                    return this.messageHandler.get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
                 }
-
                 d *= count;
             } else {
-                return ClassManager.manager.getMessageHandler().get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
+                return this.messageHandler.get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
             }
         }
-
         return message.replace("%number%", MathTools.displayNumber(d));
     }
 
@@ -75,24 +70,20 @@ public class MultiplierHandler {
     }
 
     public String calculateRewardDisplayWithMultiplier(Player p, BSBuy buy, ClickType clicktype, double d, String message) {
-        BSPriceType t = BSPriceType.detectType(buy.getRewardType(clicktype).name());
         d = calculateRewardWithMultiplier(p, buy, clicktype, d);
-
         if (buy.getPriceType(clicktype) == BSPriceType.ItemAll) {
             if (p != null) {
                 ItemStack i = (ItemStack) buy.getPrice(clicktype);
-                int count = ClassManager.manager.getItemStackChecker().getAmountOfSameItems(p, i, buy);
+                int count = this.itemStackChecker.getAmountOfSameItems(p, i, buy);
 
                 if (count == 0) {
-                    return ClassManager.manager.getMessageHandler().get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
+                    return this.messageHandler.get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
                 }
-
                 d *= count;
             } else {
-                return ClassManager.manager.getMessageHandler().get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
+                return this.messageHandler.get("Display.ItemAllEach").replace("%value%", message.replace("%number%", MathTools.displayNumber(d)));
             }
         }
-
         return message.replace("%number%", MathTools.displayNumber(d));
     }
 
@@ -107,14 +98,7 @@ public class MultiplierHandler {
         return Math.round(d * 100.0) / 100.0;
     }
 
-
-    public Set<BSMultiplier> getMultipliers() {
-        return multipliers;
-    }
-
     public boolean hasMultipliers() {
         return !multipliers.isEmpty();
     }
-
-
 }

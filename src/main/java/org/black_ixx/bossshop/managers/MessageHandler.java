@@ -4,14 +4,15 @@ import org.black_ixx.bossshop.BossShop;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
+import org.black_ixx.bossshop.managers.misc.StringManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -19,12 +20,15 @@ public class MessageHandler {
     private final BossShop plugin;
     private final String fileName = "messages.yml";
     private final File file;
-    private FileConfiguration config = null;
+    private FileConfiguration config;
+    private final StringManager stringManager;
 
-    public MessageHandler(final BossShop plugin) {
+    @Inject
+    public MessageHandler(final BossShop plugin, final StringManager stringManager) {
         this.plugin = plugin;
-        this.file = new File(plugin.getDataFolder().getAbsolutePath(), fileName);
-        config = YamlConfiguration.loadConfiguration(this.file);
+        this.stringManager = stringManager;
+        this.file = new File(plugin.getDataFolder().getAbsolutePath(), this.fileName);
+        this.config = YamlConfiguration.loadConfiguration(this.file);
     }
 
     /**
@@ -32,32 +36,21 @@ public class MessageHandler {
      * @return config
      */
     public FileConfiguration getConfig() {
-        if (config == null)
+        if (this.config == null)
             reloadConfig();
 
-        return config;
+        return this.config;
     }
 
     /**
      * Reload the config file
      */
     public void reloadConfig() {
-        config = YamlConfiguration.loadConfiguration(file);
-        InputStream defConfigStream = plugin.getResource(fileName);
+        this.config = YamlConfiguration.loadConfiguration(this.file);
+        InputStream defConfigStream = this.plugin.getResource(this.fileName);
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
-            config.setDefaults(defConfig);
-        }
-    }
-
-    /**
-     * Save the config
-     */
-    public void saveConfig() {
-        try {
-            getConfig().save(file);
-        } catch (IOException e) {
-            ClassManager.manager.getBugFinder().warn("Could not save message config to " + file);
+            this.config.setDefaults(defConfig);
         }
     }
 
@@ -129,7 +122,7 @@ public class MessageHandler {
     public void sendMessageDirect(String message, CommandSender sender) {
         if (sender != null) {
 
-            if (message == null || message.isEmpty() || message.length() < 2) {
+            if (message == null || message.length() < 2) {
                 return;
             }
 
@@ -141,7 +134,6 @@ public class MessageHandler {
         }
     }
 
-
     /**
      * Get a string from the config
      * @param node path of node
@@ -151,21 +143,12 @@ public class MessageHandler {
         return get(node, null, null, null, null);
     }
 
-    /**
-     * Get a raw string from config
-     * @param node path of node
-     * @return raw string
-     */
-    public String getRaw(String node) {
-        return config.getString(node, node);
-    }
-
     private String get(String node, Player target, BSShop shop, BSShopHolder holder, BSBuy item) {
-        return replace(config.getString(node, node), target, shop, holder, item);
+        return replace(this.config.getString(node, node), target, shop, holder, item);
     }
 
     private String replace(String message, Player target, BSShop shop, BSShopHolder holder, BSBuy item) {
-        return ClassManager.manager.getStringManager().transform(message, item, shop, holder, target);
+        return this.stringManager.transform(message, item, shop, holder, target);
     }
 
 

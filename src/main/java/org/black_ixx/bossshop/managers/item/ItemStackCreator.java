@@ -3,8 +3,8 @@ package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
-import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.config.BSConfigShop;
+import org.black_ixx.bossshop.managers.features.BugFinder;
 import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.black_ixx.bossshop.managers.misc.StringManipulationLib;
 import org.black_ixx.bossshop.misc.Misc;
@@ -12,12 +12,21 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ItemStackCreator {
+    private final ItemStackTranslator itemStackTranslator;
+    private final BugFinder bugFinder;
+    private final ItemStackChecker itemStackChecker;
 
+    @Inject
+    public ItemStackCreator(ItemStackTranslator itemStackTranslator, BugFinder bugFinder, ItemStackChecker itemStackChecker) {
+        this.itemStackTranslator = itemStackTranslator;
+        this.bugFinder = bugFinder;
+        this.itemStackChecker = itemStackChecker;
+    }
 
     public ItemStack createItemStack(List<String> itemData, BSBuy buy, BSShop shop) { //This allows to work with %rewarditem_<id>% and %priceitem_<id>%
         if (shop instanceof BSConfigShop) {
@@ -66,10 +75,10 @@ public class ItemStackCreator {
                         new_list.add(entry);
                     }
                 } else {
-                    ClassManager.manager.getBugFinder().warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " does not contain a " + index + ". item!");
+                    this.bugFinder.warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " does not contain a " + index + ". item!");
                 }
             } else {
-                ClassManager.manager.getBugFinder().warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " is not an item list!");
+                this.bugFinder.warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " is not an item list!");
             }
         }
         return new_list;
@@ -92,13 +101,14 @@ public class ItemStackCreator {
         itemData = Misc.fixLore(itemData);
 
         i = ItemDataPart.transformItem(i, itemData);
-        ClassManager.manager.getItemStackTranslator().translateItemStack(null, null, null, i, null);
+        this.itemStackTranslator.translateItemStack(null, null, null, i, null);
         return i;
     }
 
     /**
      * Gives the selected item to the player.
      * If clone_item = false the item is modified (placeholders adapted to player and amount changed).
+     *
      * @param p          Player to give the item to.
      * @param buy        Shopitem linked to the item.
      * @param i          Item to add to the player.
@@ -111,10 +121,10 @@ public class ItemStackCreator {
         }
 
         int to_give = amount;
-        int stacksize = ClassManager.manager.getItemStackChecker().getMaxStackSize(i);
+        int stacksize = this.itemStackChecker.getMaxStackSize(i);
 
         //First of all translate item
-        i = ClassManager.manager.getItemStackTranslator().translateItemStack(buy, null, null, (clone_item ? i.clone() : i), p);
+        i = this.itemStackTranslator.translateItemStack(buy, null, null, (clone_item ? i.clone() : i), p);
 
         while (to_give > 0) {
             i.setAmount(Math.min(stacksize, to_give));
@@ -136,7 +146,7 @@ public class ItemStackCreator {
         if (i.getAmount() > stacksize) {
             throw new RuntimeException("Can not give an itemstack with a higher amount than the maximum stack size at once to a player.");
         }
-        int free = ClassManager.manager.getItemStackChecker().getAmountOfFreeSpace(p, i);
+        int free = this.itemStackChecker.getAmountOfFreeSpace(p, i);
 
         if (free < i.getAmount()) { //Not enough space?
             dropItem(p, i, stacksize);

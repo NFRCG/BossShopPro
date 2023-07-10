@@ -24,7 +24,7 @@ public class ItemDataPartPlayerhead extends ItemDataPart {
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
 
-        if (ClassManager.manager.getStringManager().checkStringForFeatures(null, null, null, argument)) {
+        if (ClassManager.manager.getStringManager().checkStringForFeatures(null, null, argument)) {
             NamespacedKey key = new NamespacedKey(ClassManager.manager.getPlugin(), "skullOwnerPlaceholder");
             meta.getCustomTagContainer().setCustomTag(key, ItemTagType.STRING, argument); //argument = placeholder
         } else {

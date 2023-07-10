@@ -223,7 +223,7 @@ public class ShopCustomizer {
                 return false;
             }
 
-            if (!buy.meetsCondition(holder, p)) {
+            if (!buy.meetsCondition(p)) {
                 return false;
             }
 

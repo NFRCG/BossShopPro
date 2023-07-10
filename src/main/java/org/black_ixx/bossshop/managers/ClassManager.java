@@ -5,7 +5,6 @@ import org.black_ixx.bossshop.api.BossShopAddon;
 import org.black_ixx.bossshop.config.DataFactory;
 import org.black_ixx.bossshop.config.SettingsData;
 import org.black_ixx.bossshop.core.BSShops;
-import org.black_ixx.bossshop.core.conditions.BSConditionType;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSRegisterTypesEvent;
@@ -66,7 +65,7 @@ public class ClassManager {
 
         BSRewardType.loadTypes();
         BSPriceType.loadTypes();
-        BSConditionType.loadTypes();
+        //TODO: register conditions here.
         ItemDataPart.loadTypes();
 
         //////////////// <- Independent Classes

@@ -1,7 +1,7 @@
 package org.black_ixx.bossshop.core;
 
 import org.black_ixx.bossshop.BossShop;
-import org.black_ixx.bossshop.core.conditions.BSCondition;
+import org.black_ixx.bossshop.core.conditions.Condition;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSPlayerPurchaseEvent;
@@ -31,14 +31,14 @@ public class BSBuy {
     private final BSPriceType priceT;
     private final Object reward;
     private final Object price;
-    private BSCondition condition;
+    private Condition<Player> condition;
     private final String msg;
     private String permission;
     private boolean isGroup = false;
     private boolean fixItem; // In order for an item to not be fix it must contain a player-dependent placeholder (detected by StringManager.checkStringForFeatures)
     private int location;
 
-    public BSBuy(BSRewardType rewardT, BSPriceType priceT, Object reward, Object price, String msg, int location, String permission, String name, BSCondition condition, BSInputType inputType, String inputText) {
+    public BSBuy(BSRewardType rewardT, BSPriceType priceT, Object reward, Object price, String msg, int location, String permission, String name, Condition<Player> condition, BSInputType inputType, String inputText) {
         this(rewardT, priceT, reward, price, msg, location, permission, name);
         this.condition = condition;
         this.inputType = inputType;
@@ -128,13 +128,13 @@ public class BSBuy {
         return fixItem;
     }
 
-    public BSCondition getCondition() {
+    public Condition<Player> getCondition() {
         return condition;
     }
 
-    public boolean meetsCondition(BSShopHolder holder, Player p) {
+    public boolean meetsCondition(Player p) {
         if (condition != null) {
-            return condition.meetsCondition(holder, this, p);
+            return condition.isSatisfiedBy(p);
         }
         return true;
     }
@@ -374,7 +374,7 @@ public class BSBuy {
             p.playSound(ClassManager.manager.getFactory().settings().sounds().get("noPermission"));
             return;
         }
-        if (!meetsCondition(holder, p)) {
+        if (!meetsCondition(p)) {
             return; //Can only happen when player click-spams item before it is refreshed
         }
 

@@ -7,7 +7,7 @@ import org.black_ixx.bossshop.core.BSCustomLink;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
 import org.black_ixx.bossshop.core.BSShops;
-import org.black_ixx.bossshop.core.conditions.BSConditionType;
+import org.black_ixx.bossshop.core.conditions.Condition;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.managers.ClassManager;
@@ -190,10 +190,10 @@ public class BossShopAPI {
     /**
      * Register a condition type
      *
-     * @param type the type of condition to register
+     * @param condition the condition to register.
      */
-    public void registerConditionType(BSConditionType type) {
-        type.register();
+    public void registerConditionType(Condition<Player> condition) {
+        throw new UnsupportedOperationException("Cannot register new conditions currently! This will be available in a future version.");
     }
 
     /**

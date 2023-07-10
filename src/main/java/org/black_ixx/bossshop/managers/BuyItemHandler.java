@@ -4,9 +4,6 @@ package org.black_ixx.bossshop.managers;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSInputType;
 import org.black_ixx.bossshop.core.BSShop;
-import org.black_ixx.bossshop.core.conditions.BSConditionSet;
-import org.black_ixx.bossshop.core.conditions.BSConditionType;
-import org.black_ixx.bossshop.core.conditions.BSSingleCondition;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSCreateShopItemEvent;
@@ -149,43 +146,13 @@ public class BuyItemHandler {
 
 
             stage = "Optional: Conditions";
-            BSConditionSet conditionsset = null;
-
-            List<String> conditions = c.getStringList("Condition");
-            if (conditions != null) {
-                BSConditionSet set = new BSConditionSet();
-                BSConditionType type = null;
-                for (String s : conditions) {
-                    String[] parts = s.split(":", 2);
-                    String a = parts[0].trim();
-                    String b = parts[1].trim();
-
-                    if (a.equalsIgnoreCase("type")) {
-                        type = BSConditionType.detectType(b);
-                        continue;
-                    }
-                    if (type == null) {
-                        ClassManager.manager.getBugFinder().severe("Unable to add condition '" + s + "' to shopitem '" + name + "'! You need to define a conditiontype before you start listing conditions! [Shop: " + shopname + "]");
-                        continue;
-                    }
-
-                    a = ClassManager.manager.getStringManager().transform(a, null, shop, null, null);
-                    b = ClassManager.manager.getStringManager().transform(b, null, shop, null, null);
-                    //TODO: based on where this is called, it is not ideal. type enable should happen before this point.
-                    type.enableType();
-                    set.addCondition(new BSSingleCondition(type, a, b));
-                }
-                if (!set.getConditions().isEmpty()) {
-                    conditionsset = set;
-                }
-            }
-
-            BSCreateShopItemEvent event = new BSCreateShopItemEvent(shop, name, c, rewardT, priceT, reward, price, message, inventoryLocation, permission, conditionsset, inputtype, inputtext);
+            //TODO: impl conditions at this stage. null is passed to compile.
+            BSCreateShopItemEvent event = new BSCreateShopItemEvent(shop, name, c, rewardT, priceT, reward, price, message, inventoryLocation, permission, null, inputtype, inputtext);
             Bukkit.getPluginManager().callEvent(event); //Allow addons to create a custom BSBuy
 
             BSBuy buy = event.getCustomShopItem();
             if (buy == null) { //If addons did not create own item create a default one here!
-                buy = new BSBuy(rewardT, priceT, reward, price, message, inventoryLocation, permission, name, conditionsset, inputtype, inputtext);
+                buy = new BSBuy(rewardT, priceT, reward, price, message, inventoryLocation, permission, name, null, inputtype, inputtext);
             }
             buy.setShop(shop);
 

@@ -7,7 +7,7 @@ import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
 import org.black_ixx.bossshop.managers.MessageHandler;
-import org.black_ixx.bossshop.managers.misc.StringManager;
+import org.black_ixx.bossshop.managers.StringManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;

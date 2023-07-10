@@ -1,7 +1,5 @@
 package org.black_ixx.bossshop.misc;
 
-import org.black_ixx.bossshop.managers.misc.InputReader;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -70,36 +68,6 @@ public class Misc {
     }
 
 
-    /**
-     * Play a sound for a player
-     * @param p the player to play the sound for
-     * @param sound the sound to play
-     */
-    public static void playSound(Player p, String sound) {
-        if (sound != null) {
-            if (!sound.isEmpty()) {
-                String[] parts = sound.split(":");
-                Sound s = null;
-                for (Sound e : Sound.values()) {
-                    if (e.name().equalsIgnoreCase(parts[0])) {
-                        s = e;
-                        break;
-                    }
-                }
-                if (s != null) {
-                    float volume = 1;
-                    float pitch = 1;
-                    if (parts.length >= 2) {
-                        volume = (float) InputReader.getDouble(parts[1], 1);
-                    }
-                    if (parts.length >= 3) {
-                        pitch = (float) InputReader.getDouble(parts[2], 1);
-                    }
-                    p.playSound(p.getLocation(), s, volume, pitch);
-                }
-            }
-        }
-    }
 
 
     /**

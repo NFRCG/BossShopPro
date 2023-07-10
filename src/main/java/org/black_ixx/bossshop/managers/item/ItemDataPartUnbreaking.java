@@ -1,7 +1,6 @@
 package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.core.BSBuy;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

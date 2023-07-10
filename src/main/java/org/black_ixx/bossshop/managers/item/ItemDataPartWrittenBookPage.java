@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.managers.item;
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +29,7 @@ public class ItemDataPartWrittenBookPage extends ItemDataPart {
         }
 
         String[] parts = argument.split("#", 2);
-        int page = InputReader.getInt(parts[0], -1);
+        int page = StringUtil.getInt(parts[0], -1);
         if (parts.length != 2 || page == -1) {
             ClassManager.manager.getBugFinder().severe("Mistake in Config: Invalid: line: '" + used_name + ":" + argument + "'. It should look like following: 'bookpage:<page>#<text>'.");
             return item;

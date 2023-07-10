@@ -1,11 +1,11 @@
 package org.black_ixx.bossshop.core.rewards;
 
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.prices.BSPriceTypeNumber;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 public class BSRewardTypeItemAll extends BSRewardType {
     public Object createObject(Object o, boolean forceState) {
         if (forceState) {
-            ItemStack i = InputReader.readItem(o);
+            ItemStack i = StringUtil.readItem(o);
             i.setAmount(1);
             return i;
         } else {
-            return InputReader.readStringList(o);
+            return StringUtil.readStringList(o);
         }
     }
 

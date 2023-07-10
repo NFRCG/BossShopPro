@@ -1,9 +1,9 @@
 package org.black_ixx.bossshop.managers.item;
 
 import com.vk2gpz.tokenenchant.api.TokenEnchantAPI;
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -26,7 +26,7 @@ public class ItemDataPartEnchantment extends ItemDataPart {
         }
 
         String enchantment = parts[0].trim();
-        int level = InputReader.getInt(parts[1].trim(), -1);
+        int level = StringUtil.getInt(parts[1].trim(), -1);
 
         if (level == -1) {
             ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The level of the enchantment is invalid.");

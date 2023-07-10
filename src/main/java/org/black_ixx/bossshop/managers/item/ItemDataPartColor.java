@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.managers.item;
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.Player;
@@ -24,9 +24,9 @@ public class ItemDataPartColor extends ItemDataPart {
             return item;
         }
 
-        int red = InputReader.getInt(parts[0].trim(), 0);
-        int green = InputReader.getInt(parts[1].trim(), 0);
-        int blue = InputReader.getInt(parts[2].trim(), 0);
+        int red = StringUtil.getInt(parts[0].trim(), 0);
+        int green = StringUtil.getInt(parts[1].trim(), 0);
+        int blue = StringUtil.getInt(parts[2].trim(), 0);
         Color c = Color.fromRGB(red, green, blue);
 
         if (item.getItemMeta() instanceof Colorable) {

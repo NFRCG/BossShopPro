@@ -4,9 +4,8 @@ import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.StringManager;
+import org.black_ixx.bossshop.managers.StringManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 import org.bukkit.inventory.meta.tags.ItemTagType;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -85,8 +83,8 @@ public class ItemStackTranslator {
     private void transformCustomSkull(BSBuy buy, BSShop shop, ItemStack item, BSShopHolder holder, Player target) {
         String skulltexture = ItemDataPartCustomSkull.readSkullTexture(item);
         if (skulltexture != null) {
-            if (ClassManager.manager.getStringManager().checkStringForFeatures(shop, buy, skulltexture)) {
-                item = ItemDataPartCustomSkull.transformSkull(item, ClassManager.manager.getStringManager().transform(skulltexture, buy, shop, holder, target));
+            if (this.stringManager.checkStringForFeatures(shop, buy, skulltexture)) {
+                item = ItemDataPartCustomSkull.transformSkull(item, this.stringManager.transform(skulltexture, buy, shop, holder, target));
             }
         }
     }

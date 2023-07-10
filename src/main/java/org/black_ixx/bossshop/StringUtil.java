@@ -1,21 +1,30 @@
-package org.black_ixx.bossshop.managers.misc;
+package org.black_ixx.bossshop;
 
-import net.kyori.adventure.key.Key;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.misc.Enchant;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentWrapper;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+public class StringUtil {
+    private StringUtil() {
+    }
 
-public class InputReader {
+    public static String formatList(List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder(list.get(0));
+        list.remove(0);
+        for (String s : list) {
+            builder.append("\n").append(s);
+        }
+        return builder.toString();
+    }
+
 
 
     /**

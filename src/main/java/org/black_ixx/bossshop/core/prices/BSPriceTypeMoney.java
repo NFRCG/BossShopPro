@@ -1,9 +1,9 @@
 package org.black_ixx.bossshop.core.prices;
 
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.black_ixx.bossshop.misc.MathTools;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -12,7 +12,7 @@ public class BSPriceTypeMoney extends BSPriceTypeNumber {
 
 
     public Object createObject(Object o, boolean forceState) {
-        return InputReader.getDouble(o, -1);
+        return StringUtil.getDouble(o, -1);
     }
 
     public boolean validityCheck(String itemName, Object o) {
@@ -29,7 +29,7 @@ public class BSPriceTypeMoney extends BSPriceTypeNumber {
 
     @Override
     public boolean hasPrice(Player p, BSBuy buy, Object price, ClickType clickType, int multiplier, boolean messageOnFailure) {
-        double money = (double) ClassManager.manager.getMultiplierHandler().calculatePriceWithMultiplier(p, buy, clickType, (Double) price) * multiplier;
+        double money = ClassManager.manager.getMultiplierHandler().calculatePriceWithMultiplier(p, buy, clickType, (Double) price) * multiplier;
         if (ClassManager.manager.getVaultHandler() == null) {
             return false;
         }

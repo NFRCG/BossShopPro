@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.managers.item;
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -14,7 +14,7 @@ public class ItemDataPartDurability extends ItemDataPart {
 
     @Override
     public ItemStack transform(ItemStack item, String used_name, String argument) {
-        int damage = InputReader.getInt(argument, -1);
+        int damage = StringUtil.getInt(argument, -1);
 
         if (damage == -1) {
             ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. " +

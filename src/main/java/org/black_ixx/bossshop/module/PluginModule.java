@@ -20,7 +20,7 @@ import org.black_ixx.bossshop.managers.features.TransactionLog;
 import org.black_ixx.bossshop.managers.item.ItemStackChecker;
 import org.black_ixx.bossshop.managers.item.ItemStackCreator;
 import org.black_ixx.bossshop.managers.item.ItemStackTranslator;
-import org.black_ixx.bossshop.managers.misc.StringManager;
+import org.black_ixx.bossshop.managers.StringManager;
 
 import java.nio.file.Path;
 

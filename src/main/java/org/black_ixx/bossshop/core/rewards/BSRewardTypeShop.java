@@ -1,9 +1,9 @@
 package org.black_ixx.bossshop.core.rewards;
 
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
@@ -12,7 +12,7 @@ public class BSRewardTypeShop extends BSRewardType {
 
 
     public Object createObject(Object o, boolean forceState) {
-        return InputReader.readString(o, true);
+        return StringUtil.readString(o, true);
     }
 
     public boolean validityCheck(String item_name, Object o) {

@@ -1,4 +1,4 @@
-package org.black_ixx.bossshop.managers.misc;
+package org.black_ixx.bossshop.managers;
 
 
 import me.clip.placeholderapi.PlaceholderAPI;

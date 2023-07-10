@@ -1,5 +1,6 @@
 package org.black_ixx.bossshop.managers.config;
 
+import org.apache.commons.lang3.Validate;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShops;
@@ -18,39 +19,40 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class BSConfigShop extends BSShop {
 
-    private String ymlName;
+    private final String ymlName;
     private File f;
     private FileConfiguration config;
     private ConfigurationSection section;
 
     //////////////////////////////////
 
-    public BSConfigShop(int shop_id, String ymlName, BSShops shophandler) {
-        this(shop_id, new File(ClassManager.manager.getPlugin().getDataFolder().getAbsolutePath() + "/shops/" + ymlName), shophandler);
+    public BSConfigShop(int shopId, String ymlName, BSShops shophandler) {
+        this(shopId, new File(ClassManager.manager.getPlugin().getDataFolder().getAbsolutePath() + "/shops/" + ymlName), shophandler);
     }
 
-    public BSConfigShop(int shop_id, File f, BSShops shophandler) {
-        this(shop_id, f, shophandler, null);
+    public BSConfigShop(int shopId, File f, BSShops shophandler) {
+        this(shopId, f, shophandler, null);
     }
 
-    public BSConfigShop(int shop_id, File f, BSShops shophandler, ConfigurationSection sectionOptional) {
-        super(shop_id);
+    public BSConfigShop(int shopId, File f, BSShops shophandler, ConfigurationSection sectionOptional) {
+        super(shopId);
 
         this.f = f;
-
+        this.ymlName = f.getName();
         try {
-            config = ConfigLoader.loadConfiguration(f, true);
-
+            this.config = this.loadConfiguration(f, true);
         } catch (InvalidConfigurationException e) {
-            ClassManager.manager.getBugFinder().severe("Invalid Configuration! File: /shops/" + ymlName + " Cause: " + e.getMessage());
+            ClassManager.manager.getBugFinder().severe("Invalid Configuration! File: /shops/" + f.getName() + " Cause: " + e.getMessage());
             String name = ymlName.replace(".yml", "");
             setSignText("[" + name + "]");
             setShopName(name);
@@ -94,12 +96,9 @@ public class BSConfigShop extends BSShop {
         finishedAddingItems();
     }
 
-    //////////////////////////////////
-
     public FileConfiguration getConfig() {
         return config;
     }
-    //////////////////////////////////
 
     public void saveConfig() {
         try {
@@ -119,8 +118,6 @@ public class BSConfigShop extends BSShop {
             config.setDefaults(defConfig);
         }
     }
-
-    //////////////////////////////////
 
     public void addDefault(String name, String rewardType, String priceType, Object reward, Object price, List<String> menuitem, String message, int loc, String permission) {
         ConfigurationSection c = section.getConfigurationSection("shop").createSection(name);
@@ -154,8 +151,6 @@ public class BSConfigShop extends BSShop {
         }
     }
 
-    //////////////////////////////////
-
     @Override
     public int getInventorySize() {
         if (section.getInt("InventorySize") != 0) {
@@ -163,9 +158,6 @@ public class BSConfigShop extends BSShop {
         }
         return super.getInventorySize();
     }
-
-    ///////////////////////////////////////// <- Load Config-Items
-
 
     public void loadItems() {
         ConfigurationSection c = section.getConfigurationSection("shop");
@@ -179,6 +171,24 @@ public class BSConfigShop extends BSShop {
     @Override
     public void reloadShop() {
         reloadConfig();
+    }
+
+    private YamlConfiguration loadConfiguration(File file, boolean debug) throws InvalidConfigurationException {
+        Validate.notNull(file, "File cannot be null");
+
+        YamlConfiguration config = new YamlConfiguration();
+
+        try {
+            config.load(file);
+        } catch (FileNotFoundException ex) {
+            if (debug)
+                Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+        } catch (IOException ex) {
+            if (debug)
+                Bukkit.getLogger().log(Level.SEVERE, "Cannot load " + file, ex);
+        }
+
+        return config;
     }
 
 }

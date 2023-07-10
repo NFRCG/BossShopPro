@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.core.rewards;
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -14,9 +14,9 @@ public class BSRewardTypeItem extends BSRewardType {
 
     public Object createObject(Object o, boolean forceState) {
         if (forceState) {
-            return InputReader.readItemList(o);
+            return StringUtil.readItemList(o);
         } else {
-            return InputReader.readStringListList(o);
+            return StringUtil.readStringListList(o);
         }
     }
 

@@ -8,16 +8,25 @@ import org.black_ixx.bossshop.events.BSCreateShopItemEvent;
 import org.black_ixx.bossshop.core.ActionSet;
 import org.black_ixx.bossshop.core.BSBuyAdvanced;
 import org.black_ixx.bossshop.managers.ClassManager;
+import org.black_ixx.bossshop.managers.features.BugFinder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class ShopItemCreationListener implements Listener {
+    private final BugFinder bugFinder;
+
+    @Inject
+    public ShopItemCreationListener(BugFinder bugFinder) {
+        this.bugFinder = bugFinder;
+    }
+
     @EventHandler
     public void onCreate(final BSCreateShopItemEvent event) {
         ConfigurationSection c = event.getConfigurationSection();
@@ -44,19 +53,19 @@ public class ShopItemCreationListener implements Listener {
                 BSPriceType priceT = BSPriceType.detectType(priceType);
 
                 if (rewardT == null) {
-                    ClassManager.manager.getBugFinder().severe("Was not able to create advanced BuyItem '" + event.getShopItemName() + "'! '" + rewardType + "' is not a valid RewardType! Switching back to simple kind of BuyItem.");
-                    ClassManager.manager.getBugFinder().severe("Valid RewardTypes:");
+                    this.bugFinder.severe("Was not able to create advanced BuyItem '" + event.getShopItemName() + "'! '" + rewardType + "' is not a valid RewardType! Switching back to simple kind of BuyItem.");
+                    this.bugFinder.severe("Valid RewardTypes:");
                     for (BSRewardType type : BSRewardType.values()) {
-                        ClassManager.manager.getBugFinder().severe("-" + type.name());
+                        this.bugFinder.severe("-" + type.name());
                     }
                     return;
                 }
 
                 if (priceT == null) {
-                    ClassManager.manager.getBugFinder().severe("Was not able to create advanced BuyItem '" + event.getShopItemName() + "!' '" + priceType + "' is not a valid PriceType! Switching back to simple kind of BuyItem.");
-                    ClassManager.manager.getBugFinder().severe("Valid PriceTypes:");
+                    this.bugFinder.severe("Was not able to create advanced BuyItem '" + event.getShopItemName() + "!' '" + priceType + "' is not a valid PriceType! Switching back to simple kind of BuyItem.");
+                    this.bugFinder.severe("Valid PriceTypes:");
                     for (BSPriceType type : BSPriceType.values()) {
-                        ClassManager.manager.getBugFinder().severe("-" + type.name());
+                        this.bugFinder.severe("-" + type.name());
                     }
                     return;
                 }
@@ -90,7 +99,7 @@ public class ShopItemCreationListener implements Listener {
                         }
                     }
                     if (inputtype == null) {
-                        ClassManager.manager.getBugFinder().warn("Invalid advanced ForceInput type: '" + inputtypename + "' of shopitem '" + event.getShopItemName());
+                        this.bugFinder.warn("Invalid advanced ForceInput type: '" + inputtypename + "' of shopitem '" + event.getShopItemName());
                     }
                 }
 

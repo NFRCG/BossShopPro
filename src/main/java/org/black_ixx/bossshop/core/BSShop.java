@@ -251,14 +251,6 @@ public abstract class BSShop {
         return Math.min(maxSlotsPerPage, Math.max(i, ROW_ITEMS * manualInventoryRows));
     }
 
-    public void openInventory(Player p) {
-        openInventory(p, 0, true);
-    }
-
-    public void openInventory(Player p, boolean rememberCurrentShop) {
-        openInventory(p, 0, rememberCurrentShop);
-    }
-
     public void openInventory(Player p, int page, boolean rememberCurrentShop) {
         BSShopHolder oldshopholder = null;
 

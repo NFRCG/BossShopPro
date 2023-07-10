@@ -1,10 +1,9 @@
 package org.black_ixx.bossshop.core.rewards;
 
 import net.milkbowl.vault.permission.Permission;
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
-import org.black_ixx.bossshop.managers.misc.StringManipulationLib;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
@@ -14,7 +13,7 @@ public class BSRewardTypePermission extends BSRewardType {
 
 
     public Object createObject(Object o, boolean forceState) {
-        return InputReader.readStringList(o);
+        return StringUtil.readStringList(o);
     }
 
     public boolean validityCheck(String item_name, Object o) {
@@ -58,7 +57,7 @@ public class BSRewardTypePermission extends BSRewardType {
     public String getDisplayReward(Player p, BSBuy buy, Object reward, ClickType clickType) {
         @SuppressWarnings("unchecked")
         List<String> permissions = (List<String>) reward;
-        String permissions_formatted = StringManipulationLib.formatList(permissions);
+        String permissions_formatted = StringUtil.formatList(permissions);
         return ClassManager.manager.getMessageHandler().get("Display.Permission").replace("%permissions%", permissions_formatted);
     }
 

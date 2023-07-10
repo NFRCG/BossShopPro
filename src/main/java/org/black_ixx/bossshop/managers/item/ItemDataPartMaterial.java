@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.managers.item;
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +19,7 @@ public class ItemDataPartMaterial extends ItemDataPart {
         if (argument.contains(":")) { //Can be used for durability
             String[] parts = argument.split(":");
             if (parts.length > 1) {
-                durability = (short) InputReader.getInt(parts[1].trim(), 0);
+                durability = (short) StringUtil.getInt(parts[1].trim(), 0);
             }
             argument = parts[0].trim();
         }

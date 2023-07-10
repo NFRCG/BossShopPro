@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.managers.item;
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,8 +30,8 @@ public class ItemDataPartPotionEffect extends ItemDataPart {
         PotionMeta meta = (PotionMeta) item.getItemMeta();
 
         String potioneffecttype = parts[0].trim();
-        int level = InputReader.getInt(parts[1].trim(), -1);
-        double duration = InputReader.getDouble(parts[2].trim(), -1); //Duration in seconds. Needs to be multiplied by 20 later.
+        int level = StringUtil.getInt(parts[1].trim(), -1);
+        double duration = StringUtil.getDouble(parts[2].trim(), -1); //Duration in seconds. Needs to be multiplied by 20 later.
 
         if (level == -1) {
             ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The level of the enchantment is invalid.");
@@ -53,7 +53,7 @@ public class ItemDataPartPotionEffect extends ItemDataPart {
         if (parts.length == 4) {
             String colorparts[] = parts[3].split("#");
             if (colorparts.length == 3) {
-                Color c = Color.fromRGB(InputReader.getInt(colorparts[0], 1), InputReader.getInt(colorparts[1], 1), InputReader.getInt(colorparts[2], 1));
+                Color c = Color.fromRGB(StringUtil.getInt(colorparts[0], 1), StringUtil.getInt(colorparts[1], 1), StringUtil.getInt(colorparts[2], 1));
                 meta.setColor(c);
             } else {
                 ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' of type '" + used_name + "': Unable to read color.");

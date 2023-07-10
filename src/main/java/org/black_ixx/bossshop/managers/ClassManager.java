@@ -8,7 +8,6 @@ import org.black_ixx.bossshop.core.BSShops;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSRegisterTypesEvent;
-import org.black_ixx.bossshop.managers.config.FileHandler;
 import org.black_ixx.bossshop.managers.external.BungeeCordManager;
 import org.black_ixx.bossshop.managers.external.VaultHandler;
 import org.black_ixx.bossshop.managers.features.BugFinder;
@@ -21,7 +20,6 @@ import org.black_ixx.bossshop.managers.item.ItemDataPart;
 import org.black_ixx.bossshop.managers.item.ItemStackChecker;
 import org.black_ixx.bossshop.managers.item.ItemStackCreator;
 import org.black_ixx.bossshop.managers.item.ItemStackTranslator;
-import org.black_ixx.bossshop.managers.misc.StringManager;
 import org.bukkit.Bukkit;
 
 public class ClassManager {
@@ -48,7 +46,7 @@ public class ClassManager {
         this.factory = new DataFactory(plugin.getDataFolder().toPath());
         manager = this;
 
-        new FileHandler().exportConfigs(plugin);
+        //TODO: write code to export default shops.
 
         BSRewardType.loadTypes();
         BSPriceType.loadTypes();

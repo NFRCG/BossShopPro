@@ -1,12 +1,11 @@
 package org.black_ixx.bossshop.managers.item;
 
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.managers.config.BSConfigShop;
 import org.black_ixx.bossshop.managers.features.BugFinder;
-import org.black_ixx.bossshop.managers.misc.InputReader;
-import org.black_ixx.bossshop.managers.misc.StringManipulationLib;
 import org.black_ixx.bossshop.misc.Misc;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,21 +33,21 @@ public class ItemStackCreator {
             List<String> new_list = null;
             for (String line : itemData) {
 
-                String reward_line = StringManipulationLib.figureOutVariable(line, "rewarditem", 0);
+                String reward_line = this.figureOutVariable(line, "rewarditem", 0);
                 if (reward_line != null) {
                     if (new_list == null) {
                         new_list = cloneList(itemData);
                     }
-                    int i = InputReader.getInt(reward_line, -1) - 1;
+                    int i = StringUtil.getInt(reward_line, -1) - 1;
                     new_list = transform(line, i, new_list, buy, cshop, "Reward");
                 }
 
-                String price_line = StringManipulationLib.figureOutVariable(line, "priceitem", 0);
+                String price_line = this.figureOutVariable(line, "priceitem", 0);
                 if (price_line != null) {
                     if (new_list == null) {
                         new_list = cloneList(itemData);
                     }
-                    int i = InputReader.getInt(reward_line, -1) - 1;
+                    int i = StringUtil.getInt(reward_line, -1) - 1;
                     new_list = transform(line, i, new_list, buy, cshop, "Price");
                 }
 
@@ -68,7 +67,7 @@ public class ItemStackCreator {
         if (index != -1) {
             new_list.remove(line);
 
-            List<List<String>> list = InputReader.readStringListList(buy.getConfigurationSection(shop).get(path));
+            List<List<String>> list = StringUtil.readStringListList(buy.getConfigurationSection(shop).get(path));
             if (list != null) {
                 if (list.size() > index) {
                     for (String entry : list.get(index)) {
@@ -168,4 +167,29 @@ public class ItemStackCreator {
         }
     }
 
+    private String figureOutVariable(String s, String name, int fromIndex) {
+        String symbol = "%";
+        String start = symbol + name + "_";
+        String complete = getCompleteVariable(s, name, fromIndex);
+        if (complete != null) {
+            String variable = complete.substring(start.length(), complete.length() - symbol.length());
+            return variable;
+        }
+        return null;
+    }
+
+    private String getCompleteVariable(String s, String name, int fromIndex) {
+        String symbol = "%";
+        String start = symbol + name + "_";
+        if (s.contains(start)) {
+            int firstStart = s.indexOf(start, fromIndex);
+            if (firstStart != -1) {
+                int firstEnd = s.indexOf(symbol, firstStart + 1);
+                if (firstEnd != -1) {
+                    return s.substring(firstStart, firstEnd + 1);
+                }
+            }
+        }
+        return null;
+    }
 }

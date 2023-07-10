@@ -1,9 +1,9 @@
 package org.black_ixx.bossshop.core.rewards;
 
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.black_ixx.bossshop.misc.Enchant;
 import org.black_ixx.bossshop.misc.Misc;
 import org.bukkit.Material;
@@ -17,9 +17,9 @@ public class BSRewardTypeEnchantment extends BSRewardType {
 
     public Object createObject(Object o, boolean forceState) {
         if (forceState) {
-            return InputReader.readEnchant(o);
+            return StringUtil.readEnchant(o);
         } else {
-            return InputReader.readString(o, false);
+            return StringUtil.readString(o, false);
         }
     }
 

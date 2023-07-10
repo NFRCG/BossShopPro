@@ -1,8 +1,8 @@
 package org.black_ixx.bossshop.managers.item;
 
+import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.managers.ClassManager;
-import org.black_ixx.bossshop.managers.misc.InputReader;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,7 +12,7 @@ public class ItemDataPartAmount extends ItemDataPart {
 
     @Override
     public ItemStack transform(ItemStack item, String used_name, String argument) {
-        int amount = InputReader.getInt(argument, -1);
+        int amount = StringUtil.getInt(argument, -1);
         if (amount == -1) {
             ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. It needs to be a number like '1', '12' or '64'.");
             return item;

@@ -7,6 +7,7 @@ import org.black_ixx.bossshop.core.BSShops;
 import org.black_ixx.bossshop.core.prices.BSPriceType;
 import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSLoadShopItemsEvent;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,7 +53,7 @@ public class BSConfigShop extends BSShop {
         try {
             this.config = this.loadConfiguration(f, true);
         } catch (InvalidConfigurationException e) {
-            ClassManager.manager.getBugFinder().severe("Invalid Configuration! File: /shops/" + f.getName() + " Cause: " + e.getMessage());
+            ErrorLog.warn("Invalid Configuration! File: /shops/" + f.getName() + " Cause: " + e.getMessage());
             String name = ymlName.replace(".yml", "");
             setSignText("[" + name + "]");
             setShopName(name);

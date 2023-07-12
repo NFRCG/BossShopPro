@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,13 +16,13 @@ public class ItemDataPartWrittenBookInformation extends ItemDataPart {
     @Override
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         if (!(item.getItemMeta() instanceof BookMeta)) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: You can not add book information to an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
+            ErrorLog.warn("Mistake in Config: You can not add book information to an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
             return item;
         }
 
         String parts[] = argument.split("#", 2);
         if (parts.length != 2) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: Following line is invalid: '" + used_name + ":" + argument + "'. It should look like this: 'book:<title>#<author>'.");
+            ErrorLog.warn("Mistake in Config: Following line is invalid: '" + used_name + ":" + argument + "'. It should look like this: 'book:<title>#<author>'.");
             return item;
         }
 

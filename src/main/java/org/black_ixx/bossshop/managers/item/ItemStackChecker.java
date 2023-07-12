@@ -1,9 +1,8 @@
 package org.black_ixx.bossshop.managers.item;
 
-
 import org.black_ixx.bossshop.config.DataFactory;
 import org.black_ixx.bossshop.core.BSBuy;
-import org.black_ixx.bossshop.managers.features.BugFinder;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,12 +16,10 @@ public class ItemStackChecker {
     public static final int INVENTORY_SLOT_END = 35;
     private final DataFactory factory;
     private final List<String> parts;
-    private final BugFinder bugFinder;
 
     @Inject
-    public ItemStackChecker(DataFactory factory, BugFinder bugFinder) {
+    public ItemStackChecker(DataFactory factory) {
         this.factory = factory;
-        this.bugFinder = bugFinder;
         this.parts = List.of("AXE", "HOE", "PICKAXE", "SHOVEL", "SWORD", "BOW", "FLINT", "SHEARS", "FISHING_ROD", "CHESTPLATE", "BOOTS", "HELMET", "LEGGINGS", "HORSE_ARMOR");
     }
 
@@ -56,7 +53,7 @@ public class ItemStackChecker {
 
         a -= shopItem.getAmount();
         if (a > 0) {
-            this.bugFinder.warn("Player " + p.getName() + " lost " + a + " items of type " + shopItem.getType().name() + ". How would that happen?");
+            ErrorLog.warn("Player " + p.getName() + " lost " + a + " items of type " + shopItem.getType().name() + ". How would that happen?");
         }
     }
 

@@ -3,6 +3,7 @@ package org.black_ixx.bossshop.core.rewards;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -19,7 +20,7 @@ public class BSRewardTypeMoney extends BSRewardTypeNumber {
         if ((Double) o != -1) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be a valid number. Example: '4.0' or '10'.");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The reward object needs to be a valid number. Example: '4.0' or '10'.");
         return false;
     }
 
@@ -36,17 +37,17 @@ public class BSRewardTypeMoney extends BSRewardTypeNumber {
         double money = ClassManager.manager.getMultiplierHandler().calculateRewardWithMultiplier(p, buy, clickType, (double) reward) * multiplier;
 
         if (ClassManager.manager.getVaultHandler() == null) {
-            ClassManager.manager.getBugFinder().severe("Unable to give " + p.getName() + " his/her money: Vault manager not loaded.");
+            ErrorLog.warn("Unable to give " + p.getName() + " his/her money: Vault manager not loaded.");
             return;
         }
         if (ClassManager.manager.getVaultHandler().getEconomy() == null) {
-            ClassManager.manager.getBugFinder().severe("Unable to give " + p.getName() + " his/her money: Economy manager not loaded.");
+            ErrorLog.warn("Unable to give " + p.getName() + " his/her money: Economy manager not loaded.");
             return;
         }
 
         if (!ClassManager.manager.getVaultHandler().getEconomy().hasAccount(p.getName())) {
             ClassManager.manager.getMessageHandler().sendMessage("Economy.NoAccount", p);
-            ClassManager.manager.getBugFinder().severe("Unable to give " + p.getName() + " his/her money: He/She does not have an economy account.");
+            ErrorLog.warn("Unable to give " + p.getName() + " his/her money: He/She does not have an economy account.");
             return;
         }
 

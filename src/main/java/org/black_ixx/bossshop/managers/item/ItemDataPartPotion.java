@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,12 +17,12 @@ public class ItemDataPartPotion extends ItemDataPart {
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         String[] parts = argument.split("#");
         if (parts.length != 3) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. It has to look like this: '<potion name/id>#<extended? true/false><upgraded? true/false>'. For example 'potion:POISON#true#true'.");
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. It has to look like this: '<potion name/id>#<extended? true/false><upgraded? true/false>'. For example 'potion:POISON#true#true'.");
             return item;
         }
 
         if (!(item.getItemMeta() instanceof PotionMeta)) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: You can not make potions out of an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
+            ErrorLog.warn("Mistake in Config: You can not make potions out of an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
             return item;
         }
 
@@ -40,7 +41,7 @@ public class ItemDataPartPotion extends ItemDataPart {
         }
 
         if (type == null) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The name of the potion is not known.");
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The name of the potion is not known.");
             return item;
         }
 

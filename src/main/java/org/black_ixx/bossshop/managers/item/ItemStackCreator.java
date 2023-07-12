@@ -4,8 +4,8 @@ package org.black_ixx.bossshop.managers.item;
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.config.BSConfigShop;
-import org.black_ixx.bossshop.managers.features.BugFinder;
 import org.black_ixx.bossshop.misc.Misc;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,13 +17,11 @@ import java.util.List;
 
 public class ItemStackCreator {
     private final ItemStackTranslator itemStackTranslator;
-    private final BugFinder bugFinder;
     private final ItemStackChecker itemStackChecker;
 
     @Inject
-    public ItemStackCreator(ItemStackTranslator itemStackTranslator, BugFinder bugFinder, ItemStackChecker itemStackChecker) {
+    public ItemStackCreator(ItemStackTranslator itemStackTranslator, ItemStackChecker itemStackChecker) {
         this.itemStackTranslator = itemStackTranslator;
-        this.bugFinder = bugFinder;
         this.itemStackChecker = itemStackChecker;
     }
 
@@ -74,10 +72,10 @@ public class ItemStackCreator {
                         new_list.add(entry);
                     }
                 } else {
-                    this.bugFinder.warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " does not contain a " + index + ". item!");
+                    ErrorLog.warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " does not contain a " + index + ". item!");
                 }
             } else {
-                this.bugFinder.warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " is not an item list!");
+                ErrorLog.warn("Was trying to import the item look for MenuItem of shopitem '" + buy.getName() + "' in shop '" + shop.getShopName() + "' but your " + path + " is not an item list!");
             }
         }
         return new_list;

@@ -10,7 +10,6 @@ import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSRegisterTypesEvent;
 import org.black_ixx.bossshop.managers.external.BungeeCordManager;
 import org.black_ixx.bossshop.managers.external.VaultHandler;
-import org.black_ixx.bossshop.managers.features.BugFinder;
 import org.black_ixx.bossshop.managers.features.MultiplierHandler;
 import org.black_ixx.bossshop.managers.features.PageLayoutHandler;
 import org.black_ixx.bossshop.managers.features.PlayerDataHandler;
@@ -28,7 +27,6 @@ public class ClassManager {
     private final DataFactory factory;
 
     private final BuyItemHandler buyItemHandler;
-    private final BugFinder bugfinder;
     private final BossShop plugin;
     private final PlayerDataHandler playerdataHandler;
     ///////////////////////////////
@@ -56,7 +54,6 @@ public class ClassManager {
         //////////////// <- Independent Classes
 
         playerdataHandler = new PlayerDataHandler();
-        bugfinder = new BugFinder(plugin);
         buyItemHandler = new BuyItemHandler();
 
     }
@@ -125,10 +122,6 @@ public class ClassManager {
 
     public BuyItemHandler getBuyItemHandler() {
         return buyItemHandler;
-    }
-
-    public BugFinder getBugFinder() {
-        return bugfinder;
     }
 
     public BossShop getPlugin() {

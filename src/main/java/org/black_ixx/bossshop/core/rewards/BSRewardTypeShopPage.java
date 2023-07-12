@@ -4,6 +4,7 @@ package org.black_ixx.bossshop.core.rewards;
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShopHolder;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -23,7 +24,7 @@ public class BSRewardTypeShopPage extends BSRewardType {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be either 'next', 'previous' or a page number like '0' (first page), '1' or '2'.");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The reward object needs to be either 'next', 'previous' or a page number like '0' (first page), '1' or '2'.");
         return false;
     }
 
@@ -75,7 +76,7 @@ public class BSRewardTypeShopPage extends BSRewardType {
                     return page - 1;
 
                 } catch (NumberFormatException e) {
-                    ClassManager.manager.getBugFinder().warn("Was not able to detect shop page. Unable to read Reward '" + reward + "'. Please use either 'next', 'previous' or a page number like '1' or '2'.");
+                    ErrorLog.warn("Was not able to detect shop page. Unable to read Reward '" + reward + "'. Please use either 'next', 'previous' or a page number like '1' or '2'.");
                 }
 
             }

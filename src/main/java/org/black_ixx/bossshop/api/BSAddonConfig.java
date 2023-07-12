@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.api;
 
 import com.google.common.io.Files;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -226,7 +227,7 @@ public class BSAddonConfig implements BSAddonStorage {
                 Files.copy(c.getFile(), this.file);
                 reload();
             } catch (IOException e) {
-                ClassManager.manager.getBugFinder().warn("Unable to copy storage file from '" + c.getFile().getPath() + "' to '" + this.file.getPath() + "'.");
+                ErrorLog.warn("Unable to copy storage file from '" + c.getFile().getPath() + "' to '" + this.file.getPath() + "'.");
                 return false;
             }
             return true;

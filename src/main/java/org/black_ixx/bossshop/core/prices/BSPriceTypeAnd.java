@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.core.prices;
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -23,10 +24,10 @@ public class BSPriceTypeAnd extends BSPriceType {
             BSPriceType priceT = BSPriceType.detectType(priceType);
 
             if (priceT == null) {
-                ClassManager.manager.getBugFinder().severe("Invalid PriceType '" + priceType + "' inside price list of shopitem with pricetype AND.");
-                ClassManager.manager.getBugFinder().severe("Valid PriceTypes:");
+                ErrorLog.warn("Invalid PriceType '" + priceType + "' inside price list of shopitem with pricetype AND.");
+                ErrorLog.warn("Valid PriceTypes:");
                 for (BSPriceType type : BSPriceType.values()) {
-                    ClassManager.manager.getBugFinder().severe("-" + type.name());
+                    ErrorLog.warn("-" + type.name());
                 }
                 continue;
             }
@@ -35,7 +36,7 @@ public class BSPriceTypeAnd extends BSPriceType {
             Object priceO = priceT.createObject(priceObject, true);
 
             if (!priceT.validityCheck("?", priceO)) {
-                ClassManager.manager.getBugFinder().severe("Invalid Price '" + priceO + "' (PriceType= " + priceType + ") inside price list of shopitem with pricetype AND.");
+                ErrorLog.warn("Invalid Price '" + priceO + "' (PriceType= " + priceType + ") inside price list of shopitem with pricetype AND.");
                 continue;
             }
 
@@ -51,7 +52,7 @@ public class BSPriceTypeAnd extends BSPriceType {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The price object needs to be a list of price-blocks. Every priceblock needs to contain price and pricetype.");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The price object needs to be a list of price-blocks. Every priceblock needs to contain price and pricetype.");
         return false;
     }
 

@@ -4,6 +4,7 @@ package org.black_ixx.bossshop.core.prices;
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.rewards.BSRewardTypeNumber;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -26,7 +27,7 @@ public class BSPriceTypeItemAll extends BSPriceType {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + itemName + "! The price object needs to be a valid list of ItemData (https://www.spigotmc.org/wiki/bossshoppro-pricetypes/).");
+        ErrorLog.warn("Was not able to create ShopItem " + itemName + "! The price object needs to be a valid list of ItemData (https://www.spigotmc.org/wiki/bossshoppro-pricetypes/).");
         return false;
     }
 

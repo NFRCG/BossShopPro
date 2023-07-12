@@ -3,6 +3,7 @@ package org.black_ixx.bossshop.core.prices;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.misc.MathTools;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class BSPriceTypeExp extends BSPriceTypeNumber {
         if ((Integer) o != -1) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The price object needs to be a valid Integer number. Example: '10' or '30'.");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The price object needs to be a valid Integer number. Example: '10' or '30'.");
         return false;
     }
 

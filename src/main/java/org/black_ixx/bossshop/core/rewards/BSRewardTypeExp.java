@@ -3,6 +3,7 @@ package org.black_ixx.bossshop.core.rewards;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -19,7 +20,7 @@ public class BSRewardTypeExp extends BSRewardTypeNumber {
         if ((Integer) o != -1) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be a valid Integer number. Example: '7' or '12'.");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The reward object needs to be a valid Integer number. Example: '7' or '12'.");
         return false;
     }
 

@@ -1,9 +1,9 @@
 package org.black_ixx.bossshop.core;
 
 import org.black_ixx.bossshop.BossShop;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.managers.config.BSConfigShop;
-import org.black_ixx.bossshop.managers.config.FileHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.InventoryView;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.FileHandler;
 
 public class BSShops {
 
@@ -26,7 +27,7 @@ public class BSShops {
         shopsIds = new HashMap<>();
 
         File folder = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "shops" + File.separator);
-        new FileHandler().exportShops(plugin);
+        //TODO load defaults here.
 
         loadShops(folder, "");
         Bukkit.getLogger().info("Loaded " + shops.size() + " Shops!");
@@ -65,7 +66,7 @@ public class BSShops {
         shops.put(shop.getShopId(), shop);
 
         if (shopsIds.containsKey(shop.getShopName().toLowerCase())) {
-            ClassManager.manager.getBugFinder().warn("Two Shops with the same Name (" + shop.getShopName().toLowerCase() + ") are loaded. When opening a Shop via Name, only one of this Shops will be opened!");
+            ErrorLog.warn("Two Shops with the same Name (" + shop.getShopName().toLowerCase() + ") are loaded. When opening a Shop via Name, only one of this Shops will be opened!");
         }
 
         shopsIds.put(shop.getShopName().toLowerCase(), shop.getShopId());

@@ -3,6 +3,7 @@ package org.black_ixx.bossshop.managers.item;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -87,7 +88,7 @@ public class ItemDataPartCustomSkull extends ItemDataPart {
     @Override
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         if (!(item.getItemMeta() instanceof SkullMeta)) {
-            ClassManager.manager.getBugFinder().warn("Mistake in Config: Itemdata of type '" + used_name + "' with value '" + argument + "' can not be added to an item with material '" + item.getType().name() + "'. Don't worry I'll automatically transform the material into '" + Material.PLAYER_HEAD + ".");
+            ErrorLog.warn("Mistake in Config: Itemdata of type '" + used_name + "' with value '" + argument + "' can not be added to an item with material '" + item.getType().name() + "'. Don't worry I'll automatically transform the material into '" + Material.PLAYER_HEAD + ".");
             item.setType(Material.PLAYER_HEAD);
         }
         item = transformSkull(item, argument);

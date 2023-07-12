@@ -1,6 +1,8 @@
 package org.black_ixx.bossshop.files;
 
 import org.black_ixx.bossshop.config.DataFactory;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -8,46 +10,81 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
 
 /**
- * Simple text file writer to potentially replace BugFinder.yml. May be removed in the future.
+ * Basic Logger which also writes to file to replace BSP's BugFinder.yml.
+ * <br><br>
+ * This may be removed in the future because the feature inherently makes little sense. Issues can be read from console.
  */
 public final class ErrorLog {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss");
-    private final BufferedWriter writer;
+    private static BufferedWriter writer;
 
-    /**
-     * Constructs the object.
-     *
-     * @param pluginPath The plugin's path.
-     */
-    public ErrorLog(final Path pluginPath) throws IOException {
-        Path path = DataFactory.createFile(pluginPath, "errors.txt");
-        this.writer = new BufferedWriter(new FileWriter(path.toFile()));
+    private ErrorLog() {
     }
 
-    public void write(final String string) {
-        String message = String.format("[%s] %s", this.getPrefix(), string);
+    public static void init() {
+        Path path = JavaPlugin.getProvidingPlugin(ErrorLog.class).getDataFolder().toPath();
         try {
-            this.writer.write(message);
-            this.writer.newLine();
-            this.writer.flush();
+            writer = new BufferedWriter(new FileWriter(DataFactory.createFile(path, "bugfinder.log").toFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void write(final Iterable<String> strings) {
-        strings.forEach(this::write);
+    /**
+     * Logs the provided message at the provided level.
+     *
+     * @param level  The level of logging.
+     * @param string The message.
+     */
+    public static void log(final Level level, final String string) {
+        String message = String.format("[%s] %s", getPrefix(), string);
+        try {
+            Bukkit.getLogger().log(level, message);
+            writer.write(message);
+            writer.newLine();
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Logs an iterable of strings using the provided level.
+     *
+     * @param strings The messages.
+     */
+    public static void log(final Level level, final Iterable<String> strings) {
+        strings.forEach(x -> ErrorLog.log(level, x));
+    }
+
+    /**
+     * Logs an informational message using the provided message.
+     *
+     * @param string The message.
+     */
+    public static void info(final String string) {
+        ErrorLog.log(Level.INFO, string);
+    }
+
+    /**
+     * Logs a warning message using the provided message.
+     *
+     * @param string The message.
+     */
+    public static void warn(final String string) {
+        ErrorLog.log(Level.WARNING, string);
     }
 
     /**
      * Closes the buffer. Used for server shutdown.
      */
-    public void closeBuffer() {
+    public static void closeBuffer() {
         try {
-            this.writer.flush();
-            this.writer.close();
+            writer.flush();
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,7 +95,7 @@ public final class ErrorLog {
      *
      * @return The prefix.
      */
-    private String getPrefix() {
+    private static String getPrefix() {
         return DATE_FORMAT.format(LocalDateTime.now());
     }
 }

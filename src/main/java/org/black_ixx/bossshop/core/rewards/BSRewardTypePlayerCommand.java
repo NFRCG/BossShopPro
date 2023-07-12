@@ -2,6 +2,7 @@ package org.black_ixx.bossshop.core.rewards;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class BSRewardTypePlayerCommand extends BSRewardType {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be a list of commands (text lines).");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The reward object needs to be a list of commands (text lines).");
         return false;
     }
 

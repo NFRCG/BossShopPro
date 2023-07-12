@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -116,7 +117,7 @@ public abstract class ItemDataPart {
 
         ItemDataPart part = detectType(name);
         if (part == null) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: Unable to read itemdata '" + name + ":" + argument);
+            ErrorLog.warn("Mistake in Config: Unable to read itemdata '" + name + ":" + argument);
             return item;
         }
 
@@ -207,10 +208,10 @@ public abstract class ItemDataPart {
         try {
             return transform(item, used_name.toLowerCase(), argument);
         } catch (NoClassDefFoundError e) { //Seems like that ItemDataPart is not supported yet
-            ClassManager.manager.getBugFinder().severe("Unable to work with itemdata '" + used_name.toLowerCase() + ":" + argument + ". Seems like it is not supported by your server version yet.");
+            ErrorLog.warn("Unable to work with itemdata '" + used_name.toLowerCase() + ":" + argument + ". Seems like it is not supported by your server version yet.");
             return item;
         } catch (NoSuchMethodError e) { //Seems like that ItemDataPart is not supported yet
-            ClassManager.manager.getBugFinder().severe("Unable to work with itemdata '" + used_name.toLowerCase() + ":" + argument + ". Seems like it is not supported by your server version yet.");
+            ErrorLog.warn("Unable to work with itemdata '" + used_name.toLowerCase() + ":" + argument + ". Seems like it is not supported by your server version yet.");
             return item;
         }
     }

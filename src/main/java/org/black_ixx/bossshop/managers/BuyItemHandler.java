@@ -9,7 +9,7 @@ import org.black_ixx.bossshop.core.rewards.BSRewardType;
 import org.black_ixx.bossshop.events.BSCreateShopItemEvent;
 import org.black_ixx.bossshop.events.BSCreatedShopItemEvent;
 import org.black_ixx.bossshop.events.BSLoadShopItemEvent;
-import org.black_ixx.bossshop.managers.features.BugFinder;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.item.ItemStackCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,12 +18,10 @@ import org.bukkit.inventory.ItemStack;
 import javax.inject.Inject;
 
 public class BuyItemHandler {
-    private final BugFinder bugFinder;
     private final ItemStackCreator itemStackCreator;
 
     @Inject
-    public BuyItemHandler(BugFinder bugFinder, ItemStackCreator itemStackCreator) {
-        this.bugFinder = bugFinder;
+    public BuyItemHandler(ItemStackCreator itemStackCreator) {
         this.itemStackCreator = itemStackCreator;
     }
 
@@ -38,7 +36,7 @@ public class BuyItemHandler {
     public BSBuy loadItem(ConfigurationSection items_section, BSShop shop, String name) {
         if (items_section.getConfigurationSection(name) == null) {
             String shopname = shop == null ? "none" : shop.getShopName();
-            this.bugFinder.severe("Error when trying to create BuyItem " + name + "! (1) [Shop: " + shopname + "]");
+            ErrorLog.warn("Error when trying to create BuyItem " + name + "! (1) [Shop: " + shopname + "]");
             return null;
         }
         ConfigurationSection c = items_section.getConfigurationSection(name);
@@ -80,7 +78,7 @@ public class BuyItemHandler {
             int inventoryLocation = c.getInt("InventoryLocation");
 
             if (inventoryLocation < 0) {
-                this.bugFinder.warn("The InventoryLocation of the shopitem '" + name + "' is '" + inventoryLocation + "'. It has to be either higher than '0' or it has to be '0' if you want to it to automatically pick the next empty slot. [Shop: " + shopname + "]");
+                ErrorLog.warn("The InventoryLocation of the shopitem '" + name + "' is '" + inventoryLocation + "'. It has to be either higher than '0' or it has to be '0' if you want to it to automatically pick the next empty slot. [Shop: " + shopname + "]");
             }
             inventoryLocation--;
 
@@ -90,19 +88,19 @@ public class BuyItemHandler {
             BSPriceType priceT = BSPriceType.detectType(priceType);
 
             if (rewardT == null) {
-                this.bugFinder.severe("Was not able to create shopitem '" + name + "'! '" + rewardType + "' is not a valid RewardType! [Shop: " + shopname + "]");
-                this.bugFinder.severe("Valid RewardTypes:");
+                ErrorLog.warn("Was not able to create shopitem '" + name + "'! '" + rewardType + "' is not a valid RewardType! [Shop: " + shopname + "]");
+                ErrorLog.warn("Valid RewardTypes:");
                 for (BSRewardType type : BSRewardType.values()) {
-                    this.bugFinder.severe("-" + type.name());
+                    ErrorLog.warn("-" + type.name());
                 }
                 return null;
             }
 
             if (priceT == null) {
-                this.bugFinder.severe("Was not able to create shopitem '" + name + "'! '" + priceType + "' is not a valid PriceType! [Shop: " + shopname + "]");
-                this.bugFinder.severe("Valid PriceTypes:");
+                ErrorLog.warn("Was not able to create shopitem '" + name + "'! '" + priceType + "' is not a valid PriceType! [Shop: " + shopname + "]");
+                ErrorLog.warn("Valid PriceTypes:");
                 for (BSPriceType type : BSPriceType.values()) {
-                    this.bugFinder.severe("-" + type.name());
+                    ErrorLog.warn("-" + type.name());
                 }
                 return null;
             }
@@ -119,7 +117,7 @@ public class BuyItemHandler {
                     }
                 }
                 if (inputtype == null) {
-                    this.bugFinder.warn("Invalid ForceInput type: '" + inputtypename + "' of shopitem '" + name + ". [Shop: " + shopname + "]");
+                    ErrorLog.warn("Invalid ForceInput type: '" + inputtypename + "' of shopitem '" + name + ". [Shop: " + shopname + "]");
                 }
             }
 
@@ -158,7 +156,7 @@ public class BuyItemHandler {
 
             stage = "MenuItem creation";
             if (c.getStringList("MenuItem") == null) {
-                this.bugFinder.severe("Error when trying to create shopitem " + name + "! MenuItem is not existing?! [Shop: " + shopname + "]");
+                ErrorLog.warn("Error when trying to create shopitem " + name + "! MenuItem is not existing?! [Shop: " + shopname + "]");
                 return null;
             }
 
@@ -172,10 +170,10 @@ public class BuyItemHandler {
             return buy;
 
         } catch (Exception e) {
-            this.bugFinder.severe("Was not able to create BuyItem " + name + "! Error at Stage '" + stage + "'. [Shop: " + shopname + "]");
+            ErrorLog.warn("Was not able to create BuyItem " + name + "! Error at Stage '" + stage + "'. [Shop: " + shopname + "]");
             e.printStackTrace();
-            this.bugFinder.severe("Probably caused by Config Mistakes.");
-            this.bugFinder.severe("For more help please send me a PM at Spigot.");
+            ErrorLog.warn("Probably caused by Config Mistakes.");
+            ErrorLog.warn("For more help please send me a PM at Spigot.");
             return null;
         }
     }

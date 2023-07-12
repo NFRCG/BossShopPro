@@ -2,6 +2,7 @@ package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
@@ -18,12 +19,12 @@ public class ItemDataPartPotionEffect extends ItemDataPart {
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         String[] parts = argument.split("#", 4);
         if (parts.length < 3) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. It has to look like this: '<potioneffect name/id>#<level><duration>[#<r>#<g>#<b>]'. For example 'potioneffect:CONFUSION#1#60' or 'potioneffect:CONFUSION#1#60#255#0#0'.");
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. It has to look like this: '<potioneffect name/id>#<level><duration>[#<r>#<g>#<b>]'. For example 'potioneffect:CONFUSION#1#60' or 'potioneffect:CONFUSION#1#60#255#0#0'.");
             return item;
         }
 
         if (!(item.getItemMeta() instanceof PotionMeta)) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: You can not add Potioneffects to an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
+            ErrorLog.warn("Mistake in Config: You can not add Potioneffects to an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
             return item;
         }
 
@@ -34,18 +35,18 @@ public class ItemDataPartPotionEffect extends ItemDataPart {
         double duration = StringUtil.getDouble(parts[2].trim(), -1); //Duration in seconds. Needs to be multiplied by 20 later.
 
         if (level == -1) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The level of the enchantment is invalid.");
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The level of the enchantment is invalid.");
             return item;
         }
         if (duration == -1) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The duration of the enchantment is invalid.");
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The duration of the enchantment is invalid.");
             return item;
         }
 
         PotionEffectType type = PotionEffectType.getByName(potioneffecttype);
 
         if (type == null) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The name/id of the potioneffect is not known.");
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. The name/id of the potioneffect is not known.");
             return item;
         }
 
@@ -56,7 +57,7 @@ public class ItemDataPartPotionEffect extends ItemDataPart {
                 Color c = Color.fromRGB(StringUtil.getInt(colorparts[0], 1), StringUtil.getInt(colorparts[1], 1), StringUtil.getInt(colorparts[2], 1));
                 meta.setColor(c);
             } else {
-                ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' of type '" + used_name + "': Unable to read color.");
+                ErrorLog.warn("Mistake in Config: '" + argument + "' of type '" + used_name + "': Unable to read color.");
             }
         }
 

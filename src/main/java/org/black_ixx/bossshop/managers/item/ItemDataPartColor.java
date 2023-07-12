@@ -2,6 +2,7 @@ package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -20,7 +21,7 @@ public class ItemDataPartColor extends ItemDataPart {
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         String[] parts = argument.split("#");
         if (parts.length != 3) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. It has to look like this: '<red part>#<green part>#<blue part>'. You can find a list of RGB Colors here: http://www.farb-tabelle.de/de/farbtabelle.htm.");
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. It has to look like this: '<red part>#<green part>#<blue part>'. You can find a list of RGB Colors here: http://www.farb-tabelle.de/de/farbtabelle.htm.");
             return item;
         }
 
@@ -51,7 +52,7 @@ public class ItemDataPartColor extends ItemDataPart {
             return item;
         }
 
-        ClassManager.manager.getBugFinder().severe("Mistake in Config: Unable to color items of material '" + item.getType().name() + "'!");
+        ErrorLog.warn("Mistake in Config: Unable to color items of material '" + item.getType().name() + "'!");
         return item;
     }
 

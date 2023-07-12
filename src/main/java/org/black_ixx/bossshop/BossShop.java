@@ -7,6 +7,7 @@ import org.black_ixx.bossshop.api.BossShopAddon;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShops;
 import org.black_ixx.bossshop.events.BSReloadedEvent;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.listeners.InventoryListener;
 import org.black_ixx.bossshop.listeners.PlayerListener;
 import org.black_ixx.bossshop.listeners.ShopItemCreationListener;
@@ -32,6 +33,7 @@ public class BossShop extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        ErrorLog.init();
         Bukkit.getLogger().info("Loading data...");
         this.injector = Guice.createInjector(new PluginModule(this));
         this.manager = new ClassManager(this);
@@ -50,7 +52,8 @@ public class BossShop extends JavaPlugin {
     public void onDisable() {
         this.closeShops();
         this.unloadClasses();
-        Bukkit.getLogger().info("Disabling... bye!");
+        ErrorLog.info("Plugin is being disabled...");
+        ErrorLog.closeBuffer();
     }
 
     public ClassManager getClassManager() {

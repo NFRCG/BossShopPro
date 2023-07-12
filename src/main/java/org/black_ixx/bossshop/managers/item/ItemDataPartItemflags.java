@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -29,7 +30,7 @@ public class ItemDataPartItemflags extends ItemDataPart {
                     ItemFlag itemflag = ItemFlag.valueOf(flag.toUpperCase());
                     meta.addItemFlags(itemflag);
                 } catch (Exception e) {
-                    ClassManager.manager.getBugFinder().warn("Mistake in Config: '" + flag + "' is not a valid '" + usedName + "'.");
+                    ErrorLog.warn("Mistake in Config: '" + flag + "' is not a valid '" + usedName + "'.");
                 }
             }
 

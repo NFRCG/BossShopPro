@@ -3,6 +3,7 @@ package org.black_ixx.bossshop.core.prices;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.misc.MathTools;
 import org.bukkit.entity.Player;
@@ -19,7 +20,7 @@ public class BSPriceTypeMoney extends BSPriceTypeNumber {
         if ((Double) o != -1) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + itemName + "! The price object needs to be a valid number. Example: '4.0' or '10'.");
+        ErrorLog.warn("Was not able to create ShopItem " + itemName + "! The price object needs to be a valid number. Example: '4.0' or '10'.");
         return false;
     }
 
@@ -57,7 +58,7 @@ public class BSPriceTypeMoney extends BSPriceTypeNumber {
         double money = (double) ClassManager.manager.getMultiplierHandler().calculatePriceWithMultiplier(p, buy, clickType, (Double) price) * multiplier;
 
         if (!ClassManager.manager.getVaultHandler().getEconomy().hasAccount(p.getName())) {
-            ClassManager.manager.getBugFinder().severe("Unable to take money! No economy account existing! (" + p.getName() + ", " + money + ")");
+            ErrorLog.warn("Unable to take money! No economy account existing! (" + p.getName() + ", " + money + ")");
             return "";
         }
 

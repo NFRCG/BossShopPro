@@ -2,6 +2,7 @@ package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,13 +18,13 @@ public class ItemDataPartDurability extends ItemDataPart {
         int damage = StringUtil.getInt(argument, -1);
 
         if (damage == -1) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. " +
+            ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'. " +
                     "It needs to be an integer number like '0', '5' or '200'. ");
             return item;
         }
 
         if (!(item.getItemMeta() instanceof Damageable)) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: Unable to add damage/durability to items of type '" + item.getType() + "'.");
+            ErrorLog.warn("Mistake in Config: Unable to add damage/durability to items of type '" + item.getType() + "'.");
             return item;
         }
         Damageable d = (Damageable) item.getItemMeta();

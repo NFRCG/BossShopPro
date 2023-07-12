@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
@@ -21,7 +22,7 @@ public class ItemDataPartBanner extends ItemDataPart {
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         if (Bukkit.getVersion().contains("1.8") || Bukkit.getVersion().contains("1.9")) {  //TODO: ADD Documentation and test this feature out
             if (item.getType() != Material.LEGACY_BANNER) {
-                ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'.");
+                ErrorLog.warn("Mistake in Config: '" + argument + "' is not a valid '" + used_name + "'.");
                 return item;
             }
             BannerMeta meta = (BannerMeta) item.getItemMeta();

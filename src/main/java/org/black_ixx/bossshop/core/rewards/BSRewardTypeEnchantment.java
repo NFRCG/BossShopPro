@@ -3,6 +3,7 @@ package org.black_ixx.bossshop.core.rewards;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.misc.Enchant;
 import org.black_ixx.bossshop.misc.Misc;
@@ -27,7 +28,7 @@ public class BSRewardTypeEnchantment extends BSRewardType {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be a text line looking like this: '<enchantmenttype/enchantmentid>#<level>'.");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The reward object needs to be a text line looking like this: '<enchantmenttype/enchantmentid>#<level>'.");
         return false;
     }
 

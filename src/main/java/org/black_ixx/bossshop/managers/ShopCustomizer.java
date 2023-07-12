@@ -5,7 +5,7 @@ import org.black_ixx.bossshop.core.BSBuy;
 import org.black_ixx.bossshop.core.BSShop;
 import org.black_ixx.bossshop.core.BSShopHolder;
 import org.black_ixx.bossshop.events.BSDisplayItemEvent;
-import org.black_ixx.bossshop.managers.features.BugFinder;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.features.PageLayoutHandler;
 import org.black_ixx.bossshop.managers.item.ItemStackChecker;
 import org.black_ixx.bossshop.managers.item.ItemStackTranslator;
@@ -23,14 +23,12 @@ import java.util.Set;
 
 public class ShopCustomizer {
     private final ItemStackChecker itemStackChecker;
-    private final BugFinder bugFinder;
     private final PageLayoutHandler pageLayoutHandler;
     private final ItemStackTranslator itemStackTranslator;
     private final DataFactory factory;
 
-    public ShopCustomizer(ItemStackChecker itemStackChecker, BugFinder bugFinder, PageLayoutHandler pageLayoutHandler, ItemStackTranslator itemStackTranslator, DataFactory factory) {
+    public ShopCustomizer(ItemStackChecker itemStackChecker, PageLayoutHandler pageLayoutHandler, ItemStackTranslator itemStackTranslator, DataFactory factory) {
         this.itemStackChecker = itemStackChecker;
-        this.bugFinder = bugFinder;
         this.pageLayoutHandler = pageLayoutHandler;
         this.itemStackTranslator = itemStackTranslator;
         this.factory = factory;
@@ -153,7 +151,7 @@ public class ShopCustomizer {
                     continue;
                 }
                 if (buy.getInventoryLocation() < 0 || buy.getInventoryLocation() >= items_per_page_one_page) {
-                    this.bugFinder.warn("Unable to add pagelayout item '" + buy.getName() + "': Inventory location needs to be between 1 and " + items_per_page_one_page + " with 'MaxRows' set to '" + this.pageLayoutHandler.getMaxRows() + "'.");
+                    ErrorLog.warn("Unable to add pagelayout item '" + buy.getName() + "': Inventory location needs to be between 1 and " + items_per_page_one_page + " with 'MaxRows' set to '" + this.pageLayoutHandler.getMaxRows() + "'.");
                     continue;
                 }
                 locs.put(buy.getInventoryLocation(), buy);

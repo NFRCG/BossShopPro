@@ -2,6 +2,7 @@ package org.black_ixx.bossshop.managers.item;
 
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class ItemDataPartWrittenBookPage extends ItemDataPart {
     @Override
     public ItemStack transform(ItemStack item, String used_name, String argument) {
         if (!(item.getItemMeta() instanceof BookMeta)) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: You can not add book text to an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
+            ErrorLog.warn("Mistake in Config: You can not add book text to an item with material '" + item.getType().name() + "'! Following line is invalid: '" + used_name + ":" + argument + "'.");
             return item;
         }
         BookMeta meta = (BookMeta) item.getItemMeta();
@@ -31,7 +32,7 @@ public class ItemDataPartWrittenBookPage extends ItemDataPart {
         String[] parts = argument.split("#", 2);
         int page = StringUtil.getInt(parts[0], -1);
         if (parts.length != 2 || page == -1) {
-            ClassManager.manager.getBugFinder().severe("Mistake in Config: Invalid: line: '" + used_name + ":" + argument + "'. It should look like following: 'bookpage:<page>#<text>'.");
+            ErrorLog.warn("Mistake in Config: Invalid: line: '" + used_name + ":" + argument + "'. It should look like following: 'bookpage:<page>#<text>'.");
             return item;
         }
 

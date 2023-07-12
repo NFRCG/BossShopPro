@@ -10,7 +10,6 @@ import org.black_ixx.bossshop.managers.ShopCustomizer;
 import org.black_ixx.bossshop.managers.external.BungeeCordManager;
 import org.black_ixx.bossshop.managers.external.VaultHandler;
 import org.black_ixx.bossshop.managers.features.AutoRefreshHandler;
-import org.black_ixx.bossshop.managers.features.BugFinder;
 import org.black_ixx.bossshop.managers.features.ItemDataStorage;
 import org.black_ixx.bossshop.managers.features.MultiplierHandler;
 import org.black_ixx.bossshop.managers.features.PageLayoutHandler;
@@ -54,6 +53,5 @@ public class PluginModule extends AbstractModule {
         this.bind(TransactionLog.class).asEagerSingleton();
         //TODO: check if delay is greater than 0 before init.
         this.bind(AutoRefreshHandler.class).asEagerSingleton();
-        this.bind(BugFinder.class).asEagerSingleton();
     }
 }

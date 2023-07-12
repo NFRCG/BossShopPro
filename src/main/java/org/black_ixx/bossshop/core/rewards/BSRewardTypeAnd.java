@@ -1,6 +1,7 @@
 package org.black_ixx.bossshop.core.rewards;
 
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -23,10 +24,10 @@ public class BSRewardTypeAnd extends BSRewardType {
             BSRewardType rewardT = BSRewardType.detectType(rewardType);
 
             if (rewardT == null) {
-                ClassManager.manager.getBugFinder().severe("Invalid RewardType '" + rewardType + "' inside reward list of shopitem with rewardtype AND.");
-                ClassManager.manager.getBugFinder().severe("Valid RewardTypes:");
+                ErrorLog.warn("Invalid RewardType '" + rewardType + "' inside reward list of shopitem with rewardtype AND.");
+                ErrorLog.warn("Valid RewardTypes:");
                 for (BSRewardType type : BSRewardType.values()) {
-                    ClassManager.manager.getBugFinder().severe("-" + type.name());
+                    ErrorLog.warn("-" + type.name());
                 }
                 continue;
             }
@@ -34,7 +35,7 @@ public class BSRewardTypeAnd extends BSRewardType {
             Object rewardO = rewardT.createObject(rewardObject, true);
 
             if (!rewardT.validityCheck("?", rewardO)) {
-                ClassManager.manager.getBugFinder().severe("Invalid Reward '" + rewardO + "' (RewardType= " + rewardType + ") inside reward list of shopitem with rewardtype AND.");
+                ErrorLog.warn("Invalid Reward '" + rewardO + "' (RewardType= " + rewardType + ") inside reward list of shopitem with rewardtype AND.");
                 continue;
             }
             rewardT.enableType();
@@ -51,7 +52,7 @@ public class BSRewardTypeAnd extends BSRewardType {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be a list of reward-blocks. Every rewardblock needs to contain reward and rewardtype.");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The reward object needs to be a list of reward-blocks. Every rewardblock needs to contain reward and rewardtype.");
         return false;
     }
 

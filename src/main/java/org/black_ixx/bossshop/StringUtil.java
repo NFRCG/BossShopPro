@@ -1,5 +1,6 @@
 package org.black_ixx.bossshop;
 
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.black_ixx.bossshop.misc.Enchant;
 import org.bukkit.NamespacedKey;
@@ -139,7 +140,7 @@ public class StringUtil {
                 try {
                     lvl = Integer.parseInt(level);
                 } catch (NumberFormatException ex) {
-                    ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + level + "' is not a valid enchantment level.");
+                    ErrorLog.warn("Mistake in Config: '" + level + "' is not a valid enchantment level.");
                     return null;
                 }
                 e = Enchantment.getByKey(NamespacedKey.minecraft(name.toLowerCase()));
@@ -154,7 +155,7 @@ public class StringUtil {
 				}*/
 
                 if (e == null) {
-                    ClassManager.manager.getBugFinder().severe("Mistake in Config: '" + name + "' is not a valid enchantment name/id.");
+                    ErrorLog.warn("Mistake in Config: '" + name + "' is not a valid enchantment name/id.");
                     return null;
                 }
 

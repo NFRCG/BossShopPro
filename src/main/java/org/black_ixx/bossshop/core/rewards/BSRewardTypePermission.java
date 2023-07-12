@@ -3,6 +3,7 @@ package org.black_ixx.bossshop.core.rewards;
 import net.milkbowl.vault.permission.Permission;
 import org.black_ixx.bossshop.StringUtil;
 import org.black_ixx.bossshop.core.BSBuy;
+import org.black_ixx.bossshop.files.ErrorLog;
 import org.black_ixx.bossshop.managers.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -20,7 +21,7 @@ public class BSRewardTypePermission extends BSRewardType {
         if (o != null) {
             return true;
         }
-        ClassManager.manager.getBugFinder().severe("Was not able to create ShopItem " + item_name + "! The reward object needs to be a list of permissions (text lines).");
+        ErrorLog.warn("Was not able to create ShopItem " + item_name + "! The reward object needs to be a list of permissions (text lines).");
         return false;
     }
 
